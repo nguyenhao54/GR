@@ -1,4 +1,4 @@
-const Tour = require('./../models/tourModels');
+const Tour = require('../models/tourModel');
 const APIFeatures = require('./../utils/apiFeatures');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
@@ -72,7 +72,7 @@ exports.getTourStats = catchAsync(async (req, res, next) => {
 
 exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
   const year = req.params.year * 1;
-  console.log(year);
+  // console.log(year);
   const plan = await Tour.aggregate([
     {
       $unwind: '$startDates',
@@ -109,16 +109,15 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
     next(new AppError('please provide latitute in the format lat,lng', 400));
   }
 
-  const radius = unit === "mi" ? distance / 3963.2 : distance / 6378.1; // unit: radians
+  const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1; // unit: radians
   console.log('latlgn', distance, lat, lng, unit);
-  const tours = await Tour.find( {
-    startLocation:
-    {
+  const tours = await Tour.find({
+    startLocation: {
       $geoWithin: {
-        $centerSphere: [[lng, lat], radius]
-      }
-    }
-  } );
+        $centerSphere: [[lng, lat], radius],
+      },
+    },
+  });
   res.status(200).json({
     status: 'success',
     results: tours.length,
@@ -126,19 +125,18 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
       data: tours,
     },
   });
-} );
+});
 
-exports.getDistances = catchAsync( async ( req, res, next ) =>
-{
-   const { latlng, unit } = req.params;
-   const [lat, lng] = latlng.split(',');
-   if (!lat || !lng) {
-     next(new AppError('please provide latitute in the format lat,lng', 400));
-   }
+exports.getDistances = catchAsync(async (req, res, next) => {
+  const { latlng, unit } = req.params;
+  const [lat, lng] = latlng.split(',');
+  if (!lat || !lng) {
+    next(new AppError('please provide latitute in the format lat,lng', 400));
+  }
 
   //  const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1; // unit: radians
   //  console.log('latlgn', lat, lng, unit);
-  
+
   const distances = await Tour.aggregate([
     {
       $geoNear: {
@@ -146,16 +144,15 @@ exports.getDistances = catchAsync( async ( req, res, next ) =>
           type: 'Point',
           coordinates: [lng * 1, lat * 1],
         },
-        distanceField: "distance"
+        distanceField: 'distance',
       },
     },
   ]);
-   res.status(200).json({
-     status: 'success',
+  res.status(200).json({
+    status: 'success',
     //  results: tours.length,
-     data: {
-       data: distances,
-     },
-   } );
-  
-})
+    data: {
+      data: distances,
+    },
+  });
+});

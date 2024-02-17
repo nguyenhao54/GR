@@ -1,5 +1,5 @@
 const catchAsync = require('../utils/catchAsync');
-const User = require('./../models/userModels');
+const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 const AppError = require('./../utils/appError');
@@ -18,7 +18,7 @@ const createSendToken = (user, statuscode, res) => {
   if (process.env.NODE_ENV !== 'production') {
     cookieOptions.secure = false;
   }
-  res.cookie( 'jwt', token, cookieOptions );
+  res.cookie('jwt', token, cookieOptions);
   user.password = undefined;
 
   res.status(statuscode).json({
@@ -34,7 +34,7 @@ const signToken = (id) =>
     expiresIn: process.env.JWT_EXPIReS_IN,
   });
 exports.signup = catchAsync(async (req, res, next) => {
-  const { name, email, password, passwordConfirm, passwordChangedAt } =
+  const { name, email, password, passwordConfirm, passwordChangedAt, phone } =
     req.body;
   const newUser = await User.create({
     name,
@@ -42,6 +42,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     password,
     passwordConfirm,
     passwordChangedAt,
+    phone,
   });
 
   createSendToken(newUser, 201, res);
@@ -99,12 +100,14 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // Grant access to protected route
   req.user = freshUser;
+  console.log('protect', req.user);
   next();
 });
 
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     //
+    console.log('uẻ', req.user);
     if (!roles.includes(req.user.role)) {
       return next(
         new AppError('You do not have permission to access this', 403),
@@ -186,7 +189,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   //1 get user from collection
   const { email, password, newPassword, newPasswordConfirm } = req.body;
 
-  const user = await User.findById(req.user.id).select('+password');
+  const user = await User.findById(req.user._id).select('+password');
   console.log(user);
 
   //2 check if current password is correct

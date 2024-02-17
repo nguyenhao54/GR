@@ -39,7 +39,7 @@ const tourSchema = new mongoose.Schema(
     ratingsQuantity: {
       type: Number,
       default: 0,
-      set: val=> Math.round(val*10)/10
+      set: (val) => Math.round(val * 10) / 10,
     },
     price: {
       type: Number,
@@ -113,21 +113,20 @@ const tourSchema = new mongoose.Schema(
   },
 );
 
-tourSchema.index({price:1, ratingAverage: -1})
-tourSchema.index({startLocation: '2dsphere'})
+tourSchema.index({ price: 1, ratingAverage: -1 });
+tourSchema.index({ startLocation: '2dsphere' });
 // virtual populate
 
 tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
-} );
-
+});
 
 //create a virtual property named 'reviews' on the tour model
-tourSchema.virtual( 'reviews', {
-  ref: "Review",
-  foreignField: "tour",
-  localField: "_id"
-})
+tourSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'tour',
+  localField: '_id',
+});
 
 // tourSchema.pre('save', async function (next) {
 //   const guidesPromises = this.guides.map(async (id) => await User.findById(id));
@@ -157,16 +156,15 @@ tourSchema.pre(/^find/, function (next) {
   this.find({ secretTour: { $ne: true } });
 
   next();
-} );
+});
 
-tourSchema.pre( /^find/, function ( next )
-{
-  this.populate( {
+tourSchema.pre(/^find/, function (next) {
+  this.populate({
     path: 'guides',
     select: '-__v -passwordChangedAt',
-  } );
-  next()
-})
+  });
+  next();
+});
 
 // AGGREATION MIDDLEWAR$E
 // tourSchema.pre('aggregate', function (next) {

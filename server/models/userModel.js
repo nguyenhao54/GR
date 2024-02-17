@@ -8,6 +8,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'User must have a name'],
   },
+  codeNumber: {
+    type: Number,
+    // required: [true, 'User must have an ID'],
+  },
   email: {
     type: String,
     unique: true,
@@ -15,13 +19,26 @@ const userSchema = new mongoose.Schema({
     validate: [validator.isEmail, 'Email is invalid'],
     required: [true, 'User must have a email'],
   },
+  phone: {
+    type: String,
+    unique: true,
+    validate: [validator.isMobilePhone, 'Phone is invalid'],
+    required: [true, 'User must have a phone number'],
+  },
+  DOB: {
+    type: Date,
+  },
+  gender: {
+    type: String,
+    enum: ['male', 'female'],
+  },
   photo: {
     type: String,
   },
   role: {
     type: String,
-    enum: ['user', 'guide', 'lead-guide', 'admin'],
-    default: 'user',
+    enum: ['student', 'teacher', 'admin'],
+    default: 'student',
   },
   password: {
     type: String,
@@ -44,16 +61,19 @@ const userSchema = new mongoose.Schema({
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
-
+  faculty: {
+    type: String,
+    // required: [true, 'User must have a faculty'],
+  },
   active: {
     type: Boolean,
     default: true,
     select: false,
-  }
-} );
+  },
+});
 
 userSchema.pre(/^find/, function (next) {
-  this.find({active: { $ne: false }});
+  this.find({ active: { $ne: false } });
   next();
 });
 
@@ -62,17 +82,13 @@ userSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, 12);
   this.passwordConfirm = undefined;
   next();
-} );
+});
 
-userSchema.pre( 'save', function ( next )
-{
-  if (!this.isModified('password') || this.isNew ) return next();
-
-
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password') || this.isNew) return next();
   this.passwordChangedAt = Date.now() - 1000;
-  next()
-  
-})
+  next();
+});
 
 userSchema.methods.correctPassword = async function (
   candidatePassword,
@@ -106,8 +122,6 @@ userSchema.methods.createPasswordResetToken = function () {
   console.log(resetToken);
   return resetToken;
 };
-
-
 
 const User = mongoose.model('User', userSchema);
 

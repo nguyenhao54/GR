@@ -1,8 +1,8 @@
 const fs = require( 'fs' );
-const Tour = require( './../../models/tourModels')
-const User = require('./../../models/userModels');
+const Tour = require( './../../models/tourModel')
+const User = require('../../models/userModel');
 
-const Review = require('./../../models/reviewModels');
+const Review = require('../../models/reviewModel');
 
 const mongoose = require( 'mongoose' );
 const dotenv = require('dotenv');
@@ -38,9 +38,7 @@ const importData = async () =>
   try {
     await Tour.create( tours );
     await User.create(users, {validateBeforeSave: false});
-    
     await Review.create(reviews);
-
     console.log('data sucessfully loaded');
   } catch (e) {
     console.log(e);

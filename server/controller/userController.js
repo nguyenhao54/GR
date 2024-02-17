@@ -1,7 +1,7 @@
 const AppError = require('./../utils/appError');
 const catchAsync = require('./../utils/catchAsync');
-const User = require('./../models/userModels');
-const factory = require('./handlerFactory')
+const User = require('../models/userModel');
+const factory = require('./handlerFactory');
 const filterObj = (obj, ...allowedFields) => {
   let newObj = {};
   Object.keys(obj).forEach((el) => {
@@ -11,17 +11,16 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
-exports.getAllUsers = factory.getAll(User)
-exports.getOneUser = factory.getOne(User)
+exports.getAllUsers = factory.getAll(User);
+exports.getOneUser = factory.getOne(User);
 exports.createUser = (req, res) => {};
 exports.updateUser = (req, res) => {};
-exports.deleteUser = factory.deleteOne(User)
+exports.deleteUser = factory.deleteOne(User);
 
-exports.getMe = ( req, res, next ) =>
-{ 
-  req.params.id= req.user.id
-  next()
-}
+exports.getMe = (req, res, next) => {
+  req.params.id = req.user._id;
+  next();
+};
 
 exports.updateMe = catchAsync(async (req, res, next) => {
   //create error of user posts password data
@@ -35,8 +34,15 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     );
   }
   //filter not allowed update fields name
-  const filteredObj = filterObj(req.body, 'name', 'email');
-  const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredObj, {
+  const filteredObj = filterObj(
+    req.body,
+    'name',
+    'email',
+    'DOB',
+    'phone',
+    // 'codeNumber',
+  );
+  const updatedUser = await User.findByIdAndUpdate(req.user._id, filteredObj, {
     new: true,
     runValidators: true,
   });
@@ -51,7 +57,8 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteMe = catchAsync(async (req, res, next) => {
-  await User.findByIdAndUpdate(req.user.id, { active: false });
+  console.log('deleete me');
+  await User.findByIdAndUpdate(req.user._id, { active: false });
 
   res.status(204).json({
     status: 'success',
