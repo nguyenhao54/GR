@@ -46,7 +46,8 @@ classSchema.pre(/^find/, function(next){
   this.populate({
     path: "subject teacher students",
     select: "name subjectId  title codeNumber"
-  })
+  }),
+  next()
 })
 
 const Class = mongoose.model('Class', classSchema);

@@ -1,32 +1,32 @@
 const express = require('express');
 const router = express.Router();
-const classController = require('../controller/classController');
+const lessonController = require('../controller/lessonController');
 const authController = require('../controller/authController');
 
 router
   .route('/')
-  .get(classController.getAllClasses)
+  .get(lessonController.getAllLessons)
   .post(
     authController.protect,
-    authController.restrictTo('admin'),
-    classController.createClass,
+    // authController.restrictTo('admin'),
+    lessonController.createLesson,
   );
 
-router.get('/my', authController.protect, classController.getMyClasses);
+router.get('/my', authController.protect, lessonController.getMyLessons);
 
 router
   .route('/:id')
-  .get(classController.getClass)
+  .get(lessonController.getLesson)
   .post(authController.protect, authController.restrictTo('admin'))
   .patch(
     authController.protect,
     authController.restrictTo('admin'),
-    classController.updateClass,
+    lessonController.updateLesson,
   )
   .delete(
     authController.protect,
     authController.restrictTo('admin'),
-    classController.deleteClass,
+    lessonController.deleteLesson,
   );
 
 module.exports = router;

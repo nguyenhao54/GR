@@ -12,11 +12,12 @@ const createSendToken = (user, statuscode, res) => {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
     ),
-    secure: true,
     httpOnly: true,
   };
   if (process.env.NODE_ENV !== 'production') {
     cookieOptions.secure = false;
+  } else {
+    cookieOptions.secure = true;
   }
   res.cookie('jwt', token, cookieOptions);
   user.password = undefined;
@@ -76,6 +77,8 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.headers.authorization.startsWith('Bearer')
   ) {
     token = req.headers.authorization.split(' ')[1];
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
   }
 
   if (!token) {
@@ -100,14 +103,40 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // Grant access to protected route
   req.user = freshUser;
-  console.log('protect', req.user);
+  // console.log('protect', req.user);
   next();
+});
+
+exports.isLoggedIn = catchAsync(async (req, res, next) => {
+  // 1) getting token and check if it exists
+  if (req.cookies.jwt) {
+    // 2) validate token
+    const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
+    // 3) Check if user still exists
+    // console.log(decoded);
+    const freshUser = await User.findById(decoded.id);
+    if (!freshUser) {
+      return next(
+      );
+    }
+
+    // 4) Check if user changed password after the token was issued
+    if (freshUser.changedPasswordAfter(decoded.iat)) {
+      return next();
+    }
+
+    // Grant access to protected route
+    req.user = freshUser;
+    // console.log('protect', req.user);
+    next();
+  }
+  next()
 });
 
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     //
-    console.log('uẻ', req.user);
+    // console.log('uẻ', req.user);
     if (!roles.includes(req.user.role)) {
       return next(
         new AppError('You do not have permission to access this', 403),
@@ -127,7 +156,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   //2 Generate the random reset token
   const resetToken = user.createPasswordResetToken();
-  console.log(resetToken);
+  // console.log(resetToken);
   await user.save({ validateBeforeSave: false });
 
   //3 Send it

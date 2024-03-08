@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const app = express();
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const cors = require('cors');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
@@ -12,6 +13,9 @@ const userRouter = require('./route/userRoutes');
 const reviewRouter = require('./route/reviewRouter');
 const subjectRouter = require('./route/subjectRoutes');
 const classRouter = require('./route/classRoutes');
+const lessonRouter = require('./route/lessonRoutes');
+const gradeRouter = require('./route/gradeRoutes');
+
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controller/errorController');
@@ -27,6 +31,7 @@ const limiter = rateLimit({
 
 app.use('/api', limiter);
 app.use(helmet());
+app.use(cors({ origin: true }));
 
 app.use(express.json({ limit: '10kb' })); //add middleware to middleware stack
 
@@ -54,6 +59,9 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/subjects', subjectRouter);
 app.use('/api/v1/classes', classRouter);
+app.use('/api/v1/lessons', lessonRouter);
+app.use('/api/v1/grades', gradeRouter);
+
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
