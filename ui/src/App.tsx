@@ -14,14 +14,20 @@ function App(props: { cookies: Cookies }) {
   const navigate = useNavigate();
   const dispatch = useDispatch()
   const { cookies } = props;
-
-  (async () => {
+  useEffect(() => {
     if (cookies.get("token")) {
-      const res = await getMyInfo(cookies.get("token") || "")
-      console.log(res.data)
-      if (res.data && res.data.data) dispatch(setCurrentUser(res.data.data))
+      getMyInfo(cookies.get("token") || "").then((res) => {
+        console.log("my info", res?.data?.data)
+        if (res) {
+          if (res.data && res.data.data) dispatch(setCurrentUser(res.data.data))
+          else navigate("login")
+        }
+        else navigate("login")
+
+      })
     } else navigate("login")
-  })()
+
+  }, [])
 
   const setCookie = (name: string, value: any) => {
     cookies.set(name, value, { path: '/', maxAge: 360000 });

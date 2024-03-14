@@ -71,7 +71,7 @@ const dataBar = [
 
 export default function StackedAtendanceChart() {
     return (
-        <div className="bg-white rounded-md p-8 w-[69%] md:w-[59%] flex flex-col gap-2 h-max">
+        <div className="bg-white rounded-md p-8 w-[69%] md:w-[59%] flex flex-col gap-2 h-['100vh-32px']">
             <div>
                 <div className="text-neutral-800 font-semibold text-lg mt-1 mb-4">
                     Thống kê tham gia lớp học

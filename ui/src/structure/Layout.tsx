@@ -20,7 +20,7 @@ const Dashboard = () => {
         <Sidebar />
         <div className="bg-neutral-100 h-full w-full">
           <div className="fixed left-[288px] top-14 ml-4 w-full h-full overflow-scroll">
-            <div className='flex mt-2 gap-2 w-[76%] overflow-auto'>
+            <div className='flex mt-2 gap-2 w-[76%] h-full'>
               <Outlet />
             </div>
           </div>

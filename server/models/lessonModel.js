@@ -23,13 +23,13 @@ const lessonSchema = new mongoose.Schema(
   },
 );
 
-lessonSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'class',
-    // select: "name subjectId  title codeNumber"
-  }),
-    next();
-});
+// lessonSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: 'class',
+//     select: "subject"
+//   }),
+//     next();
+// });
 
 const Lesson = mongoose.model('Lesson', lessonSchema);
 module.exports = Lesson;

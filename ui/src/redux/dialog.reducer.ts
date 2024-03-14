@@ -1,26 +1,31 @@
 import { createAction, createReducer } from "@reduxjs/toolkit";
 
-export interface DialogState {
+export interface Dialog {
+  title?: string;
+  content?: JSX.Element;
+  onClickOk?: () => void;
+  open?: boolean;
+  customWidth?: number;
+  customHeight?: number;
+  loading?: boolean;
+  type? : "warning"|"info"
+}
 
-    title?: string;
-    content?: JSX.Element;
-    onClickOk?: () => void;
-    open?: boolean;
+export interface DialogState {
+  dialog?: Dialog
+
 }
 
 const initialState: DialogState = {
-title: undefined,
-content: undefined,
-onClickOk: undefined,
-open: false
+  dialog: undefined
 
 };
 
-export const setDialog= createAction<any | null>("setDialog");
+export const setDialog = createAction<any | null>("setDialog");
 
 const dialogReducer = createReducer(initialState, (builder) =>
-  builder.addCase(setDialog, (dialog, action) => {
-    dialog = action.payload;
+  builder.addCase(setDialog, (state, action) => {
+    state.dialog = action.payload;
   })
 );
 

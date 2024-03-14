@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const Lesson = require('./lessonModel');
 
 const classSchema = new mongoose.Schema(
   {
@@ -24,6 +25,15 @@ const classSchema = new mongoose.Schema(
     dayOfWeek: {
       type: Number,
     },
+    duration: {
+      type: Number,
+    },
+    firstStartTime: { // buổi học đầu 
+      type: Date,
+    },
+    lastStartTime: {
+      type: Date,
+    },
     location: {
       //GeoJSON
       type: {
@@ -32,7 +42,6 @@ const classSchema = new mongoose.Schema(
         enum: ['Point'],
       },
       coordinates: [Number],
-      address: String,
       description: String,
     },
   },
@@ -42,12 +51,36 @@ const classSchema = new mongoose.Schema(
   },
 );
 
-classSchema.pre(/^find/, function(next){
+classSchema.pre(/^find/, function (next) {
   this.populate({
-    path: "subject teacher students",
-    select: "name subjectId  title codeNumber"
+    path: 'subject teacher students',
+    select: 'name subjectId  title codeNumber',
   }),
-  next()
+    next();
+});
+
+classSchema.statics.addRelatedLessons = async function (classInfo) {
+  let startTime = classInfo.firstStartTime;
+  for (
+    startTime;
+    startTime.getTime() < classInfo.lastStartTime.getTime();
+    startTime = new Date(startTime.getTime() + 7 * 24 * 60 * 60 * 1000)
+  ) {
+    // console.log(classInfo.lastStartTime )
+    const endTime = new Date(
+      startTime.getTime() + classInfo.duration * 60 * 1000,
+    );
+    console.log(startTime, endTime);
+    await Lesson.create({
+      class: classInfo._id,
+      startDateTime: startTime,
+      endDateTime: endTime,
+    });
+  }
+};
+
+classSchema.post('save', function() {
+  this.constructor.addRelatedLessons(this);
 })
 
 const Class = mongoose.model('Class', classSchema);

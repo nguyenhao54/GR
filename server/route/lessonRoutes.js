@@ -14,6 +14,8 @@ router
 
 router.get('/my', authController.protect, lessonController.getMyLessons);
 
+router.get('/my/now', authController.protect, lessonController.getMyCurrentLesson);
+
 router
   .route('/:id')
   .get(lessonController.getLesson)

@@ -32,8 +32,6 @@ export default function ToastCalendar() {
     const [endDate, setEndDate] = useState<string>("");
     const [event, setEvent] = useState<CalendarEvent>();
 
-
-
     const handleClickNextButton = () => {
         const calendarInstance = calendarRef.current?.getInstance();
         // calendarInstance
@@ -213,10 +211,10 @@ export default function ToastCalendar() {
                     showNowIndicator: true,
                     showTimezoneCollapseButton: false,
                     timezonesCollapsed: false,
-                    hourStart: 0,
-                    hourEnd: 24,
+                    hourStart: 5,
+                    hourEnd: 19,
                     eventView: true,
-                    taskView: ["task"],
+                    taskView: false,
                     collapseDuplicateEvents: false,
                 }}
 
