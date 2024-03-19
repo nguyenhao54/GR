@@ -22,3 +22,6 @@ export const bgColors = [
 export const valueDropDown1 = ["Change photo", "Remove photo"];
 
 export const valueDropDown2 = ["Edit details", "Delete"];
+
+export const BORDER_COLOR = ["#33BFFF", "#ffcc00", "#f7902f", "#eb4034", "#2cc77f"]
+export const BACKGROUND_COLOR = ["#e6f7ff", "#fff9e6", "#fef2e6", "#fad3d1", "#d6ffe3"]

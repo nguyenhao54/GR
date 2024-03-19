@@ -7,14 +7,15 @@ import { AppState } from '../../../redux/store';
 import { setDialog } from '../../../redux/dialog.reducer';
 import Attendify from './Attendify';
 import { FaUserCheck } from "react-icons/fa";
-import { getCurrentLessons } from '../../../api/lesson';
+import { getCurrentLesson } from '../../../api/lesson';
 import { DotFlashing } from '../../../common';
 import { getMyAttendanceForLesson } from '../../../api/attendance';
-
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 
 export interface IAttendance {
     checkInTime?: string;
     checkOutTime?: string;
+    isSuccessful?: boolean;
 }
 
 export const getToday = () => {
@@ -84,7 +85,7 @@ function AttendanceCard() {
         setLoading(true)
         const token = getCookie("token")
         setInterval(() => setClock(getClock()), 60 * 1000);
-        getCurrentLessons(token).then((res: any) => {
+        getCurrentLesson(token).then((res: any) => {
             setLesson(res?.lessons[0]);
         }).finally(() => setLoading(false))
     }, [])
@@ -93,36 +94,36 @@ function AttendanceCard() {
         const token = getCookie("token")
         if (lesson && user) {
             getMyAttendanceForLesson(token, lesson?._id, user._id).then(res => {
-                console.log(res);
-                setAttendance(res.data[0])
+                setAttendance(res?.data[0])
             })
         }
     }, [JSON.stringify(lesson)])
 
     if (loading) {
-        return <div className="bg-white rounded-md p-8 md:w-[40%]  sm:w-[99%] flex lg:flex-col items-center h-screen">
+        return <div className="bg-white rounded-md p-8 md:w-[37%] sm:w-[99%] flex lg:flex-col items-center h-stretch justify-center">
             <DotFlashing></DotFlashing>
         </div>
     }
 
-    console.log(attendance, position, "position")
-
     if (!lesson) {
-        return <div className="bg-white rounded-md p-8 md:w-[40%]  sm:w-[99%] flex lg:flex-col items-center h-['100vh-32px']">
-            Bạn không có lớp học nào vào thời điểm này
+        return <div className="bg-white rounded-md p-8 md:w-[37%]  sm:w-[99%] flex lg:flex-col items-center h-stretch">
+            <div className="text-neutral-400 flex flex-col justify-center items-center">
+                <IoMdCheckmarkCircleOutline size={60} />
+                <div className="font-semibold text-md py-8 px-4">Bạn không có lớp học nào vào thời điểm này</div>
+            </div >
         </div>
     }
 
     const { classId = "", subject = "", location = " " } = lesson?.class;
     const { endDateTime = " ", startDateTime = "" } = lesson;
 
-    if (Math.abs(position.latitude - location.coordinates[0])> 0.001 || Math.abs(position.longitude - location.coordinates[1]) > 0.001) {
-        console.log(position, location.coordinates )
-        return <div> Vui lòng di chuyển tói vị trí lớp học và kết nối wifi của lớp học</div>
-    }
+    // if (Math.abs(position.latitude - location.coordinates[0])> 0.001 || Math.abs(position.longitude - location.coordinates[1]) > 0.001) {
+    //     console.log(position, location.coordinates )
+    //     return <div> Vui lòng di chuyển tói vị trí lớp học và kết nối wifi của lớp học</div>
+    // }
 
     return (
-        <div className="bg-white rounded-md p-8 md:w-[40%]  sm:w-[99%] flex lg:flex-col items-center h-['100vh-32px']">
+        <div className="bg-white rounded-md p-8 md:w-[37%]  sm:w-[99%] flex lg:flex-col items-center h-max">
             <><div className="text-base font-semibold mt-2">{clock}</div>
                 <div className="text-xs font-semibold text-neutral-500">
                     {`${getToday()}, Ngày ${new Date().toLocaleString("en-us", { day: '2-digit' })} Tháng ${new Date().toLocaleString("en-us", { month: '2-digit' })}`}

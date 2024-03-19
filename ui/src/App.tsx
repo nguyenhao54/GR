@@ -8,6 +8,8 @@ import { getMyInfo } from './api/user';
 import { useDispatch } from 'react-redux';
 import { Cookies, withCookies } from 'react-cookie';
 import { setCurrentUser } from './redux/user.reducer';
+import LessonDetail from './pages/components/calendar/LessonDetail';
+import { ToastCalendar } from './pages/components';
 
 function App(props: { cookies: Cookies }) {
 
@@ -45,7 +47,12 @@ function App(props: { cookies: Cookies }) {
       <Route path="/login" element={<SignIn setCookie={setCookie}></SignIn>}></Route>
       <Route path="/" element={<Layout />}>
         <Route path="/dashboard" element={<Dashboard />}></Route>
-        <Route path="/calendar" element={<Calendar />}></Route>
+        <Route path="/calendar" element={<Calendar />}>
+          <Route path="" element={
+            <ToastCalendar></ToastCalendar>
+          }></Route>
+          <Route path="/calendar/:id" element={<LessonDetail></LessonDetail>}></Route>
+        </Route>
       </Route>
     </Routes>
   );

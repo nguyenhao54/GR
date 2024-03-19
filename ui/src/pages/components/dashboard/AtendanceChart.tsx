@@ -9,14 +9,6 @@ import {
 
 import { PieChart, Pie } from "recharts";
 
-// const data = [
-//   { name: "Group A", value: 400 },
-//   { name: "Group B", value: 300 },
-//   { name: "Group C", value: 300 },
-//   { name: "Group D", value: 200 }
-// ];
-// const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
-
 const dataPie = [
     { name: "Vắng mặt", value: 26, fill: "#E0E1E3" },
     { name: "Có mặt", value: 75, fill: "#C1121F" },
@@ -33,45 +25,39 @@ const renderColorfulLegendText = (value: string, entry: any) => {
 const dataBar = [
     {
         name: "Thứ hai",
-        "Có mặt": 4000,
-        "Vắng mặt": 2400,
-        amt: 2400
+        "Có mặt": 4,
+        "Vắng mặt": 2,
     },
     {
         name: "Thứ ba",
-        "Có mặt": 3000,
-        "Vắng mặt": 1398,
-        amt: 2210
+        "Có mặt": 0,
+        "Vắng mặt": 1,
     },
     {
         name: "Thứ tư",
-        "Có mặt": 2000,
-        "Vắng mặt": 9800,
-        amt: 2290
+        "Có mặt": 2,
+        "Vắng mặt": 2,
     },
     {
         name: "Thứ năm",
-        "Có mặt": 2780,
-        "Vắng mặt": 3908,
-        amt: 2000
+        "Có mặt": 2,
+        "Vắng mặt": 1,
     },
     {
         name: "Thứ sáu",
-        "Có mặt": 1890,
-        "Vắng mặt": 4800,
-        amt: 2181
+        "Có mặt": 1,
+        "Vắng mặt": 4,
     },
     {
         name: "Thứ bảy",
-        "Có mặt": 2390,
-        "Vắng mặt": 3800,
-        amt: 2500
+        "Có mặt": 4,
+        "Vắng mặt": 3,
     }
 ];
 
 export default function StackedAtendanceChart() {
     return (
-        <div className="bg-white rounded-md p-8 w-[69%] md:w-[59%] flex flex-col gap-2 h-['100vh-32px']">
+        <div className="bg-white rounded-md p-8 w-[69%] md:w-[62%] flex flex-col gap-2 h-max">
             <div>
                 <div className="text-neutral-800 font-semibold text-lg mt-1 mb-4">
                     Thống kê tham gia lớp học
@@ -102,9 +88,8 @@ export default function StackedAtendanceChart() {
                 </div>
             </div>
 
-            <div className="flex justify-center">
+            <div className="flex justify-center pb-8">
                 <PieChart width={280} height={250} >
-                 
                     <Pie
                         data={dataPie}
                         cx={120}
@@ -115,9 +100,6 @@ export default function StackedAtendanceChart() {
                         paddingAngle={0}
                         dataKey="value"
                     >
-                        {/* {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-          ))} */}
                     </Pie>
                        <Legend
                         height={5}
@@ -128,23 +110,6 @@ export default function StackedAtendanceChart() {
                         iconSize={10}
                         formatter={renderColorfulLegendText}
                     />
-                    {/* <Pie
-          data={data}
-          cx={420}
-          cy={200}
-          startAngle={0}
-          endAngle={360}
-          innerRadius={60}
-          outerRadius={80}
-          fill="#8884d8"
-          paddingAngle={0}
-          dataKey="value"
-          blendStroke
-        >
-          {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-          ))}
-        </Pie> */}
                 </PieChart>
 
             </div>

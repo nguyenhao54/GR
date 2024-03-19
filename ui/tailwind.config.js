@@ -17,7 +17,7 @@ module.exports = {
         prussianBlue: "#003049",
         papayaWhip: "#FDF0D5",
         headingColor: "#C80000",
-        textColor: "#c2c2c2",
+        textColor: "#E5E5E5",
         cartNumBg: "#e80013",
         primary: "#111111",
         cardOverlay: "rgba(256,256,256,0.05)",

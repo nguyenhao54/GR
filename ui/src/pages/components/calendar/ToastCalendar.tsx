@@ -1,7 +1,16 @@
 import Calendar from '@toast-ui/react-calendar';
 import '@toast-ui/calendar/dist/toastui-calendar.min.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import moment from 'moment';
+import { getCookie } from '../dashboard/AttendanceCard';
+import { getMyLessons } from '../../../api/lesson';
+import { minusSevenHours, randomIntFromInterval } from '../../../utils';
+import { BACKGROUND_COLOR, BORDER_COLOR } from '../../../utils/styles';
+import { setDialog } from '../../../redux/dialog.reducer';
+import { useDispatch } from 'react-redux';
+import LessonDetail from './LessonDetail';
+import { useNavigate } from 'react-router-dom';
+import { GoTriangleLeft, GoTriangleRight } from "react-icons/go";
 
 export interface CalendarEvent {
     id: string;
@@ -10,7 +19,7 @@ export interface CalendarEvent {
     location?: string;
     dueDateClass?: string;
     start?: string;
-    end: string;
+    end?: string;
     due_at?: string;
     is_done?: boolean;
     backgroundColor?: string;
@@ -27,10 +36,33 @@ export interface CalendarEvent {
 }
 
 export default function ToastCalendar() {
+    const navigate = useNavigate()
     const calendarRef = React.useRef<any>();
     const [startDate, setStartDate] = useState<string>("");
     const [endDate, setEndDate] = useState<string>("");
-    const [event, setEvent] = useState<CalendarEvent>();
+    const [events, setEvents] = useState<CalendarEvent[]>();
+    const token = getCookie("token")
+
+    const [event, setEvent]= useState<CalendarEvent>();
+
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        getMyLessons(token).then((data: any) => {
+            console.log("lesson", data)
+
+            setEvents(data?.lessons.map((item: any) => {
+                const random = randomIntFromInterval(0, 4)
+                return ({
+                    ...item, start: minusSevenHours(item.startDateTime),
+                    end: minusSevenHours(item.endDateTime),
+                    backgroundColor: BACKGROUND_COLOR[random],
+                    borderColor: BORDER_COLOR[random],
+                    title: item.class.subject.title
+                })
+            }) || [])
+        })
+    }, [])
 
     const handleClickNextButton = () => {
         const calendarInstance = calendarRef.current?.getInstance();
@@ -111,64 +143,47 @@ export default function ToastCalendar() {
         });
     };
 
+    const handleClickEvent = (eventObj: any)=>{
+        navigate(`${eventObj.event.id}`)
+        // setEvent(eventObj)
+        // dispatch(setDialog({
+        //     title: "Chi tiết buổi học",
+        //     open: true,
+        //     customHeight: 400,
+        //     content: <LessonDetail lessonId={eventObj.event.id}></LessonDetail>,
+        //     // type: "info"
+        // }))
+
+    }
+
 
     return (
         <div className='w-full h-full pb-8'>
-            <nav className="navbar -mt-4 mr-10 flex flex-row items-center justify-between">
+            <nav className="navbar -mt-4 flex flex-row items-center justify-between">
                 <div className="">
                     <button
                         type="button"
-                        className="inline-block rounded bg-neutral-100 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-neutral-800 shadow-[0_4px_9px_-4px_#cbcbcb] transition duration-150 ease-in-out hover:bg-neutral-100 hover:shadow-[0_8px_9px_-4px_rgba(203,203,203,0.3),0_4px_18px_0_rgba(203,203,203,0.2)] focus:bg-neutral-100 focus:shadow-[0_8px_9px_-4px_rgba(203,203,203,0.3),0_4px_18px_0_rgba(203,203,203,0.2)] focus:outline-none focus:ring-0 active:bg-neutral-200 active:shadow-[0_8px_9px_-4px_rgba(203,203,203,0.3),0_4px_18px_0_rgba(203,203,203,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(251,251,251,0.3)] dark:hover:shadow-[0_8px_9px_-4px_rgba(251,251,251,0.1),0_4px_18px_0_rgba(251,251,251,0.05)] dark:focus:shadow-[0_8px_9px_-4px_rgba(251,251,251,0.1),0_4px_18px_0_rgba(251,251,251,0.05)] dark:active:shadow-[0_8px_9px_-4px_rgba(251,251,251,0.1),0_4px_18px_0_rgba(251,251,251,0.05)]"
+                        className="inline-block rounded-sm text-white font-medium p-2 hover:cursor-pointer shadow-sm hover:opacity-85 transition-all bg-lightRed"
                         onClick={handleClickNowButton}
                     >
                         Hôm nay
                     </button>
                 </div>
-                <div className="flex flew-row">
+                <div className="flex flew-row items-center gap-2 py-6">
                     <div
-                        className="-rotate-90 cursor-pointer"
+                        className="cursor-pointer"
                         onClick={handleClickPrevButton}
                     >
-                        <svg
-                            width="12"
-                            height="7"
-                            viewBox="0 0 12 7"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                d="M11.001 6L6.00098 1L1.00098 6"
-                                stroke="black"
-                                strokeOpacity="0.4"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            />
-                        </svg>
+                      <GoTriangleLeft />
                     </div>
-                    <div className="uppercase text-sm font-semibold text-gray-600 my-8">
+                    <div className="uppercase text-sm font-semibold text-gray-600 ">
                         {startDate} - {endDate}
                     </div>
                     <div
-                        className="rotate-90 cursor-pointer"
+                        className="cursor-pointer"
                         onClick={handleClickNextButton}
                     >
-                        <svg
-                            width="12"
-                            height="7"
-                            viewBox="0 0 12 7"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                d="M11.001 6L6.00098 1L1.00098 6"
-                                stroke="black"
-                                stroke-opacity="0.4"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            />
-                        </svg>
+                                        <GoTriangleRight />
                     </div>
                 </div>
                 {/* <div className="">
@@ -181,6 +196,7 @@ export default function ToastCalendar() {
             </nav>
             <Calendar
                 ref={calendarRef}
+                onClickEvent={(event) => handleClickEvent( event)}
                 onAfterRenderEvent={onAfterRenderEvent}
                 usageStatistics={false}
                 height="700px"
@@ -207,12 +223,12 @@ export default function ToastCalendar() {
                         "Thứ Bảy",
                     ],
                     narrowWeekend: false,
-                    workweek: false,
+                    workweek: false, /// hide weekend
                     showNowIndicator: true,
                     showTimezoneCollapseButton: false,
                     timezonesCollapsed: false,
-                    hourStart: 5,
-                    hourEnd: 19,
+                    hourStart: 0,
+                    hourEnd: 24,
                     eventView: true,
                     taskView: false,
                     collapseDuplicateEvents: false,
@@ -235,7 +251,7 @@ export default function ToastCalendar() {
                     isAlways6Weeks: false,
                     visibleEventCount: 6,
                 }}
-
+                events={events}
             />
         </div>
     );

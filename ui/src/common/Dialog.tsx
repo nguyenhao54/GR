@@ -25,7 +25,7 @@ export default function DialogView() {
                 style: { borderRadius: 8, width: customWidth || 560, height: customHeight || 300 },
             }}
         >
-            <DialogTitle>{dialogState?.title}</DialogTitle>
+            <DialogTitle >{dialogState?.title}</DialogTitle>
             <IconButton
                 aria-label="close"
                 onClick={() => dispatch(setDialog({ open: false }))}
@@ -40,7 +40,9 @@ export default function DialogView() {
 
             </IconButton>
             {/* {dialogState.loading && <div className='w-full h-full flex items-center justify-center bg-["rgba(0,0,0,0.1)"]'><DotFlashing></DotFlashing></div>} */}
-            <div className="flex items-center justify-center">
+            
+            <div className="h-[2px] mx-5 bg-neutral-200"></div>
+            <div className="flex items-center justify-center w-full h-full">
                 {dialogState.type && <div> {dialogState.type === "warning" ? <FaRegQuestionCircle size={40} /> : <FaInfoCircle size={40} />}
                 </div>}
                 {dialogState?.content}</div>

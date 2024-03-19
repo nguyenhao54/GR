@@ -8,7 +8,6 @@ export const getMyAttendanceForLesson = async (token: string, lessonId: string, 
             `${BASE_URL}/attendances?lesson=${lessonId}&student=${userId}`,
             { headers: { Authorization: `Bearer ${token}` } }
         )
-        console.log(res.data.data)
         return res.data.data
     }
     catch (err) {
@@ -29,7 +28,6 @@ export const createAttendance = async (token: string, lessonId: string, checkInT
             },
             { headers: { Authorization: `Bearer ${token}` } }
         )
-        console.log(res.data.data)
         return res.data.data
     }
     catch (err) {
@@ -37,17 +35,16 @@ export const createAttendance = async (token: string, lessonId: string, checkInT
     }
 }
 
-export const updateAttendance = async (token: string, attendanceId: string, checkOutTime: string) => {
+export const updateAttendance = async (token: string, attendanceId: string, checkOutTime: string, isSuccessful: boolean) => {
     try {
         const res = await axios.patch(
             `${BASE_URL}/attendances/${attendanceId}`,
             {
                 checkOutTime: checkOutTime,
-
+                isSuccessful: isSuccessful,
             },
             { headers: { Authorization: `Bearer ${token}` } }
         )
-        // console.log(res.data.data)
         return res.data.data
     }
     catch (err) {

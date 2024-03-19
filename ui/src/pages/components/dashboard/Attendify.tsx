@@ -7,6 +7,14 @@ import { setDialog } from "../../../redux/dialog.reducer";
 import { DotFlashing } from "../../../common";
 import { createAttendance, updateAttendance } from "../../../api/attendance";
 import { getCookie } from "./AttendanceCard";
+import { addSevenHours, minusSevenHours } from "../../../utils";
+
+function minutesDiff(dateTimeValue2: any, dateTimeValue1: any) {
+  var differenceValue =
+    (new Date(dateTimeValue2).getTime() - new Date(dateTimeValue1).getTime()) / 1000;
+  differenceValue /= 60;
+  return Math.abs(Math.round(differenceValue));
+}
 
 function Attendify({ attendance, setAttendance, lesson }: any) {
   const user = useSelector((appState: AppState) => appState.user.user)
@@ -142,14 +150,15 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
                       open: false
                     }))
                     const token = getCookie("token")
+                    const dateTimeNow= addSevenHours((new Date()).toISOString())
                     if (!attendance?.checkInTime)
-                      createAttendance(token, lesson._id, (new Date()).toISOString(), user._id).then(res =>
-                        setAttendance({ checkInTime: (new Date()).toISOString() })
+                      createAttendance(token, lesson._id, dateTimeNow, user._id).then(res =>
+                        setAttendance({ checkInTime:  dateTimeNow  })
                       ).catch(err=> console.log(err))
                     else {
-                      updateAttendance(token, attendance._id, (new Date()).toISOString() )
-                      setAttendance({ ...attendance, checkOutTime: (new Date()).toISOString() });
-
+                      const duration = minutesDiff(attendance.checkInTime, dateTimeNow)
+                      updateAttendance(token, attendance._id, dateTimeNow ,  duration>= lesson.duration )
+                      setAttendance({ ...attendance, checkOutTime: dateTimeNow });
                     }
                   }, 100)
 
