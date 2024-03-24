@@ -1,11 +1,33 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { AppState } from '../redux/store'
 import { TextField } from '@mui/material'
+import { getCookie } from './components/dashboard/AttendanceCard'
+import { getMyInfo } from '../api/user'
+import { setCurrentUser } from '../redux/user.reducer'
+import { useNavigate } from 'react-router-dom'
 
 function Profile() {
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
     const user = useSelector((appState: AppState) => appState.user.user)
+    useEffect(() => {
+        if (!user) {
+            const token = getCookie("token")
+            if (token) {
+                getMyInfo(token || "").then((res) => {
+                    console.log("my info", res?.data?.data)
+                    if (res) {
+                        if (res.data && res.data.data) dispatch(setCurrentUser(res.data.data))
+                        else navigate("login")
+                    }
+                    else navigate("login")
+                })
+            } else navigate("login")
+        }
+    }, [])
 
+    console.log("user", user?.active)
     return (
         <div className="bg-white rounded-md p-8 pt-4 w-[100%] h-max flex flex-col items-center">
             <div className="w-full p-6 pt-4 flex items-center gap-2 md: min-w-[500px]">
@@ -22,7 +44,7 @@ function Profile() {
             <div className="w-full px-6 py-4">
                 <div className="flex gap-8">
                     <TextField
-                        id="filled-read-only-input"
+                        id="name"
                         label="Họ và tên"
                         defaultValue={user?.name}
                         InputProps={{
@@ -33,7 +55,7 @@ function Profile() {
 
                     />
                     <TextField
-                        id="filled-read-only-input"
+                        id="code"
                         label="Mã số sinh viên"
                         defaultValue={user?.codeNumber}
                         InputProps={{
@@ -47,7 +69,7 @@ function Profile() {
             <div className="w-full px-6 py-4">
                 <div className="flex gap-8">
                     <TextField
-                        id="filled-read-only-input"
+                        id="dob"
                         label="Ngày Tháng Năm Sinh"
                         defaultValue={user?.DOB?.toLocaleString('en-US', { day: "2-digit", month: "2-digit", year: "numeric" })}
                         InputProps={{
@@ -58,7 +80,7 @@ function Profile() {
 
                     />
                     <TextField
-                        id="filled-read-only-input"
+                        id="phone"
                         label="Số điện thoại"
                         defaultValue={user?.phone}
                         // InputProps={{
@@ -73,7 +95,7 @@ function Profile() {
             <div className="w-full px-6 py-4">
                 <div className="flex gap-8">
                     <TextField
-                        id="filled-read-only-input"
+                        id="email"
                         label="Email"
                         defaultValue={user?.email}
                         InputProps={{
@@ -84,9 +106,9 @@ function Profile() {
 
                     />
                     <TextField
-                        id="filled-read-only-input"
+                        id="status"
                         label="Tình trạng"
-                        defaultValue={user?.active? "Học": "Thôi Học"}
+                        defaultValue={user?.active ? "Học" : "Thôi Học"}
                         InputProps={{
                             readOnly: true,
                         }}
@@ -98,7 +120,7 @@ function Profile() {
             <div className="w-full px-6 py-4">
                 <div className="flex gap-8">
                     <TextField
-                        id="filled-read-only-input"
+                        id="major"
                         label="Chuyên ngành"
                         defaultValue={user?.major}
                         InputProps={{
@@ -106,10 +128,9 @@ function Profile() {
                         }}
                         style={{ width: "100%" }}
                         variant="outlined"
-
                     />
                     <TextField
-                        id="filled-read-only-input"
+                        id="faculty"
                         label="Khoa/Viện"
                         defaultValue={user?.faculty}
                         InputProps={{

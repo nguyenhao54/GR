@@ -23,7 +23,7 @@ function LessonDetail() {
   const token = getCookie('token')
   const [loading, setLoading] = useState<boolean>(true)
   const [lesson, setLesson] = useState<any>()
-  const [showList, setShowList] = useState<boolean>(false);
+  const [showList, setShowList] = useState<boolean>(true);
   const user = useSelector((appState: AppState) => appState.user.user)
   const [attendance, setAttendance] = useState<IAttendance>()
   const [tab, setTab] = React.useState<LessonDetailTab>(LessonDetailTab.basic);
@@ -52,13 +52,17 @@ function LessonDetail() {
       case LessonDetailTab.basic:
         return <div>
           <div className="class-info">
-            <div className='flex justify-between items-center'>
+            <div className='flex justify-between items-center py-2'>
               <div className='font-semibold'>{lesson?.class.subject.subjectId} - {lesson?.class.subject.title}</div>
-              <div className='bg-neutral-200 px-2 py-1 rounded-md my-2 w-max text-xs font-medium'> {getHourAndMinute(lesson?.startDateTime)} - {getHourAndMinute(lesson?.endDateTime)}</div>
+              {/* <div className='bg-neutral-200 px-2 py-1 rounded-md my-2 w-max text-xs font-medium'> {getHourAndMinute(lesson?.startDateTime)} - {getHourAndMinute(lesson?.endDateTime)}</div> */}
             </div>
             <DetailList list={[
+              { title: "Mã học phần", text: lesson?.class.subject.subjectId},
+              { title: "Tên học phần", text: lesson?.class.subject.title},
               { title: "Mã lớp", text: lesson?.class.classId },
               { title: "GVHD", text: lesson.class.teacher.name },
+              { title: "Thời gian", text: `${getHourAndMinute(lesson?.startDateTime)} - ${getHourAndMinute(lesson?.endDateTime)} `},
+
             ]} ></DetailList>
           </div>
         </div>
@@ -73,19 +77,19 @@ function LessonDetail() {
               list={[
                 { title: "Check in", text: attendance?.checkInTime ? getHourAndMinute(attendance?.checkInTime) : "" },
                 { title: "Check out", text: attendance?.checkOutTime ? getHourAndMinute(attendance?.checkOutTime) : "" },
-                { title: "Trạng thái", text: attendance?.isSuccessful ? "Thành công" : "Thất bại" },
+                { title: "Trạng thái", text: attendance?.isSuccessful ? "Có mặt" : "Vắng mặt" },
               ]}
             ></DetailList>
           </div>
         </div>
       case LessonDetailTab.list: return <div className='student-list overflow-auto max-h-56 w-full'>
-        <div className="flex justify-between items-center">
+        {/* <div className="flex justify-between items-center">
           <div className='font-semibold flex justify-center items-center'> <FaUserGroup size={18} /> <p className='ml-2'>Danh sách lớp</p></div>
-          <div onClick={() => setShowList(!showList)} className="rounded-full hover:bg-neutral-200 hover: cursor-pointer p-1">{showList ? <GoTriangleDown /> : <GoTriangleUp />}</div>
+           <div onClick={() => setShowList(!showList)} className="rounded-full hover:bg-neutral-200 hover: cursor-pointer p-1">{showList ? <GoTriangleDown /> : <GoTriangleUp />}</div> 
 
-        </div>
-        {showList && <ol type="1" className="pl-8 pt-2 list-decimal">
-          {lesson.class.students.map((student: any) => <li>{student.name}</li>)}
+        </div> */}
+        {showList && <ol type="1" className="pl-4 pt-2 list-decimal">
+          {lesson.class.students.map((student: any) => <li className="py-2">{student.name}</li>)}
         </ol>}
       </div>
       default: return <></>
@@ -93,7 +97,7 @@ function LessonDetail() {
     }
   }
   return (
-    <div className="font-montserrat flex flex-col items-center justify-center w-full h-full">
+    <div className="font-montserrat flex flex-col items-center justify-center w-full h-[calc(100vh-120px)]">
       {
         loading ? <DotFlashing></DotFlashing> :
           <div className='w-full h-full'>

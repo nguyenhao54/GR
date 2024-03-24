@@ -36,7 +36,7 @@ function App(props: { cookies: Cookies }) {
 
   useEffect(() => {
     if (cookies.get("token")) {
-      navigate('/dashboard');
+      // navigate('/dashboard');
     }
     else navigate('/login')
   }, [])
