@@ -1,9 +1,15 @@
 import { isActiveStyles, isNotActiveStyles } from "../utils/styles";
 import { NavLink } from "react-router-dom";
 import { MdHomeFilled } from "react-icons/md";
-import { FaCalendarAlt } from "react-icons/fa";
+import { FaCalendarAlt, FaUser } from "react-icons/fa";
+import { FaGear } from "react-icons/fa6";
 
 const listItems = [
+  {
+    title: "Hồ sơ",
+    icon: <FaUser className="text-lg" />,
+    route: "profile",
+  },
   {
     title: "Dashboard",
     icon: <MdHomeFilled className="text-lg scale-125 " />,
@@ -16,7 +22,7 @@ const listItems = [
   },
   {
     title: "Quản lý",
-    icon: <FaCalendarAlt className="text-lg" />,
+    icon: <FaGear className="text-lg" />,
     route: "admin/manage-user",
   }
 ];

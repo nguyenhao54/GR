@@ -51,3 +51,17 @@ export const updateAttendance = async (token: string, attendanceId: string, chec
         console.log(err)
     }
 }
+
+export const getMyAttendanceStats = async (token: string) => {
+    try {
+        const res = await axios.get(
+            `${BASE_URL}/attendances/my-attendance-stats`,
+            { headers: { Authorization: `Bearer ${token}` } }
+        )
+        console.log(res.data)
+        return res.data.data.stats
+    }
+    catch (err) {
+        console.log(err)
+    }
+}

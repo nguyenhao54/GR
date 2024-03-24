@@ -42,7 +42,7 @@ function LessonDetail() {
   useEffect(() => {
     if (user?._id)
       getMyAttendanceForLesson(token, lessonId, user._id).then(
-        (res) => setAttendance(res.data[0])
+        (res) => setAttendance(res?.data[0])
       )
   }, [lessonId, user?._id])
   if (!lesson) return <></>
@@ -64,11 +64,11 @@ function LessonDetail() {
         </div>
       case LessonDetailTab.attendance:
         return <div className='attendance-info'>
-          <div className="font-semibold flex items-center">
+          {/* <div className="font-semibold flex items-center">
             <FaCheckCircle size={18} />
             <p className='ml-2'>Thông tin điểm danh</p>
-          </div>
-          <div className="pt-2 pl-6">
+          </div> */}
+          <div className="pt-2">
             <DetailList
               list={[
                 { title: "Check in", text: attendance?.checkInTime ? getHourAndMinute(attendance?.checkInTime) : "" },

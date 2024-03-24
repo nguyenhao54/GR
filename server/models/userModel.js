@@ -61,6 +61,9 @@ const userSchema = new mongoose.Schema({
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
+  major: {
+    type: String,
+  },
   faculty: {
     type: String,
     // required: [true, 'User must have a faculty'],

@@ -9,9 +9,9 @@ import Attendify from './Attendify';
 import { FaUserCheck } from "react-icons/fa";
 import { getCurrentLesson } from '../../../api/lesson';
 import { DotFlashing } from '../../../common';
+import {ThemePic} from "./../../../assets/img"
 import { getMyAttendanceForLesson } from '../../../api/attendance';
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-
 export interface IAttendance {
     checkInTime?: string;
     checkOutTime?: string;
@@ -100,17 +100,18 @@ function AttendanceCard() {
     }, [JSON.stringify(lesson)])
 
     if (loading) {
-        return <div className="bg-white rounded-md p-8 md:w-[37%] sm:w-[99%] flex lg:flex-col items-center h-stretch justify-center">
+        return <div className="bg-white flex-1 rounded-md p-8 md:w-[37%] sm:w-[99%] flex lg:flex-col items-center h-stretch justify-center">
             <DotFlashing></DotFlashing>
         </div>
     }
 
     if (!lesson) {
-        return <div className="bg-white rounded-md p-8 md:w-[37%]  sm:w-[99%] flex lg:flex-col items-center h-stretch">
+        return <div className="bg-white flex-1 rounded-md p-8 md:w-[37%]  sm:w-[99%] flex lg:flex-col items-center h-stretch">
             <div className="text-neutral-400 flex flex-col justify-center items-center">
-                <IoMdCheckmarkCircleOutline size={60} />
+                <IoMdCheckmarkCircleOutline size={60} color={"#2f9af7"} />
                 <div className="font-semibold text-md py-8 px-4">Bạn không có lớp học nào vào thời điểm này</div>
             </div >
+            <img src={ThemePic} />
         </div>
     }
 
@@ -123,7 +124,7 @@ function AttendanceCard() {
     // }
 
     return (
-        <div className="bg-white rounded-md p-8 md:w-[37%]  sm:w-[99%] flex lg:flex-col items-center h-max">
+        <div className="bg-white rounded-md flex-1 p-8 md:w-[37%]  sm:w-[99%] flex lg:flex-col items-center">
             <><div className="text-base font-semibold mt-2">{clock}</div>
                 <div className="text-xs font-semibold text-neutral-500">
                     {`${getToday()}, Ngày ${new Date().toLocaleString("en-us", { day: '2-digit' })} Tháng ${new Date().toLocaleString("en-us", { month: '2-digit' })}`}

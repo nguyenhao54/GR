@@ -10,6 +10,7 @@ import { Cookies, withCookies } from 'react-cookie';
 import { setCurrentUser } from './redux/user.reducer';
 import LessonDetail from './pages/components/calendar/LessonDetail';
 import { ToastCalendar } from './pages/components';
+import Profile from './pages/Profile';
 
 function App(props: { cookies: Cookies }) {
 
@@ -25,10 +26,8 @@ function App(props: { cookies: Cookies }) {
           else navigate("login")
         }
         else navigate("login")
-
       })
     } else navigate("login")
-
   }, [])
 
   const setCookie = (name: string, value: any) => {
@@ -46,6 +45,7 @@ function App(props: { cookies: Cookies }) {
     <Routes>
       <Route path="/login" element={<SignIn setCookie={setCookie}></SignIn>}></Route>
       <Route path="/" element={<Layout />}>
+      <Route path="/profile" element={<Profile />}></Route>
         <Route path="/dashboard" element={<Dashboard />}></Route>
         <Route path="/calendar" element={<Calendar />}>
           <Route path="" element={

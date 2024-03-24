@@ -40,9 +40,11 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     'email',
     'DOB',
     'phone',
-    "photo"
-    //update fields here
-    // 'codeNumber',
+    "photo",
+    // add can  update fields here
+    'codeNumber',
+    'faculty',
+    "major"
   );
   const updatedUser = await User.findByIdAndUpdate(req.user._id, filteredObj, {
     new: true,
