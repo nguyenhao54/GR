@@ -43,14 +43,12 @@ export default function ToastCalendar() {
     const [events, setEvents] = useState<CalendarEvent[]>();
     const token = getCookie("token")
 
-    const [event, setEvent]= useState<CalendarEvent>();
+    const [event, setEvent] = useState<CalendarEvent>();
 
     const dispatch = useDispatch()
 
     useEffect(() => {
         getMyLessons(token).then((data: any) => {
-            console.log("lesson", data)
-
             setEvents(data?.lessons.map((item: any) => {
                 const random = randomIntFromInterval(0, 4)
                 return ({
@@ -143,7 +141,7 @@ export default function ToastCalendar() {
         });
     };
 
-    const handleClickEvent = (eventObj: any)=>{
+    const handleClickEvent = (eventObj: any) => {
         navigate(`${eventObj.event.id}`)
         // setEvent(eventObj)
         // dispatch(setDialog({
@@ -158,7 +156,7 @@ export default function ToastCalendar() {
 
 
     return (
-        <div className='w-full h-full pb-8'>
+        <div className='w-full h-full'>
             <nav className="navbar -mt-4 flex flex-row items-center justify-between">
                 <div className="">
                     <button
@@ -174,7 +172,7 @@ export default function ToastCalendar() {
                         className="cursor-pointer"
                         onClick={handleClickPrevButton}
                     >
-                      <GoTriangleLeft />
+                        <GoTriangleLeft />
                     </div>
                     <div className="uppercase text-sm font-semibold text-gray-600 ">
                         {startDate} - {endDate}
@@ -183,7 +181,7 @@ export default function ToastCalendar() {
                         className="cursor-pointer"
                         onClick={handleClickNextButton}
                     >
-                                        <GoTriangleRight />
+                        <GoTriangleRight />
                     </div>
                 </div>
                 {/* <div className="">
@@ -196,20 +194,19 @@ export default function ToastCalendar() {
             </nav>
             <Calendar
                 ref={calendarRef}
-                onClickEvent={(event) => handleClickEvent( event)}
+                onClickEvent={(event) => handleClickEvent(event)}
                 onAfterRenderEvent={onAfterRenderEvent}
                 usageStatistics={false}
-                height="700px"
+                height="464px"
                 view="week"
                 theme={{
+                    scheduleView: ["time"],
                     common: {
                         gridSelection: {
                             backgroundColor: "rgba(81, 92, 230, 0.01)",
                             border: "4px solid #515ce6",
                         },
                     },
-                    // week: WeekTheme;
-                    // month: MonthTheme;
                 }}
                 week={{
                     startDayOfWeek: 1,
@@ -229,7 +226,7 @@ export default function ToastCalendar() {
                     timezonesCollapsed: false,
                     hourStart: 0,
                     hourEnd: 24,
-                    eventView: true,
+                    eventView: ["time"],
                     taskView: false,
                     collapseDuplicateEvents: false,
                 }}

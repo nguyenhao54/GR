@@ -16,7 +16,6 @@ function Profile() {
             const token = getCookie("token")
             if (token) {
                 getMyInfo(token || "").then((res) => {
-                    console.log("my info", res?.data?.data)
                     if (res) {
                         if (res.data && res.data.data) dispatch(setCurrentUser(res.data.data))
                         else navigate("login")
@@ -27,7 +26,6 @@ function Profile() {
         }
     }, [])
 
-    console.log("user", user?.active)
     return (
         <div className="bg-white rounded-md p-8 pt-4 w-[100%] h-max flex flex-col items-center">
             <div className="w-full p-6 pt-4 flex items-center gap-2 md: min-w-[500px]">
@@ -39,6 +37,7 @@ function Profile() {
 
                 </div>
             </div>
+            <div className='text-xl font-semibold'>{user?.role} </div>
             <div className="h-[1px] w-full mb-6 bg-neutral-200"></div>
 
             <div className="w-full px-6 py-4">
@@ -54,6 +53,7 @@ function Profile() {
                         variant="outlined"
 
                     />
+                    {user?.role==="student"? 
                     <TextField
                         id="code"
                         label="Mã số sinh viên"
@@ -63,7 +63,8 @@ function Profile() {
                         }}
                         style={{ width: "100%" }}
                         variant="outlined"
-                    />
+                    />:
+                    <></>}
                 </div>
             </div>
             <div className="w-full px-6 py-4">
@@ -105,6 +106,7 @@ function Profile() {
                         variant="outlined"
 
                     />
+                    {user?.role==="student"?
                     <TextField
                         id="status"
                         label="Tình trạng"
@@ -114,7 +116,7 @@ function Profile() {
                         }}
                         style={{ width: "100%" }}
                         variant="outlined"
-                    />
+                    />: <></>}
                 </div>
             </div>
             <div className="w-full px-6 py-4">

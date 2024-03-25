@@ -29,8 +29,7 @@ function MyLocationMap() {
             console.log("Geolocation is not available in your browser.");
         }
     }, []);
-
-    console.log(position);
+    // console.log(position);
 
     return (
         <div className="h-full w-full p-4">

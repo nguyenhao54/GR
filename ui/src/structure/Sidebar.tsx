@@ -3,37 +3,53 @@ import { NavLink } from "react-router-dom";
 import { MdHomeFilled } from "react-icons/md";
 import { FaCalendarAlt, FaUser } from "react-icons/fa";
 import { FaGear } from "react-icons/fa6";
+import { useSelector } from "react-redux";
+import { AppState } from "../redux/store";
+import { FaPaperPlane } from "react-icons/fa";
 
-const listItems = [
-  {
+const getListItems = (role?: string) => {
+
+  let listItems = [];
+  listItems.push({
     title: "Hồ sơ",
     icon: <FaUser className="text-lg" />,
     route: "profile",
-  },
-  {
-    title: "Dashboard",
-    icon: <MdHomeFilled className="text-lg scale-125 " />,
-    route: "dashboard",
-  },
-  {
-    title: "Lịch học",
+  });
+  if (role === "student") {
+    listItems.push({
+      title: "Dashboard",
+      icon: <MdHomeFilled className="text-lg scale-125 " />,
+      route: "dashboard",
+    })
+  }
+  listItems.push({
+    title: role === "student" ? "Lịch học" : "Lịch dạy",
     icon: <FaCalendarAlt className="text-lg" />,
     route: "calendar",
-  },
-  {
-    title: "Quản lý",
-    icon: <FaGear className="text-lg" />,
-    route: "admin/manage-user",
+  })
+
+  listItems.push({
+    title: role === "student" ? "Yêu cầu" : "Phê duyệt",
+    icon: <FaPaperPlane className="text-lg" />,
+    route: "calendar",
+  })
+  if (role === "admin") {
+    listItems.push({
+      title: "Quản lý",
+      icon: <FaGear className="text-lg" />,
+      route: "admin/manage-user",
+    })
   }
-];
+  return listItems;
+}
 
 function Sidebar() {
-//   const [{ user, playlists }, dispatch] = useStateValue();
+  const user = useSelector((appState: AppState) => appState.user.user)
 
   return (
     <div className="font-bold text-xs w-58 fixed top-14 left-2 h-full">
       <div className="bg-white rounded-md w-72 mt-2 py-2 mr-2">
-        {listItems.map((item, index) => {
+        {getListItems(user?.role).map((item, index) => {
           return (
             <NavLink
               to={item.route || ""}
@@ -52,17 +68,6 @@ function Sidebar() {
           );
         })}
       </div>
-      {/* <hr className="border-t-1 border-neutral-700 mx-7 my-2"></hr>
-      <div className="bg-[#1C1C1C] overflow-auto h-[50%]">
-        <Link
-          to="/download"
-          className="text-textColor hover:text-white flex items-center gap-2
-              duration-100 transition-all ease-in-out p-2 mx-5"
-        >
-          <BsArrowDownCircle className="text-xl" />
-          <p>Install App</p>
-        </Link>
-      </div> */}
     </div>
   );
 }

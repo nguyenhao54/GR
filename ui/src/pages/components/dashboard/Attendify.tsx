@@ -18,7 +18,6 @@ function minutesDiff(dateTimeValue2: any, dateTimeValue1: any) {
 
 function Attendify({ attendance, setAttendance, lesson }: any) {
   const user = useSelector((appState: AppState) => appState.user.user)
-  console.log(user)
   const [modelsLoaded, setModelsLoaded] = React.useState<boolean>(false);
   // const [verified, setVerified] = React.useState<boolean>(false);
   const dispatch = useDispatch();
