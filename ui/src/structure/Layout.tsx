@@ -4,14 +4,20 @@ import { useEffect } from "react";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import { Dialog } from "../common";
+import { AppState } from "../redux/store";
+import { useSelector } from "react-redux";
 
 const Layout = () => {
   const navigate = useNavigate();
   const url = useLocation();
+  const user = useSelector((appState: AppState) => appState.user.user)
 
   useEffect(() => {
-    if (url.pathname === "/") navigate("/dashboard");
-  }, [navigate, url.pathname]);
+    if (url.pathname === "/") {
+      if (user?.role === "student") navigate("/dashboard");
+      else navigate("/calendar")
+    }
+  }, [navigate, url.pathname, user?.role]);
 
   return (
     <div className="h-full font-montserrat text-xs">

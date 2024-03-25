@@ -4,33 +4,25 @@ import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../api/login';
 import { useDispatch } from 'react-redux';
 import { setCurrentUser } from '../redux/user.reducer';
-import { useCookies } from 'react-cookie';
 
-function LoginByField({ setCookie }: {setCookie: (name : string, value: any)=>void}) {
+function LoginByField({ setCookie }: { setCookie: (name: string, value: any) => void }) {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-
-
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
 
     const handleLogin = async () => {
-        console.log("login")
         const data = (await login({ email, password }))
-        console.log(data)
         if (data?.data.user) {
-            console.log(data.data.user)
             dispatch(setCurrentUser(data.data.user))
-            console.log(data.token)
             setCookie("token", data.token)
-            // window.localStorage.setItem("auth", "true");
             navigate('/dashboard')
         }
     }
 
     return (
         <div>
-            <form className=" mt-4 mb-2 font-montserrat">
+            <form className="mt-4 mb-2 font-montserrat">
                 <div className="my-4">
                     <TextField sx={{ fontWeight: 600 }} onChange={(e) => setEmail(e.target.value)} fullWidth required id="email" label="Email" variant="standard" />
                 </div>

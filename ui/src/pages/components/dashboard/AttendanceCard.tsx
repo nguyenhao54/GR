@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 import { LiaHandPointer } from "react-icons/lia";
 import { MdLocationPin } from "react-icons/md";
-import MyLocation from './MyLocationMap';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppState } from '../../../redux/store';
-import { setDialog } from '../../../redux/dialog.reducer';
-import Attendify from './Attendify';
-import { FaUserCheck } from "react-icons/fa";
-import { getCurrentLesson } from '../../../api/lesson';
-import { DotFlashing } from '../../../common';
-import {ThemePic} from "./../../../assets/img"
-import { getMyAttendanceForLesson } from '../../../api/attendance';
+import MyLocation from "./MyLocationMap";
+import { useDispatch, useSelector } from "react-redux";
+import { AppState } from "../../../redux/store";
+import { setDialog } from "../../../redux/dialog.reducer";
+import Attendify from "./Attendify";
+import { getCurrentLesson } from "../../../api/lesson";
+import { DotFlashing } from "../../../common";
+import { ThemePic } from "./../../../assets/img";
+import { getMyAttendanceForLesson } from "../../../api/attendance";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 export interface IAttendance {
     checkInTime?: string;
@@ -36,18 +35,18 @@ export const getToday = () => {
         case 6:
             return "Thứ bảy";
     }
-}
+};
 
 export function getCookie(cname: string) {
     let name = cname + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(';');
+    let ca = decodedCookie.split(";");
     for (let i = 0; i < ca.length; i++) {
         let c = ca[i];
-        while (c.charAt(0) == ' ') {
+        while (c.charAt(0) === " ") {
             c = c.substring(1);
         }
-        if (c.indexOf(name) == 0) {
+        if (c.indexOf(name) === 0) {
             return c.substring(name.length, c.length);
         }
     }
@@ -55,68 +54,85 @@ export function getCookie(cname: string) {
 }
 
 function getClock() {
-    return new Date().toLocaleString("en-us", { hour: '2-digit', minute: '2-digit' })
+    return new Date().toLocaleString("en-us", {
+        hour: "2-digit",
+        minute: "2-digit",
+    });
 }
 
 function AttendanceCard() {
-
-    const user = useSelector((appState: AppState) => appState.user.user)
+    const user = useSelector((appState: AppState) => appState.user.user);
     const [attendance, setAttendance] = useState<IAttendance>();
-    const [lesson, setLesson] = useState<any>()
-    const [loading, setLoading] = useState<boolean>(true)
+    const [lesson, setLesson] = useState<any>();
+    const [loading, setLoading] = useState<boolean>(true);
     const dispatch = useDispatch();
-    const [clock, setClock] = useState<string>(getClock())
-    const [position, setPosition] = useState<any>({ latitude: null, longitude: null });
+    const [clock, setClock] = useState<string>(getClock());
+    const [position, setPosition] = useState<any>({
+        latitude: null,
+        longitude: null,
+    });
 
     useEffect(() => {
         if ("geolocation" in navigator) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                setPosition({
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                });
-            }, null, { enableHighAccuracy: true });
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    setPosition({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                    });
+                },
+                null,
+                { enableHighAccuracy: true }
+            );
         } else {
             console.log("Geolocation is not available in your browser.");
         }
     }, []);
 
     useEffect(() => {
-        setLoading(true)
-        const token = getCookie("token")
+        setLoading(true);
+        const token = getCookie("token");
         setInterval(() => setClock(getClock()), 60 * 1000);
-        getCurrentLesson(token).then((res: any) => {
-            setLesson(res?.lessons[0]);
-        }).finally(() => setLoading(false))
-    }, [])
+        getCurrentLesson(token)
+            .then((res: any) => {
+                setLesson(res?.lessons[0]);
+            })
+            .finally(() => setLoading(false));
+    }, []);
 
     useEffect(() => {
-        const token = getCookie("token")
+        const token = getCookie("token");
         if (lesson && user) {
-            getMyAttendanceForLesson(token, lesson?._id, user._id).then(res => {
-                setAttendance(res?.data[0])
-            })
+            getMyAttendanceForLesson(token, lesson?._id, user._id).then((res) => {
+                setAttendance(res?.data[0]);
+            });
         }
-    }, [JSON.stringify(lesson)])
+    }, [lesson, user]);
 
     if (loading) {
-        return <div className="bg-white flex-1 rounded-md p-8 md:w-[37%] sm:w-[99%] flex lg:flex-col items-center h-stretch justify-center">
-            <DotFlashing></DotFlashing>
-        </div>
+        return (
+            <div className='bg-white flex-1 rounded-md p-8 md:w-[37%] sm:w-[99%] flex lg:flex-col items-center h-stretch justify-center'>
+                <DotFlashing></DotFlashing>
+            </div>
+        );
     }
 
     if (!lesson) {
-        return <div className="bg-white flex-1 rounded-md p-8 md:w-[37%]  sm:w-[99%] flex lg:flex-col items-center h-stretch">
-            <div className="text-neutral-400 flex flex-col justify-center items-center">
-                <IoMdCheckmarkCircleOutline size={60} color={"#2f9af7"} />
-                <div className="font-semibold text-md py-8 px-4">Bạn không có lớp học nào vào thời điểm này</div>
-            </div >
-            <img src={ThemePic} />
-        </div>
+        return (
+            <div className='bg-white flex-1 rounded-md p-8 md:w-[37%]  sm:w-[99%] flex lg:flex-col items-center h-stretch'>
+                <div className='text-neutral-400 flex flex-col justify-center items-center'>
+                    <IoMdCheckmarkCircleOutline size={60} color={"#2f9af7"} />
+                    <div className='font-semibold text-md py-8 px-4'>
+                        Bạn không có lớp học nào vào thời điểm này
+                    </div>
+                </div>
+                <img src={ThemePic} alt="Theme pic"/>
+            </div>
+        );
     }
 
     const { classId = "", subject = "", location = " " } = lesson?.class;
-    const { endDateTime = " ", startDateTime = "" } = lesson;
+    // const { endDateTime = " ", startDateTime = "" } = lesson;
 
     // if (Math.abs(position.latitude - location.coordinates[0])> 0.001 || Math.abs(position.longitude - location.coordinates[1]) > 0.001) {
     //     console.log(position, location.coordinates )
@@ -124,59 +140,110 @@ function AttendanceCard() {
     // }
 
     return (
-        <div className="bg-white rounded-md flex-1 p-8 md:w-[37%]  sm:w-[99%] flex lg:flex-col items-center">
-            <><div className="text-base font-semibold mt-2">{clock}</div>
-                <div className="text-xs font-semibold text-neutral-500">
-                    {`${getToday()}, Ngày ${new Date().toLocaleString("en-us", { day: '2-digit' })} Tháng ${new Date().toLocaleString("en-us", { month: '2-digit' })}`}
+        <div className='bg-white rounded-md flex-1 p-8 md:w-[37%]  sm:w-[99%] flex lg:flex-col items-center'>
+            <>
+                <div className='text-base font-semibold mt-2'>{clock}</div>
+                <div className='text-xs font-semibold text-neutral-500'>
+                    {`${getToday()}, Ngày ${new Date().toLocaleString("en-us", {
+                        day: "2-digit",
+                    })} Tháng ${new Date().toLocaleString("en-us", {
+                        month: "2-digit",
+                    })}`}
                 </div>
-                {attendance?.checkInTime ? <div className="border-lightRed hover:cursor-pointer border-8 rounded-full w-40 h-40 m-4 gap-2 flex shadow-2xl justify-center flex-col text-neutal-800 items-center"
-                    onClick={() => {
-                        dispatch(setDialog({
-                            customWidth: 400,
-                            customHeight: 180,
-                            title: "Xác nhận Check-out",
-                            open: true,
-                            type: "warning",
-                            onClickOk: () => {
-                                dispatch(setDialog({
+                {attendance?.checkInTime ? (
+                    <div
+                        className='border-lightRed hover:cursor-pointer border-8 rounded-full w-40 h-40 m-4 gap-2 flex shadow-2xl justify-center flex-col text-neutal-800 items-center'
+                        onClick={() => {
+                            dispatch(
+                                setDialog({
+                                    customWidth: 400,
+                                    customHeight: 180,
+                                    title: "Xác nhận Check-out",
+                                    open: true,
+                                    type: "warning",
+                                    onClickOk: () => {
+                                        dispatch(
+                                            setDialog({
+                                                customWidth: 700,
+                                                customHeight: 500,
+                                                title: "Xác nhận điểm danh",
+                                                open: true,
+                                                content: (
+                                                    <>
+                                                        <div className='w-full h-full flex items-end justify-center'>
+                                                            <Attendify
+                                                                attendance={attendance}
+                                                                setAttendance={setAttendance}
+                                                                lesson={lesson}
+                                                            ></Attendify>
+                                                        </div>
+                                                    </>
+                                                ),
+                                            })
+                                        );
+                                    },
+                                    content: (
+                                        <>
+                                            <div className='p-6 font-montserrat font-semibold'>
+                                                Bạn có chắc chắn muốn check-out?
+                                            </div>
+                                        </>
+                                    ),
+                                })
+                            );
+                        }}
+                    >
+                        <LiaHandPointer className='text-6xl text-lightRed -ml-2'></LiaHandPointer>
+                        <div className='text-md font-semibold justify-center text-lightRed flex items-center'>
+                            CHECK-OUT
+                        </div>
+                        <div />
+                    </div>
+                ) : (
+                    <div
+                        className='bg-[#D9D9D9] hover:cursor-pointer rounded-full w-40 h-40 m-4 gap-2 flex shadow-2xl justify-center flex-col text-neutal-800 items-center'
+                        onClick={() => {
+                            dispatch(
+                                setDialog({
                                     customWidth: 700,
                                     customHeight: 500,
                                     title: "Xác nhận điểm danh",
                                     open: true,
-                                    content: <><div className='w-full h-full flex items-end justify-center'><Attendify attendance={attendance} setAttendance={setAttendance} lesson={lesson} ></Attendify></div></>
-                                }))
-                            },
-                            content: <><div className='p-6 font-montserrat font-semibold'>Bạn có chắc chắn muốn check-out?</div></>
-                        }))
-                    }}
-                >
-                    <LiaHandPointer className="text-6xl text-lightRed -ml-2"></LiaHandPointer>
-                    <div className='text-md font-semibold justify-center text-lightRed flex items-center'>CHECK-OUT</div>
-                    <div />
-                </div> :
-                    <div className="bg-[#D9D9D9] hover:cursor-pointer rounded-full w-40 h-40 m-4 gap-2 flex shadow-2xl justify-center flex-col text-neutal-800 items-center"
-                        onClick={() => {
-                            dispatch(setDialog({
-                                customWidth: 700,
-                                customHeight: 500,
-                                title: "Xác nhận điểm danh",
-                                open: true,
-                                content: <><div className='w-full h-full flex items-end justify-center'><Attendify attendance={attendance} setAttendance={setAttendance} lesson={lesson} ></Attendify></div></>
-                            }))
-                        }}>
-                        <LiaHandPointer className="text-6xl text-neutral-800 -ml-2"></LiaHandPointer>
-                        <div className='text-md font-semibold justify-center flex items-center'>CHECK-IN</div>
+                                    content: (
+                                        <>
+                                            <div className='w-full h-full flex items-end justify-center'>
+                                                <Attendify
+                                                    attendance={attendance}
+                                                    setAttendance={setAttendance}
+                                                    lesson={lesson}
+                                                ></Attendify>
+                                            </div>
+                                        </>
+                                    ),
+                                })
+                            );
+                        }}
+                    >
+                        <LiaHandPointer className='text-6xl text-neutral-800 -ml-2'></LiaHandPointer>
+                        <div className='text-md font-semibold justify-center flex items-center'>
+                            CHECK-IN
+                        </div>
                         <div />
-
-                    </div>}
-                <div className="text-lg font-semibold mt-3">{subject.title} {subject.subjectId}</div>
-                <div className="text-xs font-semibold mt-2 text-neutral-500 flex items-center gap-1"><MdLocationPin size={14} />Vị trí: D9-401</div>
-                <div className="w-80 h-72 mt-4">
+                    </div>
+                )}
+                <div className='text-lg font-semibold mt-3'>
+                    {subject.title} {subject.subjectId}
+                </div>
+                <div className='text-xs font-semibold mt-2 text-neutral-500 flex items-center gap-1'>
+                    <MdLocationPin size={14} />
+                    Vị trí: D9-401
+                </div>
+                <div className='w-80 h-72 mt-4'>
                     <MyLocation></MyLocation>
                 </div>
             </>
         </div>
-    )
+    );
 }
 
-export default AttendanceCard
+export default AttendanceCard;

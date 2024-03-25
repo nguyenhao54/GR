@@ -3,7 +3,7 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 import { Layout } from './structure';
 import { Calendar, Dashboard } from './pages';
 import SignIn from './pages/SignIn';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { getMyInfo } from './api/user';
 import { useDispatch } from 'react-redux';
 import { Cookies, withCookies } from 'react-cookie';
@@ -20,7 +20,6 @@ function App(props: { cookies: Cookies }) {
   useEffect(() => {
     if (cookies.get("token")) {
       getMyInfo(cookies.get("token") || "").then((res) => {
-        console.log("my info", res?.data?.data)
         if (res) {
           if (res.data && res.data.data) dispatch(setCurrentUser(res.data.data))
           else navigate("login")
@@ -28,7 +27,7 @@ function App(props: { cookies: Cookies }) {
         else navigate("login")
       })
     } else navigate("login")
-  }, [])
+  }, [cookies, dispatch, navigate])
 
   const setCookie = (name: string, value: any) => {
     cookies.set(name, value, { path: '/', maxAge: 360000 });
@@ -39,7 +38,7 @@ function App(props: { cookies: Cookies }) {
       // navigate('/dashboard');
     }
     else navigate('/login')
-  }, [])
+  }, [cookies, navigate])
 
   return (
     <Routes>

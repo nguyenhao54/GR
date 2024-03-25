@@ -2,12 +2,11 @@ import * as faceapi from "face-api.js";
 import React, { useEffect } from "react";
 import { AppState } from "../../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { FaHeartPulse } from "react-icons/fa6";
 import { setDialog } from "../../../redux/dialog.reducer";
 import { DotFlashing } from "../../../common";
 import { createAttendance, updateAttendance } from "../../../api/attendance";
 import { getCookie } from "./AttendanceCard";
-import { addSevenHours, minusSevenHours } from "../../../utils";
+import { addSevenHours } from "../../../utils";
 
 function minutesDiff(dateTimeValue2: any, dateTimeValue1: any) {
   var differenceValue =
@@ -18,10 +17,9 @@ function minutesDiff(dateTimeValue2: any, dateTimeValue1: any) {
 
 function Attendify({ attendance, setAttendance, lesson }: any) {
   const user = useSelector((appState: AppState) => appState.user.user)
-  const [modelsLoaded, setModelsLoaded] = React.useState<boolean>(false);
-  // const [verified, setVerified] = React.useState<boolean>(false);
   const dispatch = useDispatch();
-
+ 
+  const [modelsLoaded, setModelsLoaded] = React.useState<boolean>(false);
   const [captureVideo, setCaptureVideo] = React.useState<boolean>(true);
 
   const videoRef = React.useRef<any>();
@@ -44,7 +42,6 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
   }, []);
 
   useEffect(() => {
-    // setCaptureVideo(true);
     navigator.mediaDevices
       .getUserMedia({ video: { width: 300 } })
       .then((stream) => {
@@ -90,7 +87,6 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
           faceapi.matchDimensions(canvasRef.current, displaySize);
           if (user?.photo) {
             const refFace = await faceapi.fetchImage(user.photo);
-            // console.log(refFace)
             let refFaceData = await faceapi.detectAllFaces(refFace, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
             try {
 
@@ -101,7 +97,6 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
                 )
                 .withFaceLandmarks()
                 .withFaceDescriptors()
-              // .withFaceExpressions();
 
               if (!detections || !videoRef.current) { return }
               const resizedDetections = faceapi.resizeResults(
@@ -111,10 +106,8 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
 
               let faceMatcher = new faceapi.FaceMatcher(refFaceData)
               resizedDetections.forEach(async face => {
-                // console.log(face)
                 const { detection, descriptor } = face;
                 let label = faceMatcher.findBestMatch(descriptor).toString();
-                console.log(label)
                 if (label.includes("unknown")) {
                   return
                 } else {
@@ -138,65 +131,33 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
                       });
                   }
 
-                  // videoRef.current?.pause();
                   videoRef.current?.srcObject?.getTracks()[0].stop();
                   drawBox.draw(canvasRef.current);
 
-                  // dispatch(setDialog({loading: true}))
                   setTimeout(() => {
                     closeWebcam();
                     dispatch(setDialog({
                       open: false
                     }))
                     const token = getCookie("token")
-                    const dateTimeNow= addSevenHours((new Date()).toISOString())
+                    const dateTimeNow = addSevenHours((new Date()).toISOString())
                     if (!attendance?.checkInTime)
                       createAttendance(token, lesson._id, dateTimeNow, user._id).then(res =>
-                        setAttendance({ checkInTime:  dateTimeNow  })
-                      ).catch(err=> console.log(err))
+                        setAttendance({ checkInTime: dateTimeNow })
+                      ).catch(err => console.log(err))
                     else {
                       const duration = minutesDiff(attendance.checkInTime, dateTimeNow)
-                      updateAttendance(token, attendance._id, dateTimeNow ,  duration>= lesson.duration )
+                      updateAttendance(token, attendance._id, dateTimeNow, duration >= lesson.duration)
                       setAttendance({ ...attendance, checkOutTime: dateTimeNow });
                     }
-                  }, 100)
-
-
-                  // videoRef.current?.srcObject?.getTracks()[0].stop();
-
+                  }, 500)
                   return;
-                  //             setCaptureVideo(false);
-                  //           }, 7000);
                 }
-
-                // alert(label) 
               }
-
               )
-
-              // canvasRef &&
-              //   canvasRef.current &&
-              //   canvasRef.current
-              //     .getContext("2d")
-              //     .clearRect(0, 0, videoWidth, videoHeight);
-              // canvasRef &&
-              //   canvasRef.current &&
-              //   faceapi.draw.drawDetections(canvasRef.current, resizedDetections);
-              // canvasRef &&
-              //   canvasRef.current &&
-              //   faceapi.draw.drawFaceLandmarks(canvasRef.current, resizedDetections);
-              // canvasRef &&
-              //   canvasRef.current &&
-              //   faceapi.draw.drawFaceExpressions(
-              //     canvasRef.current,
-              //     resizedDetections
-              //   );
             }
-
-            // closeWebcam()
             catch (e) {
               console.log(e)
-
             }
           }
 
@@ -228,39 +189,6 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
 
   return (
     <div className="w-[90%] h-[90%] flex items-center justify-center">
-      {/* <div style={{ textAlign: "center", padding: "10px" }}> */}
-      {/* {captureVideo && modelsLoaded ? (
-          <button
-            onClick={closeWebcam}
-            style={{
-              cursor: "pointer",
-              backgroundColor: "green",
-              color: "white",
-              padding: "15px",
-              fontSize: "25px",
-              border: "none",
-              borderRadius: "10px",
-            }}
-          >
-            Close Webcam
-          </button>
-        ) : (
-          <button
-            onClick={startVideo}
-            style={{
-              cursor: "pointer",
-              backgroundColor: "green",
-              color: "white",
-              padding: "15px",
-              fontSize: "25px",
-              border: "none",
-              borderRadius: "10px",
-            }}
-          >
-            Open Webcam
-          </button>
-        )} */}
-      {/* </div> */}
       {captureVideo ? (
         modelsLoaded ? (
           <div className="w-full h-full flex items-center justify-center">

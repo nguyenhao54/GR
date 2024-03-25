@@ -33,6 +33,7 @@ const getListItems = (role?: string) => {
     icon: <FaPaperPlane className="text-lg" />,
     route: "calendar",
   })
+
   if (role === "admin") {
     listItems.push({
       title: "Quản lý",
