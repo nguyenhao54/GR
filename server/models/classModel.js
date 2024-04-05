@@ -28,7 +28,8 @@ const classSchema = new mongoose.Schema(
     duration: {
       type: Number,
     },
-    firstStartTime: { // buổi học đầu 
+    firstStartTime: {
+      // buổi học đầu
       type: Date,
     },
     lastStartTime: {
@@ -52,11 +53,21 @@ const classSchema = new mongoose.Schema(
 );
 
 classSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'subject teacher students',
-    select: 'name subjectId  title codeNumber',
-  }),
-    next();
+  if (this._fields) {
+    if (this._fields.subject) {
+      this.populate({
+        path: 'subject students',
+        select: 'name subjectId  title codeNumber',
+      });
+    }
+    if (this._fields.teacher) {
+      this.populate({
+        path: 'teacher',
+        select: 'name',
+      });
+    }
+  }
+  next();
 });
 
 classSchema.statics.addRelatedLessons = async function (classInfo) {
@@ -79,9 +90,9 @@ classSchema.statics.addRelatedLessons = async function (classInfo) {
   }
 };
 
-classSchema.post('save', function() {
+classSchema.post('save', function () {
   this.constructor.addRelatedLessons(this);
-})
+});
 
 const Class = mongoose.model('Class', classSchema);
 module.exports = Class;

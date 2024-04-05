@@ -16,6 +16,7 @@ const classRouter = require('./route/classRoutes');
 const lessonRouter = require('./route/lessonRoutes');
 const gradeRouter = require('./route/gradeRoutes');
 const attendanceRouter = require('./route/attendanceRoutes');
+const requestRouter = require('./route/requestRoutes');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controller/errorController');
@@ -62,7 +63,7 @@ app.use('/api/v1/classes', classRouter);
 app.use('/api/v1/lessons', lessonRouter);
 app.use('/api/v1/grades', gradeRouter);
 app.use('/api/v1/attendances', attendanceRouter);
-
+app.use('/api/v1/requests', requestRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

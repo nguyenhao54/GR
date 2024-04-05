@@ -1,10 +1,7 @@
-const AppError = require('./../utils/appError');
 const catchAsync = require('./../utils/catchAsync');
 const Lesson = require('../models/lessonModel');
 const Class = require('../models/classModel');
-
 const factory = require('./handlerFactory');
-const authController = require('./authController');
 
 exports.getAllLessons = factory.getAll(Lesson);
 exports.getLesson = factory.getOne(Lesson, { path: 'class' });
@@ -13,6 +10,7 @@ exports.updateLesson = factory.updateOne(Lesson);
 exports.deleteLesson = factory.deleteOne(Lesson);
 
 exports.getMyLessons = catchAsync(async (req, res, next) => {
+  console.log(req.query)
   let classes;
   if (req.user.role === 'student') {
     classes = await Class.aggregate([
@@ -39,6 +37,7 @@ exports.getMyLessons = catchAsync(async (req, res, next) => {
   const ids = classes.map((i) => i._id);
   const lessons = await Lesson.find({
     class: { $in: ids },
+    ...req.query
   }).populate('class', {
     subject: 1,
     teacher: 1,
@@ -57,17 +56,29 @@ exports.getMyLessons = catchAsync(async (req, res, next) => {
 });
 
 exports.getMyCurrentLesson = catchAsync(async (req, res, next) => {
-  const classes = await Class.aggregate([
-    {
-      $unwind: '$students',
-    },
-    {
-      $match: {
-        students: req.user._id,
+  let classes;
+  if (req.user.role === 'student') {
+    classes = await Class.aggregate([
+      {
+        $unwind: '$students',
       },
-    },
-    { $unset: 'students' },
-  ]);
+      {
+        $match: {
+          students: req.user._id,
+        },
+      },
+      { $unset: 'students' },
+    ]);
+  } else if (req.user.role === 'teacher') {
+    classes = await Class.aggregate([
+      {
+        $match: {
+          teacher: req.user._id,
+        },
+      },
+      { $unset: 'students' },
+    ]);
+  }
   const ids = classes.map((i) => i._id);
   const currentDateTime = new Date(new Date().getTime() + 7 * 60 * 60 * 1000);
   const lessons = await Lesson.find({

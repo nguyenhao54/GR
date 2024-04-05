@@ -31,8 +31,16 @@ const attendanceSchema = new mongoose.Schema(
   },
 );
 
+attendanceSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'student',
+    select: 'name codeNumber',
+  }),
+    next();
+});
+
+
 attendanceSchema.statics.calStatus = async function (attendance) {
-  console.log('cjakdjk CALSTATUS');
   const lesson = await Lesson.findById(attendance.lesson);
   if (
     attendance.checkInTime &&
@@ -47,30 +55,6 @@ attendanceSchema.statics.calStatus = async function (attendance) {
 };
 
 attendanceSchema.index({ lesson: 1, student: 1 }, { unique: true });
-
-// attendanceSchema.post('save', function(){
-//   this.constructor.calStatus(this.attendance);
-// })
-
-// attendanceSchema.pre(/^findOneAnd/, async function (next) {
-//   // console.log("pre findOneAnd", this)
-//   const queryCriteria = this.getQuery();
-//   this.attendance = await this.model.find(queryCriteria);
-//   console.log("pre findOneAnd",this.attendance)
-//   // const filter = this.getFilter(); // Accessing the filter/query object
-//   // console.log("Filter object:", filter);
-//   next();
-// });
-
-// attendanceSchema.post(/^findOneAnd/, async function () {
-//   console.log("post", this)
-//   const Animal = mongoose.model('Animal', animalSchema);
-//   await this.constructor.calStatus(this.attendance);
-// });
-
-// attendanceSchema.pre(/^find/, function (next) {
-//   this.populate('lesson', { duration: 1 }), next();
-// });
 
 const Attendance = mongoose.model('Attendance', attendanceSchema);
 module.exports = Attendance;
