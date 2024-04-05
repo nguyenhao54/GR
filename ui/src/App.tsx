@@ -1,7 +1,7 @@
 import './App.css';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { Layout } from './structure';
-import { Calendar, Dashboard } from './pages';
+import { Calendar, Dashboard, Profile, Request } from './pages';
 import SignIn from './pages/SignIn';
 import { useEffect } from 'react';
 import { getMyInfo } from './api/user';
@@ -10,7 +10,6 @@ import { Cookies, withCookies } from 'react-cookie';
 import { setCurrentUser } from './redux/user.reducer';
 import LessonDetail from './pages/components/calendar/LessonDetail';
 import { ToastCalendar } from './pages/components';
-import Profile from './pages/Profile';
 
 function App(props: { cookies: Cookies }) {
 
@@ -44,8 +43,9 @@ function App(props: { cookies: Cookies }) {
     <Routes>
       <Route path="/login" element={<SignIn setCookie={setCookie}></SignIn>}></Route>
       <Route path="/" element={<Layout />}>
-      <Route path="/profile" element={<Profile />}></Route>
+        <Route path="/profile" element={<Profile />}></Route>
         <Route path="/dashboard" element={<Dashboard />}></Route>
+        <Route path="/requests" element={<Request />}></Route>
         <Route path="/calendar" element={<Calendar />}>
           <Route path="" element={
             <ToastCalendar></ToastCalendar>

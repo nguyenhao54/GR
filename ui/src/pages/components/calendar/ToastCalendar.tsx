@@ -4,13 +4,11 @@ import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { getCookie } from '../dashboard/AttendanceCard';
 import { getMyLessons } from '../../../api/lesson';
-import { minusSevenHours, randomIntFromInterval } from '../../../utils';
+import { minusSevenHours } from '../../../utils';
 import { BACKGROUND_COLOR, BORDER_COLOR } from '../../../utils/styles';
-import { setDialog } from '../../../redux/dialog.reducer';
-import { useDispatch } from 'react-redux';
-import LessonDetail from './LessonDetail';
 import { useNavigate } from 'react-router-dom';
 import { GoTriangleLeft, GoTriangleRight } from "react-icons/go";
+import { Lesson } from '../../../models';
 
 export interface CalendarEvent {
     id: string;
@@ -43,24 +41,20 @@ export default function ToastCalendar() {
     const [events, setEvents] = useState<CalendarEvent[]>();
     const token = getCookie("token")
 
-    const [event, setEvent] = useState<CalendarEvent>();
-
-    const dispatch = useDispatch()
-
     useEffect(() => {
         getMyLessons(token).then((data: any) => {
-            setEvents(data?.lessons.map((item: any) => {
-                const random = randomIntFromInterval(0, 4)
+            setEvents(data?.lessons.map((item: Lesson) => {
+                const random = Number(item.class?.subject?.subjectId?.[3]);
                 return ({
-                    ...item, start: minusSevenHours(item.startDateTime),
-                    end: minusSevenHours(item.endDateTime),
+                    ...item, start: minusSevenHours(item.startDateTime?.toString()|| ""),
+                    end: minusSevenHours(item.endDateTime?.toString()|| ""),
                     backgroundColor: BACKGROUND_COLOR[random],
                     borderColor: BORDER_COLOR[random],
-                    title: item.class.subject.title
+                    title: item.class?.subject?.title
                 })
             }) || [])
         })
-    }, [])
+    }, [token])
 
     const handleClickNextButton = () => {
         const calendarInstance = calendarRef.current?.getInstance();
@@ -153,7 +147,6 @@ export default function ToastCalendar() {
         // }))
 
     }
-
 
     return (
         <div className='w-full h-full'>

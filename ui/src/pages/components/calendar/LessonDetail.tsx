@@ -11,6 +11,7 @@ import { useParams } from 'react-router-dom'
 import { getMyAttendanceForLesson } from '../../../api/attendance'
 import { useSelector } from 'react-redux'
 import { AppState } from '../../../redux/store'
+import StudentsAttendanceTable from './StudentsAttendanceTable'
 
 export enum LessonDetailTab {
   basic = 1,
@@ -26,6 +27,8 @@ function LessonDetail() {
   const [showList, setShowList] = useState<boolean>(true);
   const user = useSelector((appState: AppState) => appState.user.user)
   const [attendance, setAttendance] = useState<IAttendance>()
+  const [attendanceList, setAttendanceList] = useState<IAttendance[]>([])
+
   const [tab, setTab] = React.useState<LessonDetailTab>(LessonDetailTab.basic);
 
   const handleChange = (event: React.SyntheticEvent, newValue: LessonDetailTab) => {
@@ -40,7 +43,7 @@ function LessonDetail() {
   }, [lessonId])
 
   useEffect(() => {
-    if (user?._id)
+    if (user?._id && user?.role === "student")
       getMyAttendanceForLesson(token, lessonId, user._id).then(
         (res) => setAttendance(res?.data[0])
       )
@@ -57,11 +60,11 @@ function LessonDetail() {
               {/* <div className='bg-neutral-200 px-2 py-1 rounded-md my-2 w-max text-xs font-medium'> {getHourAndMinute(lesson?.startDateTime)} - {getHourAndMinute(lesson?.endDateTime)}</div> */}
             </div>
             <DetailList list={[
-              { title: "Mã học phần", text: lesson?.class.subject.subjectId},
-              { title: "Tên học phần", text: lesson?.class.subject.title},
+              { title: "Mã học phần", text: lesson?.class.subject.subjectId },
+              { title: "Tên học phần", text: lesson?.class.subject.title },
               { title: "Mã lớp", text: lesson?.class.classId },
               { title: "GVHD", text: lesson.class.teacher.name },
-              { title: "Thời gian", text: `${getHourAndMinute(lesson?.startDateTime)} - ${getHourAndMinute(lesson?.endDateTime)} `},
+              { title: "Thời gian", text: `${getHourAndMinute(lesson?.startDateTime)} - ${getHourAndMinute(lesson?.endDateTime)} ` },
 
             ]} ></DetailList>
           </div>
@@ -72,15 +75,19 @@ function LessonDetail() {
             <FaCheckCircle size={18} />
             <p className='ml-2'>Thông tin điểm danh</p>
           </div> */}
-          <div className="pt-2">
-            <DetailList
-              list={[
-                { title: "Check in", text: attendance?.checkInTime ? getHourAndMinute(attendance?.checkInTime) : "" },
-                { title: "Check out", text: attendance?.checkOutTime ? getHourAndMinute(attendance?.checkOutTime) : "" },
-                { title: "Trạng thái", text: attendance?.isSuccessful ? "Có mặt" : "Vắng mặt" },
-              ]}
-            ></DetailList>
-          </div>
+          {user?.role === "student"
+            ? <div className="pt-2">
+              <DetailList
+                list={[
+                  { title: "Check in", text: attendance?.checkInTime ? getHourAndMinute(attendance?.checkInTime) : "" },
+                  { title: "Check out", text: attendance?.checkOutTime ? getHourAndMinute(attendance?.checkOutTime) : "" },
+                  { title: "Trạng thái", text: attendance?.isSuccessful ? "Có mặt" : "Vắng mặt" },
+                ]}
+              ></DetailList>
+            </div>
+            : <div className="pt-2">
+               <StudentsAttendanceTable lessonId={lessonId}></StudentsAttendanceTable>
+            </div>}
         </div>
       case LessonDetailTab.list: return <div className='student-list overflow-auto max-h-56 w-full'>
         {/* <div className="flex justify-between items-center">
@@ -110,7 +117,7 @@ function LessonDetail() {
             >
               <Tab value={LessonDetailTab.basic} label="Thông tin" />
               <Tab value={LessonDetailTab.attendance} label="Điểm danh" />
-              <Tab value={LessonDetailTab.list} label="Danh sách lớp" />
+              {user?.role === "student" && <Tab value={LessonDetailTab.list} label="Danh sách lớp" />}
             </Tabs>
             <div className='pt-2'>
               {renderTabContent(tab)}

@@ -16,7 +16,7 @@ function LoginByField({ setCookie }: { setCookie: (name: string, value: any) => 
         if (data?.data.user) {
             dispatch(setCurrentUser(data.data.user))
             setCookie("token", data.token)
-            navigate('/dashboard')
+            data.data.user.role==="student" ?navigate('/dashboard') : navigate("/calendar")
         }
     }
 
@@ -36,11 +36,6 @@ function LoginByField({ setCookie }: { setCookie: (name: string, value: any) => 
                     Quên mật khẩu?
                 </Link>
                 <div className="flex items-center justify-center">
-                    {/* <div className="flex">
-              <input type="checkbox"></input>
-              <p className="text-neutral-800 text-xs font-semibold ml-2">Remember me</p>
-            </div> */}
-
                     <button
                         className="bg-venetianRed hover:bg-barnRed text-white font-semibold py-3 px-8 rounded-full focus:outline-none focus:shadow-outline"
                         type="button"

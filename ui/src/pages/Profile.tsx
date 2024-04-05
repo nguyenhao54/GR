@@ -17,7 +17,7 @@ function Profile() {
             if (token) {
                 getMyInfo(token || "").then((res) => {
                     if (res) {
-                        if (res.data && res.data.data) dispatch(setCurrentUser(res.data.data))
+                        if ( res.os.data) dispatch(setCurrentUser(res.data.data))
                         else navigate("login")
                     }
                     else navigate("login")
@@ -28,16 +28,21 @@ function Profile() {
 
     return (
         <div className="bg-white rounded-md p-8 pt-4 w-[100%] h-max flex flex-col items-center">
-            <div className="w-full p-6 pt-4 flex items-center gap-2 md: min-w-[500px]">
-                <img src={user?.photo} className="w-36 border-8 shadow-md border-neutral-200 h-36 rounded-full"></img>
-                <div className="pl-2 flex gap-2 flex-col">
-                    <div className="font-bold text-lg text-neutral-800">{user?.name}</div>
-                    <div className="font-semibold text-[14px] text-neutral-600"> {user?.codeNumber || ""}</div>
-                    <div className='font-semibold text-neutral-400'>{user?.faculty}</div>
+            <div className="flex flex-row justify-between items-center w-full">
+                <div className="w-full p-6 pt-4 flex items-center gap-2 md: min-w-[500px]">
+                    <img src={user?.photo} className="w-36 border-8 shadow-md border-neutral-200 h-36 rounded-full"></img>
+                    <div className="pl-2 flex gap-2 flex-col">
+                        <div className='text-md text-neutral-400 rounded-md font-semibold'>{user?.role === "teacher" ? "Giáo viên" : "Sinh viên"}</div>
 
+                        <div className="font-bold text-lg text-neutral-800">{user?.name}</div>
+                        <div className="font-semibold text-[14px] text-neutral-600"> {user?.codeNumber || ""}</div>
+                        <div className='font-semibold text-neutral-400'>{user?.faculty}</div>
+
+                    </div>
                 </div>
+                {/* <div className='text-md p-2 text-lightRed rounded-md text-center justify-center font-semibold w-24'>{user?.role === "teacher" ? "Giáo viên" : "Sinh viên"}</div> */}
             </div>
-            <div className='text-xl font-semibold'>{user?.role} </div>
+
             <div className="h-[1px] w-full mb-6 bg-neutral-200"></div>
 
             <div className="w-full px-6 py-4">
@@ -53,18 +58,18 @@ function Profile() {
                         variant="outlined"
 
                     />
-                    {user?.role==="student"? 
-                    <TextField
-                        id="code"
-                        label="Mã số sinh viên"
-                        defaultValue={user?.codeNumber}
-                        InputProps={{
-                            readOnly: true,
-                        }}
-                        style={{ width: "100%" }}
-                        variant="outlined"
-                    />:
-                    <></>}
+                    {user?.role === "student" ?
+                        <TextField
+                            id="code"
+                            label="Mã số sinh viên"
+                            defaultValue={user?.codeNumber}
+                            InputProps={{
+                                readOnly: true,
+                            }}
+                            style={{ width: "100%" }}
+                            variant="outlined"
+                        /> :
+                        <></>}
                 </div>
             </div>
             <div className="w-full px-6 py-4">
@@ -106,17 +111,17 @@ function Profile() {
                         variant="outlined"
 
                     />
-                    {user?.role==="student"?
-                    <TextField
-                        id="status"
-                        label="Tình trạng"
-                        defaultValue={user?.active ? "Học" : "Thôi Học"}
-                        InputProps={{
-                            readOnly: true,
-                        }}
-                        style={{ width: "100%" }}
-                        variant="outlined"
-                    />: <></>}
+                    {user?.role === "student" ?
+                        <TextField
+                            id="status"
+                            label="Tình trạng"
+                            defaultValue={user?.active ? "Học" : "Thôi Học"}
+                            InputProps={{
+                                readOnly: true,
+                            }}
+                            style={{ width: "100%" }}
+                            variant="outlined"
+                        /> : <></>}
                 </div>
             </div>
             <div className="w-full px-6 py-4">

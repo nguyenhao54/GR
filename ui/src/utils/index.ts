@@ -1,9 +1,7 @@
-import { getCookie } from "../pages/components/dashboard/AttendanceCard"
-
 export {}
 
 export const minusSevenHours = (dateTime: string)=>{
-    return new Date(new Date(dateTime).getTime()- 7*60*60*1000).toISOString()
+    return new Date(new Date(dateTime).getTime()- 7*60*60*1000).toString()
 }
 
 export const addSevenHours = (dateTime: string)=>{

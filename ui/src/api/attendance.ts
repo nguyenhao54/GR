@@ -15,6 +15,32 @@ export const getMyAttendanceForLesson = async (token: string, lessonId: string, 
     }
 }
 
+export const getAllSuccessfulAttendancesForLesson = async (token: string, lessonId: string) => {
+    try {
+        const res = await axios.get(
+            `${BASE_URL}/attendances?lesson=${lessonId}&isSuccessful=true`,
+            { headers: { Authorization: `Bearer ${token}` } }
+        )
+        return res.data.data
+    }
+    catch (err) {
+        console.log(err)
+    }
+}
+
+export const getAllAttendancesForLesson = async (token: string, lessonId: string) => {
+    try {
+        const res = await axios.get(
+            `${BASE_URL}/attendances?lesson=${lessonId}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+        )
+        return res.data.data
+    }
+    catch (err) {
+        console.log(err)
+    }
+}
+
 export const createAttendance = async (token: string, lessonId: string, checkInTime: string, student: string) => {
     try {
         const res = await axios.post(

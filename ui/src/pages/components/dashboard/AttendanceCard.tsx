@@ -11,10 +11,15 @@ import { DotFlashing } from "../../../common";
 import { ThemePic } from "./../../../assets/img";
 import { getMyAttendanceForLesson } from "../../../api/attendance";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { Lesson, User } from '../../../models';
 export interface IAttendance {
+    id?: string;
+    _id?: string;
     checkInTime?: string;
     checkOutTime?: string;
     isSuccessful?: boolean;
+    lesson?: Lesson;
+    student?: User;
 }
 
 export const getToday = () => {

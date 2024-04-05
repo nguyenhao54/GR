@@ -31,7 +31,7 @@ const getListItems = (role?: string) => {
   listItems.push({
     title: role === "student" ? "Yêu cầu" : "Phê duyệt",
     icon: <FaPaperPlane className="text-lg" />,
-    route: "calendar",
+    route: "requests",
   })
 
   if (role === "admin") {

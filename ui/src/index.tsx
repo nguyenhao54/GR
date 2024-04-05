@@ -9,6 +9,8 @@ import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 import { store } from './redux/store';
 import firebase from 'firebase/compat/app'
 import { CookiesProvider } from 'react-cookie';
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorPage from './pages/ErrorPage';
 
 
 const firebaseConfig = {
@@ -40,9 +42,10 @@ root.render(
     <ThemeProvider theme={THEME}>
       <React.StrictMode>
         <Provider store={store}>
-        <CookiesProvider>
-
-          <App />
+          <CookiesProvider>
+            <ErrorBoundary fallback={<ErrorPage></ErrorPage>}>
+              <App />
+            </ErrorBoundary>
           </CookiesProvider>
         </Provider>
       </React.StrictMode>
