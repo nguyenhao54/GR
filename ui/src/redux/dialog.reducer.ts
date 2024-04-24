@@ -8,7 +8,8 @@ export interface Dialog {
   customWidth?: number;
   customHeight?: number;
   loading?: boolean;
-  type?: "warning" | "info"
+  type?: "warning" | "info";
+  isMessagebar?: boolean;
 }
 
 export interface DialogState {
@@ -18,10 +19,9 @@ export interface DialogState {
 
 const initialState: DialogState = {
   dialog: undefined
-
 };
 
-export const setDialog = createAction<any | null>("setDialog");
+export const setDialog = createAction<Dialog | undefined>("setDialog");
 
 const dialogReducer = createReducer(initialState, (builder) =>
   builder.addCase(setDialog, (state, action) => {

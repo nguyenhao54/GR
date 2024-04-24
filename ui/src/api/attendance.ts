@@ -41,7 +41,7 @@ export const getAllAttendancesForLesson = async (token: string, lessonId: string
     }
 }
 
-export const createAttendance = async (token: string, lessonId: string, checkInTime: string, student: string) => {
+export const createAttendance = async (token: string, lessonId: string, checkInTime: string, student: string, isSuccessful?: boolean, checkOutTime?: string, ) => {
     try {
         const res = await axios.post(
             `${BASE_URL}/attendances`,

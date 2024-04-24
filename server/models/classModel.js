@@ -53,20 +53,20 @@ const classSchema = new mongoose.Schema(
 );
 
 classSchema.pre(/^find/, function (next) {
-  if (this._fields) {
-    if (this._fields.subject) {
+  // if (this._fields) {
+    // if (this._fields.subject) {
       this.populate({
         path: 'subject students',
-        select: 'name subjectId  title codeNumber',
+        select: 'name subjectId title codeNumber',
       });
-    }
-    if (this._fields.teacher) {
+    // }
+    // if (this._fields.teacher) {
       this.populate({
         path: 'teacher',
         select: 'name',
       });
-    }
-  }
+    // }
+  // }
   next();
 });
 
@@ -81,7 +81,6 @@ classSchema.statics.addRelatedLessons = async function (classInfo) {
     const endTime = new Date(
       startTime.getTime() + classInfo.duration * 60 * 1000,
     );
-    console.log(startTime, endTime);
     await Lesson.create({
       class: classInfo._id,
       startDateTime: startTime,

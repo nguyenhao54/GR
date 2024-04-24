@@ -1,22 +1,17 @@
 import * as React from "react";
-import { AiOutlineDelete } from "react-icons/ai";
-// import Food from "../../models/foods";
 import { useDispatch } from "react-redux";
-import { MdOutlineAddCircleOutline } from "react-icons/md";
-// import { LuEdit } from "react-icons/lu";
-import { FaCheckCircle, FaStar } from "react-icons/fa";
-import { NavigateFunction } from "react-router-dom";
+import { FaCheckCircle, FaUserCheck } from "react-icons/fa";
 import TablePager, { HeadCell } from '../../../common/TablePager';
 import { IAttendance, getCookie } from '../dashboard/AttendanceCard';
-import { getAllAttendancesForLesson } from '../../../api/attendance';
+import { createAttendance, getAllAttendancesForLesson, updateAttendance } from '../../../api/attendance';
 import { getLessonById } from '../../../api/lesson';
 import { DotFlashing, SearchBar } from '../../../common';
-import { FaCircleXmark, FaXmark } from "react-icons/fa6";
-import { FaUserXmark } from "react-icons/fa6";
-import { FaUserCheck } from "react-icons/fa";
+import { FaCircleXmark, FaXmark, FaUserXmark } from "react-icons/fa6";
 import ToolTip from '../../../common/ToolTip';
 import { Button } from '@mui/material';
-interface Data {
+import { closeTopLoading, showTopLoading } from '../../../redux/toploading.reducer';
+import { Lesson } from '../../../models';
+interface StudentTableData {
   id?: string;
   action?: JSX.Element;
   studentName?: string;
@@ -26,7 +21,7 @@ interface Data {
   status?: JSX.Element
 }
 
-const headCells: readonly HeadCell<Data>[] = [
+const headCells: readonly HeadCell<StudentTableData>[] = [
   {
     id: "studentCode",
     numeric: false,
@@ -69,16 +64,14 @@ export interface IMenuTableProps {
   lessonId: string;
 }
 
-
 export default function MenuTable(props: IMenuTableProps) {
   const { lessonId } = props;
   const [attendances, setAttendances] = React.useState<IAttendance[]>([
   ]);
+  const [lesson, setLesson] = React.useState<Lesson>()
   const [display, setDisplay] = React.useState<IAttendance[]>(attendances);
-  // const [order, setOrder] = React.useState<Order>("asc");
-  const [orderBy, setOrderBy] = React.useState<keyof Data>("id");
+  const [orderBy, setOrderBy] = React.useState<keyof StudentTableData>("id");
   const [selected, setSelected] = React.useState<IAttendance[]>([]);
-  const searchKey = "studentName";
   const [loading, setLoading] = React.useState<boolean>(true);
   const [searchText, setSearchText] = React.useState<string>("");
 
@@ -88,18 +81,21 @@ export default function MenuTable(props: IMenuTableProps) {
     let students: any[] = []
     let attendances: IAttendance[] = [];
     setLoading(true)
-    Promise.all([getLessonById(token, lessonId), getAllAttendancesForLesson(token, lessonId)]).then((res) => {
+    Promise.all([getLessonById(token, lessonId), getAllAttendancesForLesson(token, lessonId)]).then((res: any) => {
+
+      setLesson(res[0])
       students = res[0]?.class?.students;
       attendances = res[1].data.concat(res[1].data);
       const attendanceListMap = students.map((student: any) => {
         let record = attendances.find((attendance) => attendance.student?._id === student._id)
         if (record) {
-          return { ...record, id: record.student?._id }
+          return { ...record, id: record.student?._id, isFromDB: true }
         }
         else return {
           checkInTime: undefined, checkOutTime: undefined, isSuccessful: false,
           student,
-          id: student._id
+          id: student._id,
+          isFromDB: false
         }
       })
       setAttendances(attendanceListMap)
@@ -110,7 +106,7 @@ export default function MenuTable(props: IMenuTableProps) {
   }, [lessonId, token]);
 
 
-  const createRowElement = (attendance: IAttendance): Data => {
+  const createRowElements = (attendance: IAttendance): StudentTableData => {
     return {
       id: attendance.student?._id || "0",
       studentCode: attendance.student?.codeNumber,
@@ -121,7 +117,7 @@ export default function MenuTable(props: IMenuTableProps) {
         ? <div className='flex gap-1 items-center text-green-600'><FaUserCheck className='text-lg' /> Có mặt</div>
         : <div className='flex gap-1 items-center text-lightRed'><FaUserXmark className='text-lg' /> Vắng mặt</div>}</div>,
       action: (
-        <><div className='flex gap-2 items-center justify-center'>
+        <div className='flex gap-2 items-center justify-center'>
 
           <ToolTip textContent='Từ chối' limit={1}>
             <FaCircleXmark className='text-lg text-lightRed'
@@ -131,25 +127,21 @@ export default function MenuTable(props: IMenuTableProps) {
             <FaCheckCircle className='text-lg text-green-600'
               onClick={() => { handleDenyOrAccept(attendance, true) }} />
           </ToolTip>
-        </div></>
+        </div>
       ),
     };
   }
 
   const handleDenyOrAccept = (attendance: IAttendance, accept?: boolean) => {
-    console.log(attendance)
     const processedAttendanceList = attendances.map((item: IAttendance) => {
-
       if (item.id === attendance.id) return { ...item, isSuccessful: accept }
       else return { ...item }
-
     })
-    console.log(processedAttendanceList)
     setAttendances(processedAttendanceList)
   }
 
-  const mapAttendanceDataToRowElement = (attendances: IAttendance[],): Data[] => attendances.map((item: IAttendance) => {
-    return createRowElement(item);
+  const mapAttendanceDataToRowElement = (attendances: IAttendance[],): StudentTableData[] => attendances.map((item: IAttendance) => {
+    return createRowElements(item);
   });
 
   React.useEffect(() => {
@@ -161,7 +153,7 @@ export default function MenuTable(props: IMenuTableProps) {
           .includes(searchText.toLocaleLowerCase());
       })
     );
-  }, [searchText, attendances]);
+  }, [searchText, JSON.stringify(attendances)]);
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
@@ -181,7 +173,19 @@ export default function MenuTable(props: IMenuTableProps) {
   }
 
   const handleSave = () => {
-
+    dispatch(showTopLoading())
+    console.log(attendances)
+    attendances.forEach(async (item) => {
+      if (item.isFromDB) {
+        //update
+        await updateAttendance(token, item._id!, item.checkOutTime || "", item.isSuccessful || false)
+        dispatch(closeTopLoading())
+      } else {
+        //create //item.id is student id actually
+        await createAttendance(token, lessonId, "", item.id!, item.isSuccessful, "")
+        dispatch(closeTopLoading())
+      }
+    })
   }
 
   const toolbarItems = (
@@ -241,8 +245,8 @@ export default function MenuTable(props: IMenuTableProps) {
           setSelected={setSelected}
           orderBy={orderBy}
           onSelectAllClick={handleSelectAllClick}
-          total={attendances.length}
-          data={display}
+          total={display?.length}
+          data={display || []}
           mapDataToRowData={mapAttendanceDataToRowElement}
           headCells={headCells}
           showSearchBar={true}

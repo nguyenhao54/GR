@@ -96,7 +96,7 @@ function LessonDetail() {
 
         </div> */}
         {showList && <ol type="1" className="pl-4 pt-2 list-decimal">
-          {lesson.class.students.map((student: any) => <li className="py-2">{student.name}</li>)}
+          {lesson.class.students.map((student: any) => <li className="py-2"><span className="font-semibold">{student.codeNumber} </span>{student.name}</li>)}
         </ol>}
       </div>
       default: return <></>

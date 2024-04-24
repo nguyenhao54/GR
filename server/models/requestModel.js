@@ -40,17 +40,24 @@ requestSchema.pre(/^find/, function (next) {
     path: 'lesson',
     populate: {
       path: 'class',
-      select: 'teacher',
+      select: 'teacher classId',
     },
   }).populate({
-    path: "student",
-    select: "name codeNumber"
-  })
+    path: 'student',
+    select: 'name codeNumber',
+  });
   next();
 });
 
-requestSchema.post('save', function () {
-  this.contructor.modifyRelatedAttendance(this);
+requestSchema.pre(/^findOneAnd/, async function (next) {
+  this.r = await this.findOne().clone();
+  console.log(this.r);
+  next();
+});
+
+requestSchema.post(/^update/, function () {
+  console.log('modify related');
+  if (this.r) this.r.contructor.modifyRelatedAttendance(this);
 });
 
 requestSchema.statics.modifyRelatedAttendance = async function (request) {
@@ -62,9 +69,10 @@ requestSchema.statics.modifyRelatedAttendance = async function (request) {
       lesson: request.lesson,
       student: request.student,
     });
-    console.log(attendance);
+    console.log(attendance, 'âksksksk');
     // if there is a record => update it
     if (attendance) {
+      console.log(attendance, 'attendance');
       await Attendance.findByIdAndUpdate(attendance._id, {
         isSuccessful: true,
       });

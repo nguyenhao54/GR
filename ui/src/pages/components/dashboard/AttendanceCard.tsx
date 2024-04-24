@@ -20,6 +20,7 @@ export interface IAttendance {
     isSuccessful?: boolean;
     lesson?: Lesson;
     student?: User;
+    isFromDB?: boolean;
 }
 
 export const getToday = () => {
@@ -131,7 +132,7 @@ function AttendanceCard() {
                         Bạn không có lớp học nào vào thời điểm này
                     </div>
                 </div>
-                <img src={ThemePic} alt="Theme pic"/>
+                <img src={ThemePic} alt="Theme pic" />
             </div>
         );
     }
@@ -146,107 +147,99 @@ function AttendanceCard() {
 
     return (
         <div className='bg-white rounded-md flex-1 p-8 md:w-[37%]  sm:w-[99%] flex lg:flex-col items-center'>
-            <>
-                <div className='text-base font-semibold mt-2'>{clock}</div>
-                <div className='text-xs font-semibold text-neutral-500'>
-                    {`${getToday()}, Ngày ${new Date().toLocaleString("en-us", {
-                        day: "2-digit",
-                    })} Tháng ${new Date().toLocaleString("en-us", {
-                        month: "2-digit",
-                    })}`}
-                </div>
-                {attendance?.checkInTime ? (
-                    <div
-                        className='border-lightRed hover:cursor-pointer border-8 rounded-full w-40 h-40 m-4 gap-2 flex shadow-2xl justify-center flex-col text-neutal-800 items-center'
-                        onClick={() => {
-                            dispatch(
-                                setDialog({
-                                    customWidth: 400,
-                                    customHeight: 180,
-                                    title: "Xác nhận Check-out",
-                                    open: true,
-                                    type: "warning",
-                                    onClickOk: () => {
-                                        dispatch(
-                                            setDialog({
-                                                customWidth: 700,
-                                                customHeight: 500,
-                                                title: "Xác nhận điểm danh",
-                                                open: true,
-                                                content: (
-                                                    <>
-                                                        <div className='w-full h-full flex items-end justify-center'>
-                                                            <Attendify
-                                                                attendance={attendance}
-                                                                setAttendance={setAttendance}
-                                                                lesson={lesson}
-                                                            ></Attendify>
-                                                        </div>
-                                                    </>
-                                                ),
-                                            })
-                                        );
-                                    },
-                                    content: (
-                                        <>
-                                            <div className='p-6 font-montserrat font-semibold'>
-                                                Bạn có chắc chắn muốn check-out?
-                                            </div>
-                                        </>
-                                    ),
-                                })
-                            );
-                        }}
-                    >
-                        <LiaHandPointer className='text-6xl text-lightRed -ml-2'></LiaHandPointer>
-                        <div className='text-md font-semibold justify-center text-lightRed flex items-center'>
-                            CHECK-OUT
-                        </div>
-                        <div />
+            <div className='text-base font-semibold mt-2'>{clock}</div>
+            <div className='text-xs font-semibold text-neutral-500'>
+                {`${getToday()}, Ngày ${new Date().toLocaleString("en-us", {
+                    day: "2-digit",
+                })} Tháng ${new Date().toLocaleString("en-us", {
+                    month: "2-digit",
+                })}`}
+            </div>
+            {attendance?.checkInTime ? (
+                <div
+                    className='border-lightRed hover:cursor-pointer border-8 rounded-full w-40 h-40 m-4 gap-2 flex shadow-2xl justify-center flex-col text-neutal-800 items-center'
+                    onClick={() => {
+                        dispatch(
+                            setDialog({
+                                customWidth: 400,
+                                customHeight: 180,
+                                title: "Xác nhận Check-out",
+                                open: true,
+                                type: "warning",
+                                onClickOk: () => {
+                                    dispatch(
+                                        setDialog({
+                                            customWidth: 700,
+                                            customHeight: 500,
+                                            title: "Xác nhận điểm danh",
+                                            open: true,
+                                            content: (
+                                                <div className='w-full h-full flex items-center justify-center'>
+                                                    <Attendify
+                                                        attendance={attendance}
+                                                        setAttendance={setAttendance}
+                                                        lesson={lesson}
+                                                    ></Attendify>
+                                                </div>
+                                            ),
+                                        })
+                                    );
+                                },
+                                content: (
+                                    <div className='pl-6 font-montserrat font-semibold'>
+                                        Bạn có chắc chắn muốn check-out?
+                                    </div>
+                                ),
+                            })
+                        );
+                    }}
+                >
+                    <LiaHandPointer className='text-6xl text-lightRed -ml-2'></LiaHandPointer>
+                    <div className='text-md font-semibold justify-center text-lightRed flex items-center'>
+                        CHECK-OUT
                     </div>
-                ) : (
-                    <div
-                        className='bg-[#D9D9D9] hover:cursor-pointer rounded-full w-40 h-40 m-4 gap-2 flex shadow-2xl justify-center flex-col text-neutal-800 items-center'
-                        onClick={() => {
-                            dispatch(
-                                setDialog({
-                                    customWidth: 700,
-                                    customHeight: 500,
-                                    title: "Xác nhận điểm danh",
-                                    open: true,
-                                    content: (
-                                        <>
-                                            <div className='w-full h-full flex items-end justify-center'>
-                                                <Attendify
-                                                    attendance={attendance}
-                                                    setAttendance={setAttendance}
-                                                    lesson={lesson}
-                                                ></Attendify>
-                                            </div>
-                                        </>
-                                    ),
-                                })
-                            );
-                        }}
-                    >
-                        <LiaHandPointer className='text-6xl text-neutral-800 -ml-2'></LiaHandPointer>
-                        <div className='text-md font-semibold justify-center flex items-center'>
-                            CHECK-IN
-                        </div>
-                        <div />
+                    <div />
+                </div>
+            ) : (
+                <div
+                    className='bg-[#D9D9D9] hover:cursor-pointer rounded-full w-40 h-40 m-4 gap-2 flex shadow-2xl justify-center flex-col text-neutal-800 items-center'
+                    onClick={() => {
+                        dispatch(
+                            setDialog({
+                                customWidth: 700,
+                                customHeight: 500,
+                                title: "Xác nhận điểm danh",
+                                open: true,
+                                content: (
+                                    <div className='w-full h-full flex items-end justify-center'>
+                                        <Attendify
+                                            attendance={attendance}
+                                            setAttendance={setAttendance}
+                                            lesson={lesson}
+                                        ></Attendify>
+                                    </div>
+                                ),
+                            })
+                        );
+                    }}
+                >
+                    <LiaHandPointer className='text-6xl text-neutral-800 -ml-2'></LiaHandPointer>
+                    <div className='text-md font-semibold justify-center flex items-center'>
+                        CHECK-IN
                     </div>
-                )}
-                <div className='text-lg font-semibold mt-3'>
-                    {subject.title} {subject.subjectId}
+                    <div />
                 </div>
-                <div className='text-xs font-semibold mt-2 text-neutral-500 flex items-center gap-1'>
-                    <MdLocationPin size={14} />
-                    Vị trí: D9-401
-                </div>
-                <div className='w-80 h-72 mt-4'>
-                    <MyLocation></MyLocation>
-                </div>
-            </>
+            )}
+            <div className='text-lg font-semibold mt-3'>
+                {subject.title} {subject.subjectId}
+            </div>
+            <div className='text-xs font-semibold mt-2 text-neutral-500 flex items-center gap-1'>
+                <MdLocationPin size={14} />
+                Vị trí: D9-401
+            </div>
+            <div className='w-80 h-72 mt-4'>
+                <MyLocation></MyLocation>
+            </div>
         </div>
     );
 }

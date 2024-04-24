@@ -68,14 +68,17 @@ exports.getMyRequests = catchAsync(async (req, res, next) => {
 
 // request: lessonId[], reason, photo
 exports.createBatch = catchAsync(async (req, res, next) => {
-  if (req.body.lessonId.length > 0) {
-    const requests = req.body.lessonId.map(async (lessonId) => {
-      await Request.create({
-        lesson: lessonId,
-        reason: req.body.reason,
-        photo: req.body.photo,
-      });
-    });
+  if (req.body.lessonIds.length > 0) {
+    const requests = await Promise.all(
+      req.body.lessonIds.map(async (lessonId) => {
+        return await Request.create({
+          lesson: lessonId,
+          reason: req.body.reason,
+          photo: req.body.photo,
+          student: req.body.student,
+        });
+      }),
+    );
 
     res.status(200).json({
       status: 'success',

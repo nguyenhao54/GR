@@ -10,7 +10,7 @@ exports.updateLesson = factory.updateOne(Lesson);
 exports.deleteLesson = factory.deleteOne(Lesson);
 
 exports.getMyLessons = catchAsync(async (req, res, next) => {
-  console.log(req.query)
+  console.log(req.query);
   let classes;
   if (req.user.role === 'student') {
     classes = await Class.aggregate([
@@ -34,10 +34,24 @@ exports.getMyLessons = catchAsync(async (req, res, next) => {
       { $unset: 'students' },
     ]);
   }
+
+  let filterQuery = {};
+  if (req.query.startDateTime && req.query.endDateTime) {
+    // Convert query string parameters to Date objects
+    
+    const { startDateTime, endDateTime } = req.query;
+    const startDate = new Date(startDateTime);
+    const endDate = new Date(endDateTime);
+    filterQuery = {
+      startDateTime: { $gte: startDate },
+      endDateTime: { $lt: endDate },
+    };
+  }
   const ids = classes.map((i) => i._id);
   const lessons = await Lesson.find({
     class: { $in: ids },
-    ...req.query
+    ...req.query,
+    ...filterQuery,
   }).populate('class', {
     subject: 1,
     teacher: 1,

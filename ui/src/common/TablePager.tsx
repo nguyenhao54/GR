@@ -56,45 +56,48 @@ export interface HeadCell<T> {
   id: keyof T;
   label: string;
   numeric: boolean;
+  minWidth?: number;
 }
 
 interface TablePagerProps<T> {
   tableTitle: string;
-  selected: T[];
-  setSelected: (value: T[]) => void;
-  onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  orderBy: string;
+  selected?: T[];
+  setSelected?: (value: T[]) => void;
+  onSelectAllClick?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  orderBy?: string;
   total: number;
   data: T[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   headCells: readonly HeadCell<any>[];
-  showSearchBar: boolean;
-  toolbarItems: JSX.Element;
+  showSearchBar?: boolean;
+  toolbarItems?: JSX.Element;
   onRowClick?: () => void;
+  hideCheckbox?: boolean;
   mapDataToRowData: (data: T[], navigate: NavigateFunction) => any[];
 }
 
 interface TableHeadProps<T> {
-  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof T) => void;
-  orderBy: string;
+  onRequestSort?: (event: React.MouseEvent<unknown>, property: keyof T) => void;
+  orderBy?: string;
   order: Order;
+  hideCheckbox?: boolean;
   headCells: readonly HeadCell<T>[];
-  onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onSelectAllClick?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isAllSelected?: boolean;
 }
 
 function EnhancedTableHead<T>(props: TableHeadProps<T>) {
-  const { orderBy, order, onRequestSort, headCells, onSelectAllClick, isAllSelected } = props;
+  const { orderBy, order, onRequestSort, hideCheckbox, headCells, onSelectAllClick, isAllSelected } = props;
   const createSortHandler =
     (property: keyof T) => (event: React.MouseEvent<unknown>) => {
-      onRequestSort(event, property);
+      onRequestSort?.(event, property);
     };
 
   return (
     <TableHead className='bg-neutral-200 rounded-t-lg'>
       <TableRow className='bg-neutral-200 rounded-t-lg'>
 
-        <TableCell padding="checkbox">
+        {!hideCheckbox && <TableCell padding="checkbox">
           <Checkbox
             color="primary"
             checked={isAllSelected}
@@ -106,6 +109,7 @@ function EnhancedTableHead<T>(props: TableHeadProps<T>) {
             }}
           />
         </TableCell>
+        }
         {headCells.map((headCell) => (
           <TableCell
             className='items-center flex'
@@ -135,14 +139,11 @@ function EnhancedTableHead<T>(props: TableHeadProps<T>) {
 }
 
 export default function EnhancedTable<T extends { id?: string }>(props: TablePagerProps<T>) {
-
-  const { data: rows, orderBy, headCells, selected, setSelected, total } = props;
-
+  const { data: rows, orderBy, headCells, selected, hideCheckbox, setSelected, total } = props;
   const navigate = useNavigate();
   const [order, setOrder] = React.useState<Order>("asc");
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
 
   const handleRequestSort = (_event: React.MouseEvent<unknown>, property: keyof T) => {
     const isAsc = orderBy === property && order === "asc";
@@ -169,7 +170,7 @@ export default function EnhancedTable<T extends { id?: string }>(props: TablePag
 
   const visibleRows = React.useMemo(
     () =>
-      stableSort<T>(rows, getComparator(order, orderBy)).slice(
+      stableSort<T>(rows, getComparator(order, orderBy || "id")).slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage
       ),
@@ -188,6 +189,7 @@ export default function EnhancedTable<T extends { id?: string }>(props: TablePag
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
               headCells={headCells}
+              hideCheckbox={hideCheckbox}
               onSelectAllClick={props.onSelectAllClick}
               isAllSelected={isAllSelected}
             />
@@ -209,33 +211,36 @@ export default function EnhancedTable<T extends { id?: string }>(props: TablePag
                         selected={isItemSelected}
                       // sx={{ cursor: "pointer" }}
                       >
-                        <TableCell padding="checkbox">
+                        {!hideCheckbox && <TableCell padding="checkbox">
                           <Checkbox
                             color="primary"
                             checked={isItemSelected}
                             onChange={(_, checked) => {
                               if (!checked)
-                                setSelected(selected.filter((item) => JSON.stringify(item) !== JSON.stringify(rows[index])))
-                              else setSelected(selected.concat(rows[index]))
+                                setSelected?.((selected || []).filter((item) => JSON.stringify(item) !== JSON.stringify(rows[index])))
+                              else setSelected?.((selected || []).concat(rows[index]))
                             }}
                             inputProps={{
                               "aria-labelledby": labelId,
                             }}
                           />
                         </TableCell>
+                        }
                         <>
                           {Object.keys(row).map((key) => {
                             if (key === "id" || typeof key == "undefined")
                               return;
-                            else
+                            else{
+                              const minWidth= headCells.find((item) => item.id === key)?.minWidth
                               return (
-                                <TableCell align='left'>
+                                <TableCell align='left' sx={{ minWidth: minWidth }}>
                                   <Tooltip
                                     textContent={row[key]}
-                                    limit={20}
+                                    limit={minWidth? minWidth/7 : 20 }
                                   />
                                 </TableCell>
                               );
+                            }
                           })}
                         </>
                       </TableRow>

@@ -14,13 +14,6 @@ router
   .route('/createBatch')
   .post(authController.protect, requestController.createBatch);
 
-router
-  .route('/approve/:id')
-  .patch(
-    authController.protect,
-    authController.restrictTo('teacher'),
-    requestController.approveRequest,
-  );
 
 router
   .route('/deny/:id')
@@ -35,7 +28,6 @@ router
   .get(requestController.getRequest)
   .patch(
     authController.protect,
-    authController.restrictTo('student'),
     requestController.updateRequest,
   )
   .delete(
@@ -43,5 +35,14 @@ router
     authController.restrictTo('admin'),
     requestController.deleteRequest,
   );
+
+  router
+  .route('/:id/approve')
+  .patch(
+    authController.protect,
+    authController.restrictTo('teacher'),
+    requestController.approveRequest,
+  );
+
 
 module.exports = router;

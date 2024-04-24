@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
   },
   codeNumber: {
     type: Number,
+    select: true,
     // required: [true, 'User must have an ID'],
   },
   email: {

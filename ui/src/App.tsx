@@ -29,7 +29,7 @@ function App(props: { cookies: Cookies }) {
   }, [cookies, dispatch, navigate])
 
   const setCookie = (name: string, value: any) => {
-    cookies.set(name, value, { path: '/', maxAge: 360000 });
+    cookies.set(name, value, { path: '/', maxAge: 86400 }); // set expires time
   }
 
   useEffect(() => {

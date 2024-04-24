@@ -7,6 +7,7 @@ import { DotFlashing } from "../../../common";
 import { createAttendance, updateAttendance } from "../../../api/attendance";
 import { getCookie } from "./AttendanceCard";
 import { addSevenHours } from "../../../utils";
+import { closeTopLoading, showTopLoading } from '../../../redux/toploading.reducer';
 
 function minutesDiff(dateTimeValue2: any, dateTimeValue1: any) {
   var differenceValue =
@@ -75,7 +76,7 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
   const handleVideoOnPlay = () => {
     if (videoRef.current && captureVideo) {
       let myInterval = setInterval(async () => {
-        if (canvasRef && canvasRef.current) {
+        if (canvasRef?.current) {
           canvasRef.current.innerHTML = faceapi.createCanvasFromMedia(
             videoRef.current
           );
@@ -118,7 +119,7 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
                   canvasRef.current
                     .getContext("2d")
                     .clearRect(0, 0, videoWidth, videoHeight);
-                  var pausePromise = videoRef.current?.pause();
+                  let pausePromise = videoRef.current?.pause();
                   if (pausePromise !== undefined) {
                     pausePromise.then((res: any) => {
 
@@ -134,11 +135,13 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
                   videoRef.current?.srcObject?.getTracks()[0].stop();
                   drawBox.draw(canvasRef.current);
 
+                  dispatch(showTopLoading())
                   setTimeout(() => {
                     closeWebcam();
                     dispatch(setDialog({
                       open: false
                     }))
+                    dispatch(closeTopLoading())
                     const token = getCookie("token")
                     const dateTimeNow = addSevenHours((new Date()).toISOString())
                     if (!attendance?.checkInTime)
@@ -150,14 +153,14 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
                       updateAttendance(token, attendance._id, dateTimeNow, duration >= lesson.duration)
                       setAttendance({ ...attendance, checkOutTime: dateTimeNow });
                     }
-                  }, 500)
-                  return;
+                  }, 2000)
                 }
               }
               )
             }
             catch (e) {
-              console.log(e)
+              throw new Error("Something went wrong")
+              // console.log(e)
             }
           }
 
@@ -169,7 +172,7 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
   const closeWebcam = () => {
 
     // navigator.mediaDevices.getUserMedia().
-    var pausePromise = videoRef.current?.pause();
+    let pausePromise = videoRef.current?.pause();
     if (pausePromise !== undefined) {
       pausePromise.then((res: any) => {
 

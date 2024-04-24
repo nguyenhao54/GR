@@ -8,7 +8,6 @@ exports.updateGrade = factory.updateOne(Grade);
 exports.deleteGrade = factory.deleteOne(Grade);
 
 exports.getMyGrades = catchAsync(async (req, res, next) => {
-    // console.log("rè" ,req.user);
   const grades = await Grade.find({student: req.user.id})
 
   res.status(200).json({

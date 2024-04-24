@@ -77,7 +77,7 @@ function Profile() {
                     <TextField
                         id="dob"
                         label="Ngày Tháng Năm Sinh"
-                        defaultValue={user?.DOB?.toLocaleString('en-US', { day: "2-digit", month: "2-digit", year: "numeric" })}
+                        defaultValue={ user?.DOB ? new Date(user.DOB).toLocaleString('en-US', { day: "2-digit", month: "2-digit", year: "numeric" }): ""}
                         InputProps={{
                             readOnly: true,
                         }}

@@ -44,13 +44,13 @@ export default function ToastCalendar() {
     useEffect(() => {
         getMyLessons(token).then((data: any) => {
             setEvents(data?.lessons.map((item: Lesson) => {
-                const random = Number(item.class?.subject?.subjectId?.[3]);
+                const random = Number(item.startDateTime?.toString()[9]) % 5;
                 return ({
                     ...item, start: minusSevenHours(item.startDateTime?.toString()|| ""),
                     end: minusSevenHours(item.endDateTime?.toString()|| ""),
                     backgroundColor: BACKGROUND_COLOR[random],
                     borderColor: BORDER_COLOR[random],
-                    title: item.class?.subject?.title
+                    title: item.class?.classId + " - " + item.class?.subject?.title
                 })
             }) || [])
         })

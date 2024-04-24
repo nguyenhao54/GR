@@ -135,6 +135,9 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
 
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
+  console.log(req.user.role)
+  console.log(roles)
+
     //
     // console.log('uẻ', req.user);
     if (!roles.includes(req.user.role)) {

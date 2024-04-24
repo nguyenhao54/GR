@@ -5,13 +5,12 @@ import { BrowserRouter as Router } from "react-router-dom";
 import App from './App';
 import { Provider } from "react-redux";
 import reportWebVitals from './reportWebVitals';
-import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { store } from './redux/store';
 import firebase from 'firebase/compat/app'
 import { CookiesProvider } from 'react-cookie';
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorPage from './pages/ErrorPage';
-
 
 const firebaseConfig = {
   apiKey: "AIzaSyDZfv8UqhzEugpv8zqqYavPP8NdQw_D-Pc",
@@ -24,6 +23,7 @@ const firebaseConfig = {
 }
 
 firebase.initializeApp(firebaseConfig)
+export const storage = firebase.storage();
 
 const THEME = createTheme({
   typography: {
