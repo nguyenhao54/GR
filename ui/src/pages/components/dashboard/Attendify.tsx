@@ -72,7 +72,6 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
     return videoRef.current?.srcObject?.getTracks().forEach((track: any) => track.stop())
   })
 
-
   const handleVideoOnPlay = () => {
     if (videoRef.current && captureVideo) {
       let myInterval = setInterval(async () => {

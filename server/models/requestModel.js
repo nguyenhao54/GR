@@ -51,14 +51,14 @@ requestSchema.pre(/^find/, function (next) {
 
 requestSchema.pre(/^findOneAnd/, async function (next) {
   this.r = await this.findOne().clone();
-  console.log(this.r);
+  console.log(this.r, 'findone and');
   next();
 });
 
-requestSchema.post(/^update/, function () {
-  console.log('modify related');
-  if (this.r) this.r.contructor.modifyRelatedAttendance(this);
-});
+// requestSchema.post(/^findOneAnd/, function () {
+//   console.log('modify related');
+//   if (this.r) this.r.constructor.modifyRelatedAttendance(this);
+// });
 
 requestSchema.statics.modifyRelatedAttendance = async function (request) {
   //// IF REQUEST STATUS IS APPROVED
@@ -68,24 +68,24 @@ requestSchema.statics.modifyRelatedAttendance = async function (request) {
     let attendance = await Attendance.find({
       lesson: request.lesson,
       student: request.student,
-    });
-    console.log(attendance, 'âksksksk');
+    })[0];
+    // console.log(attendance, 'âksksksk');
     // if there is a record => update it
     if (attendance) {
-      console.log(attendance, 'attendance');
+      // console.log(attendance, 'attendance');
       await Attendance.findByIdAndUpdate(attendance._id, {
         isSuccessful: true,
       });
     }
     // if no record => create one
     else {
-      console.log(
-        await Attendance.create({
-          lesson: request.lesson,
-          student: request.student,
-          isSuccessful: true,
-        }),
-      );
+      // console.log(
+      await Attendance.create({
+        lesson: request.lesson,
+        student: request.student,
+        isSuccessful: true,
+      });
+      // );
     }
   }
 };

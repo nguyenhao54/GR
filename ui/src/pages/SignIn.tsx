@@ -16,7 +16,7 @@ function LoginByField({ setCookie }: { setCookie: (name: string, value: any) => 
         if (data?.data.user) {
             dispatch(setCurrentUser(data.data.user))
             setCookie("token", data.token)
-            data.data.user.role==="student" ?navigate('/dashboard') : navigate("/calendar")
+            data.data.user.role === "student" ? navigate('/dashboard') : navigate("/calendar")
         }
     }
 

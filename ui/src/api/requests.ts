@@ -28,7 +28,14 @@ export const getRequests = async (token: string) => {
             `${BASE_URL}/requests/my`,
             { headers: { Authorization: `Bearer ${token}` } }
         )
-        return res.data.data.requests
+
+        const data = res.data.data.requests.sort((a: any, b: any) => {
+            const dateA = new Date(a.lesson.startDateTime).getTime();
+            const dateB = new Date(b.lesson.startDateTime).getTime();
+            console.log(dateB - dateA)
+            return (dateB - dateA)
+          });
+        return data
     }
     catch (err) {
         console.log(err)

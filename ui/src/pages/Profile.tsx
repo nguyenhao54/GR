@@ -27,7 +27,7 @@ function Profile() {
     }, [])
 
     return (
-        <div className="bg-white rounded-md p-8 pt-4 w-[100%] h-max flex flex-col items-center">
+        <div className="bg-white rounded-md p-8 pt-4 w-[100%] flex flex-col items-center h-[calc(100vh-80px)]">
             <div className="flex flex-row justify-between items-center w-full">
                 <div className="w-full p-6 pt-4 flex items-center gap-2 md: min-w-[500px]">
                     <img src={user?.photo} className="w-36 border-8 shadow-md border-neutral-200 h-36 rounded-full"></img>

@@ -146,7 +146,7 @@ export default function MenuTable(props: IMenuTableProps) {
 
   React.useEffect(() => {
     setDisplay(
-      attendances.filter((item: IAttendance) => {
+      attendances?.filter((item: IAttendance) => {
         const codeNumber = item.student?.codeNumber || ""
         return codeNumber.toString()
           .toLocaleLowerCase()

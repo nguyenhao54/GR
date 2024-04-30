@@ -43,7 +43,9 @@ const classSchema = new mongoose.Schema(
         enum: ['Point'],
       },
       coordinates: [Number],
-      description: String,
+      description: {
+        type: String,
+      },
     },
   },
   {
@@ -54,18 +56,18 @@ const classSchema = new mongoose.Schema(
 
 classSchema.pre(/^find/, function (next) {
   // if (this._fields) {
-    // if (this._fields.subject) {
-      this.populate({
-        path: 'subject students',
-        select: 'name subjectId title codeNumber',
-      });
-    // }
-    // if (this._fields.teacher) {
-      this.populate({
-        path: 'teacher',
-        select: 'name',
-      });
-    // }
+  // if (this._fields.subject) {
+  this.populate({
+    path: 'subject students',
+    select: 'name subjectId title codeNumber',
+  });
+  // }
+  // if (this._fields.teacher) {
+  this.populate({
+    path: 'teacher',
+    select: 'name',
+  });
+  // }
   // }
   next();
 });

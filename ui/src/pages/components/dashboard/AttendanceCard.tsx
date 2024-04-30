@@ -12,6 +12,7 @@ import { ThemePic } from "./../../../assets/img";
 import { getMyAttendanceForLesson } from "../../../api/attendance";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { Lesson, User } from '../../../models';
+import { getHourAndMinute } from '../../../utils';
 export interface IAttendance {
     id?: string;
     _id?: string;
@@ -102,6 +103,7 @@ function AttendanceCard() {
         getCurrentLesson(token)
             .then((res: any) => {
                 setLesson(res?.lessons[0]);
+                console.log(res?.lessons[0])
             })
             .finally(() => setLoading(false));
     }, []);
@@ -125,7 +127,7 @@ function AttendanceCard() {
 
     if (!lesson) {
         return (
-            <div className='bg-white flex-1 rounded-md p-8 md:w-[37%]  sm:w-[99%] flex lg:flex-col items-center h-stretch'>
+            <div className='bg-white flex-1 rounded-md p-8 md:w-[37%]  sm:w-[99%] flex lg:flex-col  h-[calc(100vh-80px)] items-center h-stretch'>
                 <div className='text-neutral-400 flex flex-col justify-center items-center'>
                     <IoMdCheckmarkCircleOutline size={60} color={"#2f9af7"} />
                     <div className='font-semibold text-md py-8 px-4'>
@@ -138,7 +140,8 @@ function AttendanceCard() {
     }
 
     const { classId = "", subject = "", location = " " } = lesson?.class;
-    // const { endDateTime = " ", startDateTime = "" } = lesson;
+    const { endDateTime = " ", startDateTime = "" } = lesson;
+    console.log(location)
 
     // if (Math.abs(position.latitude - location.coordinates[0])> 0.001 || Math.abs(position.longitude - location.coordinates[1]) > 0.001) {
     //     console.log(position, location.coordinates )
@@ -146,7 +149,7 @@ function AttendanceCard() {
     // }
 
     return (
-        <div className='bg-white rounded-md flex-1 p-8 md:w-[37%]  sm:w-[99%] flex lg:flex-col items-center'>
+        <div className='bg-white rounded-md flex-1 p-8 md:w-[37%]  sm:w-[99%] flex lg:flex-col items-center h-[calc(100vh-80px)]'>
             <div className='text-base font-semibold mt-2'>{clock}</div>
             <div className='text-xs font-semibold text-neutral-500'>
                 {`${getToday()}, Ngày ${new Date().toLocaleString("en-us", {
@@ -233,9 +236,12 @@ function AttendanceCard() {
             <div className='text-lg font-semibold mt-3'>
                 {subject.title} {subject.subjectId}
             </div>
+            <div className='text-sm font-semibold mt-2 text-neutral-500 '>
+                {getHourAndMinute(startDateTime)} - {getHourAndMinute(endDateTime)}
+            </div>
             <div className='text-xs font-semibold mt-2 text-neutral-500 flex items-center gap-1'>
                 <MdLocationPin size={14} />
-                Vị trí: D9-401
+                Vị trí: {location.description || "Không có dữ liệu"}
             </div>
             <div className='w-80 h-72 mt-4'>
                 <MyLocation></MyLocation>

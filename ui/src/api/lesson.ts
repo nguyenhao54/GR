@@ -16,7 +16,6 @@ export const getCurrentLesson = async (token: string) => {
 }
 
 export const getMyLessons = async (token: string, queryString?: string) => {
-    console.log(`${BASE_URL}/lessons/my${queryString ? `?${queryString}` : ""}`)
     
     try {
         const res = await axios.get(

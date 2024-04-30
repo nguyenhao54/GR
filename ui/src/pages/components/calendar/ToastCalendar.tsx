@@ -190,7 +190,7 @@ export default function ToastCalendar() {
                 onClickEvent={(event) => handleClickEvent(event)}
                 onAfterRenderEvent={onAfterRenderEvent}
                 usageStatistics={false}
-                height="464px"
+                height="calc(100vh - 180px)"
                 view="week"
                 theme={{
                     scheduleView: ["time"],

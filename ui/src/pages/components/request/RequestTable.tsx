@@ -99,17 +99,16 @@ function RequestTable() {
     getRequests(token)
       .then((res) => {
         setRequestList(res);
-        console.log(res)
       }
       )
       .finally(() => setLoading(false))
 
-  }, [user?._id])
+  }, [user?._id, token])
 
 
   React.useEffect(() => {
     setDisplay(
-      requestList.filter((item: any) => {
+      requestList?.filter((item: any) => {
         const codeNumber = item.student?.codeNumber || ""
         return codeNumber.toString()
           .toLocaleLowerCase()
@@ -179,8 +178,6 @@ function RequestTable() {
   }
 
   const createRowElements = (request: any): RequestTableData => {
-
-
     return {
       id: request._id,
       studentCode: request.student.codeNumber,
@@ -204,7 +201,7 @@ function RequestTable() {
                   open: true,
                   content: (
                     <div className='max-h-[400px] overflow-auto'>
-                      <img src={request.photo} />
+                      <img src={request.photo} alt="ảnh minh chứng" />
                     </div>
                   ),
                 }))
@@ -214,12 +211,12 @@ function RequestTable() {
           {user?.role === "teacher" &&
             <><ToolTip textContent='Từ chối' limit={1}>
               {/* //TODO: set button disable  */}
-            <FaCircleXmark className={request.status === "approved" ? "opacity-30 hover:cursor-default text-lg" : 'text-lg text-lightRed'}
-                onClick={() => { handleDenyOrAccept(request, false) }} />
+              <FaCircleXmark className={request.status !== "pending" ? "opacity-30 hover:cursor-default text-lg" : 'text-lg text-lightRed'}
+                onClick={request.status === "pending" ? () => { handleDenyOrAccept(request, false) } : undefined} />
             </ToolTip>
               <ToolTip textContent='Chấp nhận' limit={1}>
-                <FaCheckCircle className='text-lg text-green-600'
-                  onClick={() => { handleDenyOrAccept(request, true) }} />
+                <FaCheckCircle className={request.status !== "pending" ? "opacity-30 hover:cursor-default text-lg" : 'text-lg text-green-600'}
+                  onClick={request.status === "pending" ? () => { handleDenyOrAccept(request, true) } : undefined} />
               </ToolTip>
             </>}
         </div>
@@ -252,6 +249,7 @@ function RequestTable() {
           mapDataToRowData={mapRequestToRowElement}
           headCells={headCells}
           hideCheckbox
+          orderBy='startTime'
           showSearchBar
           toolbarItems={user?.role !== "student" ? toolbarItems : <></>}
         ></TablePager>

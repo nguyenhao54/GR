@@ -15,13 +15,13 @@ router
   .post(authController.protect, requestController.createBatch);
 
 
-router
-  .route('/deny/:id')
-  .patch(
-    authController.protect,
-    authController.restrictTo('teacher'),
-    requestController.denyRequest,
-  );
+// router
+//   .route('/deny/:id')
+//   .patch(
+//     authController.protect,
+//     authController.restrictTo('teacher'),
+//     requestController.denyRequest,
+//   );
 
 router
   .route('/:id')
