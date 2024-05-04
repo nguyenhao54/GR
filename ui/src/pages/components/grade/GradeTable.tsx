@@ -72,7 +72,6 @@ function GradeTable({ selectedClass }: { selectedClass: any }) {
 
     useEffect(() => {
         dispatch(showTopLoading())
-
         Promise.all([...(selectedClass?.students || []).map(async (student: any) => {
             const grade = await getGrade(token, selectedClass._id, student._id)
             if (grade) {
@@ -89,7 +88,6 @@ function GradeTable({ selectedClass }: { selectedClass: any }) {
         })]).then((tempGradeList) => {
             setGradeList(tempGradeList || [])
             dispatch(closeTopLoading())
-
         })
 
     }, [selectedClass?._id])
