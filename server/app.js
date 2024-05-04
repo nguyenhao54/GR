@@ -26,13 +26,18 @@ if (process.env.NODE_ENV !== 'production') {
 }
 const limiter = rateLimit({
   max: 100,
-  windowMs: 60 * 60 * 1000,
+  windowMs: 60 * 60 * 1000, //can only sent 100 request in 1 hour
   message: 'To many requests sent, please try again later',
 });
 
 app.use('/api', limiter);
 app.use(helmet());
-app.use(cors({credentials: true, origin: "*"}));
+app.use(
+  cors({
+    // credentials: true,
+    origin: true,
+  }),
+);
 
 app.use(express.json({ limit: '10kb' })); //add middleware to middleware stack
 

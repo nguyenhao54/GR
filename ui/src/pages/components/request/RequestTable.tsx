@@ -103,7 +103,7 @@ function RequestTable() {
       )
       .finally(() => setLoading(false))
 
-  }, [user?._id, token])
+  }, [user?._id, token, user])
 
 
   React.useEffect(() => {
@@ -229,7 +229,7 @@ function RequestTable() {
   });
 
   const toolbarItems =
-    <div className="flex justify-end w-full">
+    <div className="flex justify-end w-full -mt-10">
       <div className="w-[40%] my-2 justify-end">
         <SearchBar
           searchText={searchText}

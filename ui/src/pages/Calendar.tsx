@@ -1,5 +1,3 @@
-import React from 'react'
-import { ToastCalendar } from './components'
 import { Outlet } from 'react-router-dom'
 
 function Calendar() {

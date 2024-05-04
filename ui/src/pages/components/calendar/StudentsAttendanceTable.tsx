@@ -174,7 +174,6 @@ export default function MenuTable(props: IMenuTableProps) {
 
   const handleSave = () => {
     dispatch(showTopLoading())
-    console.log(attendances)
     attendances.forEach(async (item) => {
       if (item.isFromDB) {
         //update

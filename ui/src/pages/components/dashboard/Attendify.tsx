@@ -190,12 +190,12 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
   };
 
   return (
-    <div className="w-[90%] h-[90%] flex items-center justify-center">
+    <div className="flex items-center justify-center">
       {captureVideo ? (
         modelsLoaded ? (
           <div className="w-full h-full flex items-center justify-center">
             <div
-              className="flex justify-center items-center w-full h-full p-8"
+              className="flex justify-center items-center w-full h-full"
             >
               <video
                 ref={videoRef}

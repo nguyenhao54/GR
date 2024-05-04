@@ -12,18 +12,25 @@ exports.deleteClass = factory.deleteOne(Class);
 
 exports.getMyClasses = catchAsync(async (req, res, next) => {
   //   console.log(req.user);
-  const classesRes = await Class.aggregate([
-    {
-      $unwind: '$students',
-    },
-    {
-      $match: {
-        students: req.user._id,
+  let classesRes;
+  if (req.user.role === 'student') {
+    classesRes = await Class.aggregate([
+      {
+        $unwind: '$students',
       },
-    },
-    { $unset: 'students' },
-  ]);
-  console.log('class', classesRes);
+      {
+        $match: {
+          students: req.user._id,
+        },
+      },
+      { $unset: 'students' },
+    ]);
+  } else {
+    classesRes = await Class.find({
+      teacher: req.user._id,
+    }).populate("students");
+  }
+  // console.log('class', classesRes);
   const classes = await Class.populate(classesRes, {
     path: 'subject teacher',
   });

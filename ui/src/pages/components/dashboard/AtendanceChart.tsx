@@ -52,12 +52,12 @@ export default function StackedAtendanceChart() {
         }).finally(() => { setLoading(false) });
     }, [])
     return (
-        <div className="bg-white flex-1 rounded-md p-8 w-[69%] md:w-[62%] flex flex-col gap-2">
+        <div className="bg-white flex-1 rounded-md p-4 w-[69%] md:w-[62%] flex flex-col gap-2 min-h-[calc(100vh-80px)]">
             {
                 loading
                     ? <DotFlashing></DotFlashing>
                     : <div>
-                        <div className="text-neutral-800 font-semibold text-lg mt-1 mb-4">
+                        <div className="text-neutral-800 font-semibold text-lg mt-1 mb-4 text-center">
                             Thống kê tham gia lớp học
                         </div>
                         {!pieData || !barData ? <div>Không có dữ liệu</div> :

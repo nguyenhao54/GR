@@ -5,9 +5,9 @@ import { DetailList, DotFlashing } from '../../../common'
 import { getHourAndMinute } from '../../../utils'
 import { GoTriangleDown, GoTriangleUp } from "react-icons/go"
 import { FaUserGroup } from "react-icons/fa6";
-import { FaCheckCircle } from "react-icons/fa";
-import { Tab, Tabs } from '@mui/material'
-import { useParams } from 'react-router-dom'
+import { FaArrowLeft } from "react-icons/fa6";
+import { Button, Tab, Tabs } from '@mui/material'
+import { useNavigate, useParams } from 'react-router-dom'
 import { getMyAttendanceForLesson } from '../../../api/attendance'
 import { useSelector } from 'react-redux'
 import { AppState } from '../../../redux/store'
@@ -28,7 +28,7 @@ function LessonDetail() {
   const user = useSelector((appState: AppState) => appState.user.user)
   const [attendance, setAttendance] = useState<IAttendance>()
   const [attendanceList, setAttendanceList] = useState<IAttendance[]>([])
-
+  const navigate = useNavigate()
   const [tab, setTab] = React.useState<LessonDetailTab>(LessonDetailTab.basic);
 
   const handleChange = (event: React.SyntheticEvent, newValue: LessonDetailTab) => {
@@ -108,6 +108,12 @@ function LessonDetail() {
       {
         loading ? <DotFlashing></DotFlashing> :
           <div className='w-full h-full'>
+            <button className="text-lightRed rounded-full p-2 hover:bg-neutral-200  cursor-pointer"
+            onClick={()=>{
+              navigate('/calendar')
+
+            }}
+            ><FaArrowLeft/></button>
             <Tabs
               TabIndicatorProps={{ style: { background: '#C1121F', transition: "none" }, sx: { bgcolor: "#FF5733" } }}
               value={tab}

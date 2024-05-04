@@ -32,7 +32,6 @@ export const getRequests = async (token: string) => {
         const data = res.data.data.requests.sort((a: any, b: any) => {
             const dateA = new Date(a.lesson.startDateTime).getTime();
             const dateB = new Date(b.lesson.startDateTime).getTime();
-            console.log(dateB - dateA)
             return (dateB - dateA)
           });
         return data

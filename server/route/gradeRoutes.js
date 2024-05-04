@@ -5,13 +5,15 @@ const authController = require('../controller/authController');
 
 router
   .route('/')
+  .get(gradeController.getGrade)
   .post(
     authController.protect,
-    authController.restrictTo('teacher','admin'),
+    authController.restrictTo('teacher', 'admin'),
     gradeController.createGrade,
   );
 
 router.get('/my', authController.protect, gradeController.getMyGrades);
+
 
 router
   .route('/:id')

@@ -17,7 +17,7 @@ function Profile() {
             if (token) {
                 getMyInfo(token || "").then((res) => {
                     if (res) {
-                        if ( res.os.data) dispatch(setCurrentUser(res.data.data))
+                        if ( res?.data?.data) dispatch(setCurrentUser(res.data.data))
                         else navigate("login")
                     }
                     else navigate("login")

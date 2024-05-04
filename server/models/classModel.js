@@ -35,6 +35,9 @@ const classSchema = new mongoose.Schema(
     lastStartTime: {
       type: Date,
     },
+    semester: {
+      type: Number,
+    },
     location: {
       //GeoJSON
       type: {
@@ -59,7 +62,7 @@ classSchema.pre(/^find/, function (next) {
   // if (this._fields.subject) {
   this.populate({
     path: 'subject students',
-    select: 'name subjectId title codeNumber',
+    select: 'name subjectId title codeNumber gradeCoefficient',
   });
   // }
   // if (this._fields.teacher) {
@@ -80,7 +83,7 @@ classSchema.statics.addRelatedLessons = async function (classInfo) {
     startTime = new Date(startTime.getTime() + 7 * 24 * 60 * 60 * 1000)
   ) {
     // console.log(classInfo.lastStartTime )
-    const endTime = new Date(
+    const endTime = new Date(                                                 
       startTime.getTime() + classInfo.duration * 60 * 1000,
     );
     await Lesson.create({

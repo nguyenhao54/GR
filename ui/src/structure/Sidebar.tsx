@@ -6,6 +6,7 @@ import { FaGear } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { AppState } from "../redux/store";
 import { FaPaperPlane } from "react-icons/fa";
+import { FaBook } from "react-icons/fa";
 
 const getListItems = (role?: string) => {
 
@@ -32,6 +33,12 @@ const getListItems = (role?: string) => {
     title: role === "student" ? "Yêu cầu" : "Phê duyệt",
     icon: <FaPaperPlane className="text-lg" />,
     route: "requests",
+  })
+
+  listItems.push({
+    title: role === "student" ? "Kết quả học tập" : "Nhập điểm",
+    icon: <FaBook className="text-lg" />,
+    route: "grades",
   })
 
   if (role === "admin") {

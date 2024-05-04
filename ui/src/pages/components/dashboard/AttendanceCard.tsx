@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { LiaHandPointer } from "react-icons/lia";
 import { MdLocationPin } from "react-icons/md";
 import MyLocation from "./MyLocationMap";
@@ -119,7 +119,7 @@ function AttendanceCard() {
 
     if (loading) {
         return (
-            <div className='bg-white flex-1 rounded-md p-8 md:w-[37%] sm:w-[99%] flex lg:flex-col items-center h-stretch justify-center'>
+            <div className='bg-white flex-1 rounded-md p-4 md:w-[37%] sm:w-[99%] flex lg:flex-col items-center h-stretch justify-center'>
                 <DotFlashing></DotFlashing>
             </div>
         );
@@ -127,7 +127,7 @@ function AttendanceCard() {
 
     if (!lesson) {
         return (
-            <div className='bg-white flex-1 rounded-md p-8 md:w-[37%]  sm:w-[99%] flex lg:flex-col  h-[calc(100vh-80px)] items-center h-stretch'>
+            <div className='bg-white flex-1 rounded-md p-4 md:w-[37%]  sm:w-[99%] flex lg:flex-col  min-h-[calc(100vh-80px)] items-center h-stretch'>
                 <div className='text-neutral-400 flex flex-col justify-center items-center'>
                     <IoMdCheckmarkCircleOutline size={60} color={"#2f9af7"} />
                     <div className='font-semibold text-md py-8 px-4'>
@@ -139,7 +139,7 @@ function AttendanceCard() {
         );
     }
 
-    const { classId = "", subject = "", location = " " } = lesson?.class;
+    const { subject = "", location = " " } = lesson?.class;
     const { endDateTime = " ", startDateTime = "" } = lesson;
     console.log(location)
 
@@ -149,7 +149,7 @@ function AttendanceCard() {
     // }
 
     return (
-        <div className='bg-white rounded-md flex-1 p-8 md:w-[37%]  sm:w-[99%] flex lg:flex-col items-center h-[calc(100vh-80px)]'>
+        <div className='bg-white rounded-md flex-1 p-4 md:w-[37%]  sm:w-[99%] flex lg:flex-col items-center min-h-[calc(100vh-80px)]'>
             <div className='text-base font-semibold mt-2'>{clock}</div>
             <div className='text-xs font-semibold text-neutral-500'>
                 {`${getToday()}, Ngày ${new Date().toLocaleString("en-us", {
@@ -160,7 +160,7 @@ function AttendanceCard() {
             </div>
             {attendance?.checkInTime ? (
                 <div
-                    className='border-lightRed hover:cursor-pointer border-8 rounded-full w-40 h-40 m-4 gap-2 flex shadow-2xl justify-center flex-col text-neutal-800 items-center'
+                    className='border-lightRed hover:cursor-pointer border-8 rounded-full min-w-40 min-h-40 m-4 gap-2 flex shadow-2xl justify-center flex-col text-neutal-800 items-center'
                     onClick={() => {
                         dispatch(
                             setDialog({
@@ -205,7 +205,7 @@ function AttendanceCard() {
                 </div>
             ) : (
                 <div
-                    className='bg-[#D9D9D9] hover:cursor-pointer rounded-full w-40 h-40 m-4 gap-2 flex shadow-2xl justify-center flex-col text-neutal-800 items-center'
+                    className='bg-[#D9D9D9] hover:cursor-pointer rounded-full min-w-40 min-h-40 m-4 gap-2 flex shadow-2xl justify-center flex-col text-neutal-800 items-center'
                     onClick={() => {
                         dispatch(
                             setDialog({
@@ -214,7 +214,7 @@ function AttendanceCard() {
                                 title: "Xác nhận điểm danh",
                                 open: true,
                                 content: (
-                                    <div className='w-full h-full flex items-end justify-center'>
+                                    <div className='w-full h-full flex items-center justify-center'>
                                         <Attendify
                                             attendance={attendance}
                                             setAttendance={setAttendance}
@@ -233,17 +233,17 @@ function AttendanceCard() {
                     <div />
                 </div>
             )}
-            <div className='text-lg font-semibold mt-3'>
+            <div className='text-sm font-semibold mt-2'>
                 {subject.title} {subject.subjectId}
             </div>
-            <div className='text-sm font-semibold mt-2 text-neutral-500 '>
+            <div className='text-xs font-semibold mt-1 text-lightRed'>
                 {getHourAndMinute(startDateTime)} - {getHourAndMinute(endDateTime)}
             </div>
-            <div className='text-xs font-semibold mt-2 text-neutral-500 flex items-center gap-1'>
+            <div className='text-xs font-semibold mt-1 text-neutral-500 flex items-center gap-1'>
                 <MdLocationPin size={14} />
                 Vị trí: {location.description || "Không có dữ liệu"}
             </div>
-            <div className='w-80 h-72 mt-4'>
+            <div className='w-3/4 h-3/5 mt-2'>
                 <MyLocation></MyLocation>
             </div>
         </div>

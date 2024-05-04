@@ -30,7 +30,7 @@ function MyLocationMap() {
     // console.log(position);
 
     return (
-        <div className="h-full w-full p-4">
+        <div className="h-full w-full p-0 pb-4">
             <h2 className="text-neutral-400 text-xs mb-2">Vị trí hiện tại</h2>
             {position.latitude && position.longitude ? (
                <div className='h-full w-full map-wrapper'>

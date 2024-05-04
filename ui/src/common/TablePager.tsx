@@ -60,6 +60,7 @@ export interface HeadCell<T> {
 }
 
 interface TablePagerProps<T> {
+  id?: string;
   tableTitle: string;
   selected?: T[];
   setSelected?: (value: T[]) => void;
@@ -182,7 +183,7 @@ export default function EnhancedTable<T extends { id?: string }>(props: TablePag
       <p className="text-lg font-semibold my-1">{props.tableTitle}</p>
       {props.toolbarItems}
       <Paper sx={{ width: "100%", mb: 2, borderRadius: 1 }}>
-        <TableContainer>
+        <TableContainer id={props.id}>
           <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
             <EnhancedTableHead<T>
               order={order}
