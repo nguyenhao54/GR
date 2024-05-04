@@ -35,8 +35,8 @@ attendanceSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'student',
     select: 'name codeNumber',
-  }),
-    next();
+  });
+  next();
 });
 
 

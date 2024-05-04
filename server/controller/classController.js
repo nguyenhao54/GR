@@ -11,7 +11,6 @@ exports.updateClass = factory.updateOne(Class);
 exports.deleteClass = factory.deleteOne(Class);
 
 exports.getMyClasses = catchAsync(async (req, res, next) => {
-  //   console.log(req.user);
   let classesRes;
   if (req.user.role === 'student') {
     classesRes = await Class.aggregate([
@@ -30,7 +29,6 @@ exports.getMyClasses = catchAsync(async (req, res, next) => {
       teacher: req.user._id,
     }).populate("students");
   }
-  // console.log('class', classesRes);
   const classes = await Class.populate(classesRes, {
     path: 'subject teacher',
   });
