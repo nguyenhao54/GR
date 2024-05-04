@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, MenuItem, OutlinedInput, PaperProps, Theme, useTheme } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, OutlinedInput, Theme, useTheme } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import React, { useEffect } from 'react'
 import { getMyClasses } from '../api/class';
@@ -38,7 +38,7 @@ function Grade() {
     }
     else {
         return <>{
-            user!.role === "student"
+            user.role === "student"
                 ? <Result></Result>
                 : <GradeView></GradeView>
         }</>

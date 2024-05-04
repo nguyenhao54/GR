@@ -202,7 +202,7 @@ function GradeTable({ selectedClass }: { selectedClass: any }) {
             <TablePager
                 id={`${selectedClass?._id}`}
                 tableTitle={"Danh sách sinh viên"}
-                total={display?.length || 0}
+                total={display?.length ?? 0}
                 data={display || []}
                 mapDataToRowData={mapRequestToRowElement}
                 headCells={headCells}

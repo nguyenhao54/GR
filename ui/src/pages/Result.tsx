@@ -1,5 +1,5 @@
 import React from 'react'
-import { FormControl, InputLabel, MenuItem, OutlinedInput, PaperProps, Theme, useTheme } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, OutlinedInput, Theme, useTheme } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { getCookie } from './components/dashboard/AttendanceCard';
 import SemesterGradeTable from './components/grade/SemesterGradeTable';
