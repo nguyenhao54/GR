@@ -4,19 +4,23 @@ import React from 'react'
 import { FaInfoCircle } from 'react-icons/fa';
 import { MenuProps } from '../../Grade';
 import { getStyles } from '../../Result';
+import { getUsers } from '../../../api/user';
+import { getCookie } from '../dashboard/AttendanceCard';
 
 const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) => {
 
     const theme = useTheme();
-
+    const token = getCookie("token");
     const [open, setOpen] = React.useState(false);
     const [semester, setSemester] = React.useState<number>(classObj.semester)
+    const [teacher, setTeacher] = React.useState<any>({ email: classObj.teacher?.email || "" })
+    const [teacherError, setTeacherError] = React.useState<string>("");
     const semesterList = [20191, 20192, 20211, 20212, 20221, 20222, 20231, 20232, 20241, 20242, 20251, 20252]
-
 
     React.useImperativeHandle(ref, () => {
         return {
-            changedClass: { ...classObj, semester }
+            changedClass: { ...classObj, semester },
+            validateForm: validate
         }
     })
 
@@ -29,12 +33,24 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
         setSemester(semesterList.find((item) => item === value) || semesterList[0]);
     }
 
+    const validate = async () => {
+        let validate = true;
+        const res = await getUsers(token, `?email=${teacher.email}`)
+        if (res.data.data[0]) {
+            setTeacher({ ...teacher, id: res.data.data[0]._id })
+        }
+        else {
+            validate = false;
+            setTeacherError("Không có giáo viên với email này")
+        }
+        return validate;
+    }
 
     return (
         <div className='overflow-auto font-montserrat w-full h-[430px]'>
             <div className="flex flex-col ">
                 <div className="flex-col flex gap-4">
-                    <div className="font-semibold flex flex-row gap-1 items-center">
+                    {classObj.classId ? <div className="font-semibold flex flex-row gap-1 items-center">
                         <p>Lớp học: {classObj.classId}</p>
                         <ClickAwayListener onClickAway={handleTooltipClose}>
                             <div>
@@ -58,34 +74,52 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
                             </div>
                         </ClickAwayListener>
                     </div>
-                    {/* <p>Thời gian: {formatDate(request.lesson.startDateTime) + " - " + formatDate(request.lesson.endDateTime)}</p> */}
+                        : <div className="w-1/2">
+                            <TextField
+                                id="classId"
+                                label="Mã lớp"
+                                required
+                                value={""}
+                                onChange={(e) => {
+                                    console.log(e.target.value)
+                                }}
+                                style={{ width: "100%" }}
+                                variant="outlined"
+                            />
+                        </div>
+                    }
                     <div className="flex gap-2">
-                        <TextField
-                            id="subjectId"
-                            label="Mã học phần"
-                            required
-                            // multiline
-                            // rows='4.7'
-                            value={classObj.subject.subjectId}
-                            onChange={(e) => {
-                                console.log(e.target.value)
-                            }}
-                            style={{ width: "50%" }}
-                            variant="outlined"
-                        />
-                        <TextField
-                            id="teacher"
-                            label="Giáo viên"
-                            required
-                            // multiline
-                            // rows='4.7'
-                            defaultValue={classObj.teacher.email}
-                            onChange={(e) => {
-                                console.log(e.target.value)
-                            }}
-                            style={{ width: "50%" }}
-                            variant="outlined"
-                        />
+
+                        <div className="w-1/2">
+                            <TextField
+                                id="subjectId"
+                                label="Mã học phần"
+                                required
+                                value={classObj.subject?.subjectId}
+                                onChange={(e) => {
+                                    console.log(e.target.value)
+                                }}
+                                style={{ width: "100%" }}
+                                variant="outlined"
+                            />
+                        </div>
+                        <div className="w-1/2">
+                            <TextField
+                                id="teacher"
+                                label="Giáo viên"
+                                required
+                                defaultValue={teacher.email}
+                                onChange={(e) => {
+                                    setTeacherError("")
+                                    setTeacher({ email: e.target.value })
+                                    console.log(e.target.value)
+                                }}
+                                style={{ width: "100%" }}
+
+                                variant="outlined"
+                            />
+                            {teacherError && <div className="text-[10px] text-lightRed mt-1 -mb-5 pb-3 italic w-full">{teacherError}</div>}
+                        </div>
                     </div>
 
                     <div className="font-semibold text-xs pl-1">Vị trí lớp học</div>
@@ -94,9 +128,7 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
                             id="lat"
                             label="Kinh độ"
                             required
-                            // multiline
-                            // rows='4.7'
-                            defaultValue={classObj.location.coordinates[0] || ""}
+                            defaultValue={classObj.location?.coordinates[0] || ""}
                             onChange={(e) => {
                                 console.log(e.target.value)
                             }}
@@ -107,9 +139,7 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
                             id="long"
                             label="Vĩ độ"
                             required
-                            // multiline
-                            // rows='4.7'
-                            defaultValue={classObj.location.coordinates[1] || ""}
+                            defaultValue={classObj.location?.coordinates[1] || ""}
                             onChange={(e) => {
                                 console.log(e.target.value)
                             }}
@@ -119,9 +149,7 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
                             id="desc"
                             label="Mô tả"
                             required
-                            // multiline
-                            // rows='4.7'
-                            defaultValue={classObj.location.description}
+                            defaultValue={classObj.location?.description}
                             onChange={(e) => {
                                 console.log(e.target.value)
                             }}
@@ -131,20 +159,6 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
 
                     </div>
                     <div className="flex gap-2">
-                        {/* <TextField
-                            id="semester"
-                            label="Học kỳ"
-                            required
-                            // multiline
-                            // rows='4.7'
-                            value={semester}
-                            onChange={(e) => {
-                                console.log(e.target.value)
-                                setSemester(e.target.value)
-                            }}
-                            style={{ width: "50%" }}
-                            variant="outlined"
-                        /> */}
                         <div className="w-1/2">
                             <FormControl fullWidth >
                                 <InputLabel id="demo-simple-select-label">Học kỳ</InputLabel>
@@ -175,6 +189,7 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
                             id="duration"
                             label="Thời lượng (phút)"
                             required
+                            type="number"
                             defaultValue={classObj.duration}
                             onChange={(e) => {
                                 console.log(e.target.value)
@@ -187,7 +202,6 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
             </div>
         </div>
     )
-}
-)
+})
 
 export default EditClassForm

@@ -107,32 +107,35 @@ function ManageClass() {
             open: true,
             type: "normal",
             onClickOk: async () => {
-                dispatch(showTopLoading())
-                const newClass = editClassRef.changedClass
-                const res = await editClass(token, classObj._id, newClass)
-                if (res?.status === "success") {
-                    const processedClassList = classList.map(item => {
-                        if (item.id === classObj._id) return { ...item, ...newClass }
-                        else return { ...item }
-                    })
-                    //display success dialog
-                    setClassList(processedClassList)
-                    dispatch(setDialog({
-                        title: "Chỉnh sửa lớp học thành công",
-                        open: true,
-                        type: "info",
-                        isMessagebar: true
-                    }))
+                console.log(editClassRef.validateForm());
+                if (await editClassRef.validateForm()) {
+                    dispatch(showTopLoading())
+                    const newClass = editClassRef.changedClass
+                    const res = await editClass(token, classObj._id, newClass)
+                    if (res?.status === "success") {
+                        const processedClassList = classList.map(item => {
+                            if (item.id === classObj._id) return { ...item, ...newClass }
+                            else return { ...item }
+                        })
+                        //display success dialog
+                        setClassList(processedClassList)
+                        dispatch(setDialog({
+                            title: "Chỉnh sửa lớp học thành công",
+                            open: true,
+                            type: "info",
+                            isMessagebar: true
+                        }))
 
-                } else {
-                    dispatch(setDialog({
-                        title: "Chỉnh sửa lớp học thất bại, vui lòng thử lại sau",
-                        open: true,
-                        type: "warning",
-                        isMessagebar: true
-                    }))
+                    } else {
+                        dispatch(setDialog({
+                            title: "Chỉnh sửa lớp học thất bại, vui lòng thử lại sau",
+                            open: true,
+                            type: "warning",
+                            isMessagebar: true
+                        }))
+                    }
+                    dispatch(closeTopLoading())
                 }
-                dispatch(closeTopLoading())
 
             },
             content: (
@@ -143,6 +146,58 @@ function ManageClass() {
         }))
 
     }
+
+    const handleAddNew = () => {
+
+        dispatch(setDialog({
+            title: "Thêm mới lớp học",
+            customHeight: 680,
+            customWidth: 700,
+            open: true,
+            type: "normal",
+            onClickOk: async () => {
+                console.log(editClassRef.validateForm());
+                if (await editClassRef.validateForm()) {
+                    dispatch(showTopLoading())
+                    const newClass = editClassRef.changedClass
+                    console.log(newClass)
+                    // const res = await createClass(token, newClass)
+                    // if (res?.status === "success") {
+                    //     const processedClassList = classList.map(item => {
+                    //         if (item.id === classObj._id) return { ...item, ...newClass }
+                    //         else return { ...item }
+                    //     })
+                    //     //display success dialog
+                    //     setClassList(processedClassList)
+                    //     dispatch(setDialog({
+                    //         title: "Chỉnh sửa lớp học thành công",
+                    //         open: true,
+                    //         type: "info",
+                    //         isMessagebar: true
+                    //     }))
+
+                    // } else {
+                    //     dispatch(setDialog({
+                    //         title: "Chỉnh sửa lớp học thất bại, vui lòng thử lại sau",
+                    //         open: true,
+                    //         type: "warning",
+                    //         isMessagebar: true
+                    //     }))
+                    // }
+                    dispatch(closeTopLoading())
+                }
+
+            },
+            content: (
+                <EditClassForm classObj={{}} ref={(ref) => {
+                    editClassRef = ref
+                }} />
+            )
+        }))
+
+
+    }
+
     const handleDeleteClass = (classObj: any) => {
         dispatch(
             setDialog({
@@ -201,11 +256,11 @@ function ManageClass() {
             action: (
                 <div className='flex gap-2 items-center justify-center'>
                     <ToolTip textContent='Chỉnh sửa' limit={1}>
-                        <FaPen className='text-lg text-[#33BFFF] cursor-pointer'
+                        <FaPen size={14} className='text-lg text-[#33BFFF] cursor-pointer'
                             onClick={() => { handleEditClass(classObj) }} />
                     </ToolTip>
                     <ToolTip textContent='Xóa' limit={1}>
-                        <FaTrash className='text-lg text-lightRed cursor-pointer'
+                        <FaTrash size={14} className='text-lg text-lightRed cursor-pointer'
                             onClick={() => { handleDeleteClass(classObj) }} />
                     </ToolTip>
                 </div>
@@ -229,7 +284,7 @@ function ManageClass() {
                         }
                     }}
 
-                //   onClick={() => handleAcceptOrDenyAllSelected(true)}
+                    onClick={() => handleAddNew()}
                 >Thêm mới
                 </Button>
             </div>
@@ -250,7 +305,7 @@ function ManageClass() {
     return (
         <div className="bg-white rounded-md p-8 pt-4 w-[100%] h-max flex flex-col items-center">
             <TablePager<any>
-                tableTitle={"Danh sách lớp học"}
+                tableTitle={"Danh sách người dùng"}
                 // selected={selected}
                 // setSelected={setSelected}
                 // orderBy={orderBy}

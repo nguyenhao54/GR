@@ -143,11 +143,11 @@ function ManageClass() {
       action: (
         <div className='flex gap-2 items-center justify-center'>
           <ToolTip textContent='Chỉnh sửa' limit={1}>
-            <FaPen className='text-lg text-[#33BFFF] cursor-pointer'
+            <FaPen size={14} className='text-lg text-[#33BFFF] cursor-pointer'
               onClick={() => { handleEditUser(user) }} />
           </ToolTip>
           <ToolTip textContent='Xóa' limit={1}>
-            <FaTrash className='text-lg text-lightRed cursor-pointer'
+            <FaTrash size={14} className='text-lg text-lightRed cursor-pointer'
               onClick={() => { handleDeleteUser(user) }} />
           </ToolTip>
 

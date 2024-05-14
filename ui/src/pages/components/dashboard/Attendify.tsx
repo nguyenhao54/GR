@@ -105,11 +105,11 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
               );
 
               let faceMatcher = new faceapi.FaceMatcher(refFaceData)
-              resizedDetections.forEach(async face => {
+              resizedDetections.every(async face => {
                 const { detection, descriptor } = face;
                 let label = faceMatcher.findBestMatch(descriptor).toString();
                 if (label.includes("unknown")) {
-                  return
+                  return true
                 } else {
                   clearInterval(myInterval)
 
@@ -153,6 +153,7 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
                     }
                     dispatch(closeTopLoading())
                   }, 3500)
+                  return false;
                 }
               }
               )
@@ -164,7 +165,7 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
           }
 
         }
-      }, 1500);
+      }, 500);
     };
   }
 

@@ -15,10 +15,10 @@ export const getMyInfo = async (token: string) => {
 }
 
 
-export const getUsers = async (token: string) => {
+export const getUsers = async (token: string, query?: string) => {
     try {
         const res = await axios.get(
-            `${BASE_URL}/users`,
+            `${BASE_URL}/users${query || ""}`,
             {headers: {Authorization: `Bearer ${token}` }}
         )
        return res.data

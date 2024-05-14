@@ -216,6 +216,7 @@ function RequestTable() {
       }))
   }
 
+
   function handleEdit(request: any) {
     const storage = firebase.storage();
     dispatch(
@@ -310,7 +311,7 @@ function RequestTable() {
               </ToolTip>
               <ToolTip textContent='Từ chối' limit={1}>
                 {/* //TODO: set button disable  */}
-                <FaCircleXmark className={request.status !== "pending" ? "opacity-30 hover:cursor-default text-lg" : 'text-lg cursor-pointer text-lightRed'}
+                <FaCircleXmark className={request.atus !== "pending" ? "opacity-30 hover:cursor-default text-lg" : 'text-lg cursor-pointer text-lightRed'}
                   onClick={request.status === "pending" ? () => { handleDenyOrAccept(request, false) } : undefined} />
               </ToolTip>
 
@@ -319,14 +320,14 @@ function RequestTable() {
           {user?.role === "student" &&
             <><ToolTip textContent='Chỉnh sửa' limit={1}>
               {/* //TODO: set button disable  */}
-              <FaPen className={request.status !== "pending" ? "opacity-30 hover:cursor-default text-lg" : 'text-lg cursor-pointer text-blue-500'}
+              <FaPen size={14} className={request.status !== "pending" ? "opacity-30 hover:cursor-default text-lg" : 'text-lg cursor-pointer text-blue-500'}
                 onClick={request.status === "pending" ? () => {
 
                   handleEdit(request)
                 } : undefined} />
             </ToolTip>
               <ToolTip textContent='Xóa' limit={1}>
-                <FaTrash className={request.status !== "pending" ? "opacity-30 hover:cursor-default text-lg" : 'text-lg  cursor-pointer text-lightRed'}
+                <FaTrash size={14} className={request.status !== "pending" ? "opacity-30 hover:cursor-default text-lg" : 'text-lg  cursor-pointer text-lightRed'}
                   onClick={request.status === "pending" ? () => { handleDelete(request) } : undefined} />
               </ToolTip>
             </>}
