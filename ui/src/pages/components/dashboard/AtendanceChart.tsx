@@ -32,7 +32,7 @@ export default function StackedAtendanceChart() {
         getMyAttendanceStats(token).then(res => {
             if (res) {
                 setBarData(res.map((item: any) => ({
-                    name: new Date(item.date).toLocaleString("en-US", { day: '2-digit', month: '2-digit' }),
+                    name: new Date(item.date).toLocaleString("en-GB", { day: '2-digit', month: '2-digit' }),
                     "Có mặt": item.present,
                     "Vắng mặt": item.absent,
                 })))
@@ -55,10 +55,12 @@ export default function StackedAtendanceChart() {
         <div className="bg-white flex-1 rounded-md p-4 w-[69%] md:w-[62%] flex flex-col gap-2 min-h-[calc(100vh-80px)]">
             {
                 loading
-                    ? <DotFlashing></DotFlashing>
+                    ? <div className='bg-white flex-1 rounded-md p-4 flex lg:flex-col items-center h-stretch justify-center'>
+                        <DotFlashing></DotFlashing>
+                    </div>
                     : <div>
                         <div className="text-neutral-800 font-semibold text-lg mt-1 mb-4 text-center">
-                            Thống kê tham gia lớp học
+                            Thống kê điểm danh
                         </div>
                         {!pieData || !barData ? <div>Không có dữ liệu</div> :
                             <>

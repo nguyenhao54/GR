@@ -111,10 +111,10 @@ export default function ToastCalendar() {
                         `<div class="flex flex-col justify-start">
                   <div class="whitespace-normal flex flex-row gap-2">
                     <div class="rounded-md py-0.5 px-1 font-semibold" style="background-color:${event.borderColor}; ">
-                      ${moment(event.start.toDate()).format("HH:MM")}
+                      ${moment(event.start.toDate()).format("HH:mm")}
                     </div>
                     <div class="rounded-md py-0.5 px-1 font-semibold" style="background-color:${event.borderColor}; ">
-                      ${moment(event.end.toDate()).format("HH:MM")}
+                      ${moment(event.end.toDate()).format("HH:mm")}
                     </div>
                   </div>
                   <div class="whitespace-normal font-semibold">${event.title}</div>
@@ -125,7 +125,7 @@ export default function ToastCalendar() {
                     return (
                         `<div class="flex flex-row justify-start gap-2">
                   <div class="rounded-md py-0.5 px-1 font-semibold" style="background-color:${event.borderColor}; ">
-                      ${moment(event.end.toDate()).format("HH:MM")}
+                      ${moment(event.end.toDate()).format("HH:mm")}
                   </div>
                   <div class="whitespace-normal font-semibold">${event.title}</div>
                 </div>`

@@ -68,7 +68,7 @@ function RequestForm() {
                 open: true,
                 type: "info",
                 content: (
-                    <div className='pl-6 font-montserrat'>
+                    <div className='pl-6 font-montserrat text-xs font-medium'>
                         Khoảng thời gian bạn chọn không có lớp học hoặc không hợp lệ, vui lòng kiểm tra lại!
                     </div>
                 ),

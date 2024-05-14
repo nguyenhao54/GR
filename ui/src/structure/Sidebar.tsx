@@ -2,11 +2,12 @@ import { isActiveStyles, isNotActiveStyles } from "../utils/styles";
 import { NavLink } from "react-router-dom";
 import { MdHomeFilled } from "react-icons/md";
 import { FaCalendarAlt, FaUser } from "react-icons/fa";
-import { FaGear } from "react-icons/fa6";
+import { FaGear, FaUserGear, FaUserGroup } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { AppState } from "../redux/store";
 import { FaPaperPlane } from "react-icons/fa";
 import { FaBook } from "react-icons/fa";
+import { FaChalkboardTeacher } from "react-icons/fa";
 
 const getListItems = (role?: string) => {
 
@@ -16,36 +17,43 @@ const getListItems = (role?: string) => {
     icon: <FaUser className="text-lg" />,
     route: "profile",
   });
-  if (role === "student") {
+  if (role !== "admin") {
+    if (role === "student") {
+      listItems.push({
+        title: "Dashboard",
+        icon: <MdHomeFilled className="text-lg scale-125 " />,
+        route: "dashboard",
+      })
+    }
     listItems.push({
-      title: "Dashboard",
-      icon: <MdHomeFilled className="text-lg scale-125 " />,
-      route: "dashboard",
+      title: role === "student" ? "Lịch học" : "Lịch dạy",
+      icon: <FaCalendarAlt className="text-lg" />,
+      route: "calendar",
+    })
+
+    listItems.push({
+      title: role === "student" ? "Yêu cầu" : "Phê duyệt",
+      icon: <FaPaperPlane className="text-lg" />,
+      route: "requests",
+    })
+
+    listItems.push({
+      title: role === "student" ? "Kết quả học tập" : "Nhập điểm",
+      icon: <FaBook className="text-lg" />,
+      route: "grades",
     })
   }
-  listItems.push({
-    title: role === "student" ? "Lịch học" : "Lịch dạy",
-    icon: <FaCalendarAlt className="text-lg" />,
-    route: "calendar",
-  })
-
-  listItems.push({
-    title: role === "student" ? "Yêu cầu" : "Phê duyệt",
-    icon: <FaPaperPlane className="text-lg" />,
-    route: "requests",
-  })
-
-  listItems.push({
-    title: role === "student" ? "Kết quả học tập" : "Nhập điểm",
-    icon: <FaBook className="text-lg" />,
-    route: "grades",
-  })
 
   if (role === "admin") {
     listItems.push({
-      title: "Quản lý",
-      icon: <FaGear className="text-lg" />,
+      title: "Quản lý Người dùng",
+      icon: <FaUserGear className="text-lg" />,
       route: "admin/manage-user",
+    });
+    listItems.push({
+      title: "Quản lý Lớp học",
+      icon: <FaChalkboardTeacher className="text-lg" />,
+      route: "admin/manage-class",
     })
   }
   return listItems;

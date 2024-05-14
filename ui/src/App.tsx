@@ -11,6 +11,8 @@ import { setCurrentUser } from './redux/user.reducer';
 import LessonDetail from './pages/components/calendar/LessonDetail';
 import { ToastCalendar } from './pages/components';
 import Grade from './pages/Grade';
+import ManageUser from './pages/ManageUser';
+import ManageClass from './pages/ManageClass';
 
 function App(props: { cookies: Cookies }) {
 
@@ -48,17 +50,17 @@ function App(props: { cookies: Cookies }) {
         <Route path="/dashboard" element={<Dashboard />}></Route>
         <Route path="/requests" element={<Request />}></Route>
         <Route path="/grades" element={<Grade />}></Route>
-
         <Route path="/calendar" element={<Calendar />}>
           <Route path="" element={
             <ToastCalendar></ToastCalendar>
           }></Route>
           <Route path="/calendar/:id" element={<LessonDetail></LessonDetail>}></Route>
         </Route>
+        <Route path="/admin/manage-user" element={<ManageUser />}></Route>
+        <Route path="/admin/manage-class" element={<ManageClass />}></Route>
       </Route>
     </Routes>
   );
 }
-
 
 export default withCookies(App);

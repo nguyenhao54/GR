@@ -57,6 +57,7 @@ const headCells: readonly HeadCell<StudentTableData>[] = [
     numeric: false,
     disablePadding: true,
     label: "Hành động",
+    minWidth: 60,
   },
 ];
 
@@ -72,7 +73,6 @@ export default function MenuTable(props: IMenuTableProps) {
   const [display, setDisplay] = React.useState<IAttendance[]>(attendances);
   const [orderBy, setOrderBy] = React.useState<keyof StudentTableData>("id");
   const [selected, setSelected] = React.useState<IAttendance[]>([]);
-  const [loading, setLoading] = React.useState<boolean>(true);
   const [searchText, setSearchText] = React.useState<string>("");
 
   const dispatch = useDispatch();
@@ -80,7 +80,7 @@ export default function MenuTable(props: IMenuTableProps) {
   React.useEffect(() => {
     let students: any[] = []
     let attendances: IAttendance[] = [];
-    setLoading(true)
+    dispatch(showTopLoading())
     Promise.all([getLessonById(token, lessonId), getAllAttendancesForLesson(token, lessonId)]).then((res: any) => {
 
       setLesson(res[0])
@@ -101,7 +101,7 @@ export default function MenuTable(props: IMenuTableProps) {
       setAttendances(attendanceListMap)
       setDisplay(attendanceListMap)
     }).finally(() => {
-      setLoading(false)
+      dispatch(closeTopLoading())
     })
   }, [lessonId, token]);
 
@@ -114,17 +114,17 @@ export default function MenuTable(props: IMenuTableProps) {
       checkInTime: attendance.checkInTime || <div> <FaXmark className='text-lightRed text-md' /></div>,
       checkOutTime: attendance.checkOutTime || <div> <FaXmark className='text-lightRed text-md' /></div>,
       status: <div>{attendance.isSuccessful
-        ? <div className='flex gap-1 items-center text-green-600'><FaUserCheck className='text-lg' /> Có mặt</div>
+        ? <div className='flex gap-1 items-center text-[#33BFFF]'><FaUserCheck className='text-lg' /> Có mặt</div>
         : <div className='flex gap-1 items-center text-lightRed'><FaUserXmark className='text-lg' /> Vắng mặt</div>}</div>,
       action: (
         <div className='flex gap-2 items-center justify-center'>
 
           <ToolTip textContent='Từ chối' limit={1}>
-            <FaCircleXmark className='text-lg text-lightRed'
+            <FaCircleXmark className='text-lg text-lightRed cursor-pointer'
               onClick={() => { handleDenyOrAccept(attendance, false) }} />
           </ToolTip>
           <ToolTip textContent='Chấp nhận' limit={1}>
-            <FaCheckCircle className='text-lg text-green-600'
+            <FaCheckCircle className='text-lg text-[#33BFFF] cursor-pointer'
               onClick={() => { handleDenyOrAccept(attendance, true) }} />
           </ToolTip>
         </div>
@@ -196,11 +196,11 @@ export default function MenuTable(props: IMenuTableProps) {
           disabled={!(selected.length > 0)}
           // textTransform={"none"}
           sx={{
-            color: "green",
+            color: "#33BFFF",
             textTransform: "none",
-            borderColor: "green",
+            borderColor: "#33BFFF",
             "&:hover": {
-              borderColor: "green"
+              borderColor: "#33BFFF"
             }
           }}
 
@@ -235,37 +235,34 @@ export default function MenuTable(props: IMenuTableProps) {
   );
 
   return (
-    <>{loading ? <DotFlashing></DotFlashing>
-      :
-      <div>
-        <TablePager<IAttendance>
-          tableTitle={"Danh sách điểm danh"}
-          selected={selected}
-          setSelected={setSelected}
-          orderBy={orderBy}
-          onSelectAllClick={handleSelectAllClick}
-          total={display?.length}
-          data={display || []}
-          mapDataToRowData={mapAttendanceDataToRowElement}
-          headCells={headCells}
-          showSearchBar={true}
-          toolbarItems={toolbarItems}
-        ></TablePager>
-        <div className="flex justify-end">
-          <Button
-            variant="contained"
-            sx={{
-              textTransform: "none",
-              backgroundColor: "green",
-              "&:hover": {
-                backgroundColor: "green"
-              }
-            }}
-            onClick={() => handleSave()}
-          >Lưu thay đổi
-          </Button>
-        </div>
+    <div>
+      <TablePager<IAttendance>
+        tableTitle={"Danh sách điểm danh"}
+        selected={selected}
+        setSelected={setSelected}
+        orderBy={orderBy}
+        onSelectAllClick={handleSelectAllClick}
+        total={display?.length}
+        data={display || []}
+        mapDataToRowData={mapAttendanceDataToRowElement}
+        headCells={headCells}
+        showSearchBar={true}
+        toolbarItems={toolbarItems}
+      ></TablePager>
+      <div className="flex justify-end">
+        <Button
+          variant="contained"
+          sx={{
+            textTransform: "none",
+            backgroundColor: "#C1121F",
+            "&:hover": {
+              backgroundColor: "#C1121F"
+            }
+          }}
+          onClick={() => handleSave()}
+        >Lưu thay đổi
+        </Button>
       </div>
-    }</>
+    </div>
   );
 }

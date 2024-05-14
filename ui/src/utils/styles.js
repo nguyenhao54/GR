@@ -1,8 +1,8 @@
 export const isActiveStyles =
-  "mx-2 text-venetianRed font-medium rounded hover:bg-neutral-200 hover:text-venetianRed duration-100 transition-all ease-in-out";
+  "mx-2 text-venetianRed font-medium rounded bg-neutral-100 hover:bg-neutral-200 hover:text-venetianRed duration-100 transition-all ease-in-out";
 
 export const isNotActiveStyles =
-  "mx-2 text-textColor font-medium rounded-md hover:text-venetianRed hover:bg-neutral-200 duration-100 transition-all ease-in-out";
+  "mx-2 text-neutral-400 font-light rounded-md hover:text-venetianRed hover:bg-neutral-200 duration-100 transition-all ease-in-out";
 
 export const isActiveStyles2 =
   "text-2xl mx-3 text-venetianRed font-medium bg-[#2a2a2a] duration-100 transition-all ease-in-out";

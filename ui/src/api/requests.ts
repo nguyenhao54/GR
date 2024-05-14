@@ -57,3 +57,32 @@ export const handleRequest = async (token: string, requestId: string, isApprove:
         console.log(err)
     }
 }
+
+export const editRequest = async (token: string, requestId: string, request: any ) => {
+    try {
+        const res = await axios.patch(
+            `${BASE_URL}/requests/${requestId}`,
+            {
+                reason: request.reason,
+                photo: request.photo
+            },
+            { headers: { Authorization: `Bearer ${token}` } }
+        )
+        return res.data
+    }
+    catch (err) {
+        console.log(err)
+    }
+}
+
+export const deleteRequest = async (token: string, requestId: string) => {
+    try {
+        const res = await axios.delete(
+            `${BASE_URL}/requests/${requestId}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+        )
+    }
+    catch (err) {
+        console.log(err)
+    }
+}

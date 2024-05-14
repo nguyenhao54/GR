@@ -25,7 +25,7 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'));
 }
 const limiter = rateLimit({
-  max: 100,
+  max: 10000,
   windowMs: 60 * 60 * 1000, //can only sent 100 request in 1 hour
   message: 'To many requests sent, please try again later',
 });

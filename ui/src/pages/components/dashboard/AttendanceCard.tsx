@@ -61,7 +61,7 @@ export function getCookie(cname: string) {
 }
 
 function getClock() {
-    return new Date().toLocaleString("en-us", {
+    return new Date().toLocaleString("en-GB", {
         hour: "2-digit",
         minute: "2-digit",
     });
@@ -152,9 +152,9 @@ function AttendanceCard() {
         <div className='bg-white rounded-md flex-1 p-4 md:w-[37%]  sm:w-[99%] flex lg:flex-col items-center min-h-[calc(100vh-80px)]'>
             <div className='text-base font-semibold mt-2'>{clock}</div>
             <div className='text-xs font-semibold text-neutral-500'>
-                {`${getToday()}, Ngày ${new Date().toLocaleString("en-us", {
+                {`${getToday()}, Ngày ${new Date().toLocaleString("en-GB", {
                     day: "2-digit",
-                })} Tháng ${new Date().toLocaleString("en-us", {
+                })} Tháng ${new Date().toLocaleString("en-GB", {
                     month: "2-digit",
                 })}`}
             </div>
@@ -164,7 +164,7 @@ function AttendanceCard() {
                     onClick={() => {
                         dispatch(
                             setDialog({
-                                customWidth: 400,
+                                customWidth: 360,
                                 customHeight: 180,
                                 title: "Xác nhận Check-out",
                                 open: true,
@@ -189,7 +189,7 @@ function AttendanceCard() {
                                     );
                                 },
                                 content: (
-                                    <div className='pl-6 font-montserrat font-semibold'>
+                                    <div className='pl-6 font-montserrat text-xs font-medium'>
                                         Bạn có chắc chắn muốn check-out?
                                     </div>
                                 ),

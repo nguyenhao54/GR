@@ -140,7 +140,6 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
                     dispatch(setDialog({
                       open: false
                     }))
-                    dispatch(closeTopLoading())
                     const token = getCookie("token")
                     const dateTimeNow = addSevenHours((new Date()).toISOString())
                     if (!attendance?.checkInTime)
@@ -152,7 +151,8 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
                       updateAttendance(token, attendance._id, dateTimeNow, duration >= lesson.duration)
                       setAttendance({ ...attendance, checkOutTime: dateTimeNow });
                     }
-                  }, 2000)
+                    dispatch(closeTopLoading())
+                  }, 3500)
                 }
               }
               )
@@ -164,7 +164,7 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
           }
 
         }
-      }, 1000);
+      }, 1500);
     };
   }
 

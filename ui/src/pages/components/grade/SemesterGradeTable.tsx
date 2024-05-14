@@ -4,6 +4,7 @@ import { getMyGrade } from '../../../api/grade';
 import { AppState } from '../../../redux/store';
 import { getCookie } from '../dashboard/AttendanceCard';
 import TablePager, { HeadCell } from '../../../common/TablePager';
+import { closeTopLoading, showTopLoading } from '../../../redux/toploading.reducer';
 
 interface ClassGradeTableData {
     id?: string;
@@ -74,9 +75,13 @@ function SemesterGradeTable({ semester }: { semester: number }) {
 
     const [classList, setClassList] = useState<any[]>([])
     useEffect(() => {
+        dispatch(showTopLoading())
         getMyGrade(token, semester).then((res: any) => {
             // console.log(res)
-            setClassList(res.grades)
+            setClassList(res?.grades || [])
+        }).finally(() => {
+            dispatch(closeTopLoading())
+
         })
     }, [semester])
 

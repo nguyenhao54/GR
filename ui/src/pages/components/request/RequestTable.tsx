@@ -2,14 +2,18 @@ import React, { useEffect } from 'react'
 import TablePager, { HeadCell } from '../../../common/TablePager';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../../redux/store';
-import { getRequests, handleRequest } from '../../../api/requests';
+import { deleteRequest, editRequest, getRequests, handleRequest } from '../../../api/requests';
 import { getCookie } from '../dashboard/AttendanceCard';
 import ToolTip from '../../../common/ToolTip';
 import { FaCheckCircle, FaEye } from "react-icons/fa";
-import { DotFlashing, SearchBar } from '../../../common';
+import { SearchBar } from '../../../common';
 import { minusSevenHours } from '../../../utils';
 import { setDialog } from '../../../redux/dialog.reducer';
-import { FaCircleXmark } from 'react-icons/fa6';
+import { FaCircleXmark, FaPen, FaXmark } from 'react-icons/fa6';
+import { FaTrash } from "react-icons/fa6";
+import { closeTopLoading, showTopLoading } from '../../../redux/toploading.reducer';
+import EditRequestForm from './EditRequestForm';
+import firebase from 'firebase/compat/app';
 
 interface RequestTableData {
   id?: string;
@@ -95,13 +99,15 @@ function RequestTable() {
   useEffect(() => {
     if (!user)
       return;
-    setLoading(true);
+    // setLoading(true);
+    dispatch(showTopLoading())
     getRequests(token)
       .then((res) => {
-        setRequestList(res);
+        setRequestList(res.filter((req: any) => req.lesson.class));
       }
       )
-      .finally(() => setLoading(false))
+      .finally(() => dispatch(closeTopLoading())
+      )
 
   }, [user?._id, token, user])
 
@@ -117,16 +123,16 @@ function RequestTable() {
     );
   }, [searchText, JSON.stringify(requestList)]);
 
+  let editRequestRef: any;
 
-
-  const getStatusElement = (status: any) => {
+  const getStatusElement = (status: any, role: any) => {
     switch (status) {
       case "pending":
-        return <div className="font-medium text-neutral-600">Chờ phê duyệt</div>
+        return <div className="font-medium text-neutral-700">Chờ phê duyệt</div>
       case "approved":
-        return <div className="font-medium text-green-600">Được chấp nhận</div>
+        return <div className="font-medium text-blue-500">{role === "student" ? "Được chấp nhận" : "Đã chấp nhận"}</div>
       case "denied":
-        return <div className="font-medium text-red-600">Bị từ chối</div>
+        return <div className="font-medium text-lightRed">{role === "student" ? "Bị từ chối" : "Đã từ chối"}</div>
     }
   }
 
@@ -170,9 +176,97 @@ function RequestTable() {
           }
         },
         content: (
-          <div className='pl-6 font-montserrat font-semibold'>
+          <div className='pl-6 font-montserrat text-xs font-medium'>
             {accept ? "Bạn có chắc chắn chấp nhận yêu cầu?" : "Bạn có chắc chắn muốn từ chối yêu cầu?"}
           </div>
+        ),
+      }))
+  }
+
+  function handleDelete(request: any) {
+    dispatch(
+      setDialog({
+        customWidth: 400,
+        customHeight: 180,
+        title: "Xác nhận xóa yêu cầu",
+        open: true,
+        type: "warning",
+        onClickOk: async () => {
+          const promise = deleteRequest;
+          const res = await promise(token, request._id)
+          const processedRequestList = requestList.filter((item) => item.id !== request._id)
+          dispatch(setDialog({
+            open: false,
+          }))
+          //DONE: show succcessmsg
+          dispatch(setDialog({
+            title: " Xóa yêu cầu thành công",
+            open: true,
+            type: "info",
+            isMessagebar: true
+          }))
+          setRequestList(processedRequestList)
+
+        },
+        content: (
+          <div className='pl-6 font-montserrat text-xs font-medium'>
+            {"Những dữ liệu liên quan sẽ không thể khôi phục, bạn có chắc chắn muốn xóa yêu cầu này?"}
+          </div>
+        ),
+      }))
+  }
+
+  function handleEdit(request: any) {
+    const storage = firebase.storage();
+    dispatch(
+      setDialog({
+        customWidth: 700,
+        customHeight: 680,
+        title: "Chỉnh sửa yêu cầu",
+        open: true,
+        type: "normal",
+        onClickOk: async () => {
+
+          dispatch(showTopLoading())
+          const image = editRequestRef.changedRequest.image
+          let newRequest = { ...editRequestRef.changedRequest }
+
+          if (image.img) {
+            const img = await fetch(image.img)
+            const blob = await img.blob();
+            const ref = storage.ref(`/images/${image.title}`);
+            await ref.put(blob);
+            const url = await ref.getDownloadURL();
+            newRequest = { ...newRequest, photo: url }
+          }
+          const res = await editRequest(token, request._id, newRequest)
+          dispatch(closeTopLoading())
+          if (res?.status === "success") {
+            const processedRequestList = requestList.map(item => {
+              if (item.id === request._id) return { ...item, ...newRequest }
+              else return { ...item }
+            })
+            //display success dialog
+            setRequestList(processedRequestList)
+            dispatch(setDialog({
+              title: "Chỉnh sửa yêu cầu thành công",
+              open: true,
+              type: "info",
+              isMessagebar: true
+            }))
+
+          } else {
+            dispatch(setDialog({
+              title: "Chỉnh sửa yêu cầu thất bại, vui lòng thử lại sau",
+              open: true,
+              type: "warning",
+              isMessagebar: true
+            }))
+          }
+          console.log(editRequestRef.changedRequest)
+        },
+        content: (
+          <EditRequestForm ref={(ref) => { editRequestRef = ref }} request={request} />
         ),
       }))
   }
@@ -183,15 +277,15 @@ function RequestTable() {
       studentCode: request.student.codeNumber,
       studentName: request.student.name,
       lessonName: request.lesson.class.classId + ": " + request.lesson.class.subject.title,
-      startTime: new Date(minusSevenHours(request.lesson.startDateTime)).toLocaleString('en-US', { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }),
-      endTime: new Date(minusSevenHours(request.lesson.endDateTime)).toLocaleString('en-US', { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }),
+      startTime: new Date(minusSevenHours(request.lesson.startDateTime)).toLocaleString('en-GB', { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }),
+      endTime: new Date(minusSevenHours(request.lesson.endDateTime)).toLocaleString('en-GB', { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }),
       reason: request.reason,
-      status: getStatusElement(request.status),
+      status: getStatusElement(request.status, user!.role),
       action: (
         <div className='flex gap-2 items-center justify-center'>
 
           <ToolTip textContent='Xem ảnh minh chứng' limit={1}>
-            <FaEye className='text-lg text-green-600'
+            <FaEye className='text-lg text-neutral-600 cursor-pointer'
               onClick={() => {
                 //DONE: show popup with image
                 dispatch(setDialog({
@@ -209,14 +303,31 @@ function RequestTable() {
               } />
           </ToolTip>
           {user?.role === "teacher" &&
-            <><ToolTip textContent='Từ chối' limit={1}>
-              {/* //TODO: set button disable  */}
-              <FaCircleXmark className={request.status !== "pending" ? "opacity-30 hover:cursor-default text-lg" : 'text-lg text-lightRed'}
-                onClick={request.status === "pending" ? () => { handleDenyOrAccept(request, false) } : undefined} />
-            </ToolTip>
+            <>
               <ToolTip textContent='Chấp nhận' limit={1}>
-                <FaCheckCircle className={request.status !== "pending" ? "opacity-30 hover:cursor-default text-lg" : 'text-lg text-green-600'}
+                <FaCheckCircle className={request.status !== "pending" ? "opacity-30 hover:cursor-default text-lg" : 'text-lg  cursor-pointer text-blue-500'}
                   onClick={request.status === "pending" ? () => { handleDenyOrAccept(request, true) } : undefined} />
+              </ToolTip>
+              <ToolTip textContent='Từ chối' limit={1}>
+                {/* //TODO: set button disable  */}
+                <FaCircleXmark className={request.status !== "pending" ? "opacity-30 hover:cursor-default text-lg" : 'text-lg cursor-pointer text-lightRed'}
+                  onClick={request.status === "pending" ? () => { handleDenyOrAccept(request, false) } : undefined} />
+              </ToolTip>
+
+            </>}
+
+          {user?.role === "student" &&
+            <><ToolTip textContent='Chỉnh sửa' limit={1}>
+              {/* //TODO: set button disable  */}
+              <FaPen className={request.status !== "pending" ? "opacity-30 hover:cursor-default text-lg" : 'text-lg cursor-pointer text-blue-500'}
+                onClick={request.status === "pending" ? () => {
+
+                  handleEdit(request)
+                } : undefined} />
+            </ToolTip>
+              <ToolTip textContent='Xóa' limit={1}>
+                <FaTrash className={request.status !== "pending" ? "opacity-30 hover:cursor-default text-lg" : 'text-lg  cursor-pointer text-lightRed'}
+                  onClick={request.status === "pending" ? () => { handleDelete(request) } : undefined} />
               </ToolTip>
             </>}
         </div>
@@ -239,12 +350,11 @@ function RequestTable() {
       </div>
     </div>
   return (
-    <>{loading ? <DotFlashing></DotFlashing>
-      :
+    <>
       <div className="pt-4 w-full">
         <TablePager
           tableTitle={"Danh sách yêu cầu"}
-          total={display?.length}
+          total={display?.length || 0}
           data={display || []}
           mapDataToRowData={mapRequestToRowElement}
           headCells={headCells}
@@ -253,7 +363,7 @@ function RequestTable() {
           showSearchBar
           toolbarItems={user?.role !== "student" ? toolbarItems : <></>}
         ></TablePager>
-      </div>}
+      </div>
     </>
   )
 }

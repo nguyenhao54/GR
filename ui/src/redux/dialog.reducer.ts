@@ -8,7 +8,7 @@ export interface Dialog {
   customWidth?: number;
   customHeight?: number;
   loading?: boolean;
-  type?: "warning" | "info";
+  type?: "warning" | "info" | "normal";
   isMessagebar?: boolean;
 }
 

@@ -11,8 +11,9 @@ function Header() {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const carretRef = React.createRef<HTMLDivElement>()
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
+    setAnchorEl(carretRef.current);
   };
   const handleClose = () => {
     setAnchorEl(null);
@@ -27,8 +28,9 @@ function Header() {
           </div>
         </NavLink>
       </div>
-      <div className='p-4 px-8 flex justify-center hover:cursor-pointer items-center'>
+      <div className='p-4 px-8 flex justify-center hover:cursor-pointer items-center' onClick={handleClick}>
         <img
+          alt="user-photo"
           className='w-10 h-10 border-4 shadow-md border-neutral-200 bg-barnRed rounded-full'
           src={user?.photo}
         ></img>
@@ -36,8 +38,8 @@ function Header() {
           <p className='font-semibold'>{user?.name}</p>
           <p>{user?.codeNumber}</p>
         </div>
-        <div className='hover:cursor-pointer pl-2 pb-2' onClick={handleClick}>
-          <FaCaretDown />
+        <div className='hover:cursor-pointer pl-2 pb-2' ref={carretRef}>
+          <FaCaretDown/>
         </div>
       </div>
       <Menu
@@ -64,6 +66,15 @@ function Header() {
           style={{ margin: 4, borderRadius: 4, fontWeight: 600 }}
         >
           Hồ sơ
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            navigate("/changePass");
+            setAnchorEl(null);
+          }}
+          style={{ margin: 4, borderRadius: 4, fontWeight: 600 }}
+        >
+          Đổi mật khẩu
         </MenuItem>
         <MenuItem
           onClick={() => {

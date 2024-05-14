@@ -58,8 +58,6 @@ const classSchema = new mongoose.Schema(
 );
 
 classSchema.pre(/^find/, function (next) {
-  // if (this._fields) {
-  // if (this._fields.subject) {
   this.populate({
     path: 'subject students',
     select: 'name subjectId title codeNumber gradeCoefficient',
@@ -68,10 +66,8 @@ classSchema.pre(/^find/, function (next) {
   // if (this._fields.teacher) {
   this.populate({
     path: 'teacher',
-    select: 'name',
+    select: 'name email',
   });
-  // }
-  // }
   next();
 });
 
@@ -82,8 +78,7 @@ classSchema.statics.addRelatedLessons = async function (classInfo) {
     startTime.getTime() < classInfo.lastStartTime.getTime();
     startTime = new Date(startTime.getTime() + 7 * 24 * 60 * 60 * 1000)
   ) {
-    // console.log(classInfo.lastStartTime )
-    const endTime = new Date(                                                 
+    const endTime = new Date(
       startTime.getTime() + classInfo.duration * 60 * 1000,
     );
     await Lesson.create({
@@ -94,8 +89,20 @@ classSchema.statics.addRelatedLessons = async function (classInfo) {
   }
 };
 
+classSchema.statics.deleteRelatedLessons = async function (classInfo) {
+  await Lesson.deleteMany({
+    class: classInfo._id,
+  });
+};
+
 classSchema.post('save', function () {
   this.constructor.addRelatedLessons(this);
+});
+
+classSchema.post('findOneAndDelete', async function () {
+  await Lesson.deleteMany({
+    class: this._id,
+  });
 });
 
 const Class = mongoose.model('Class', classSchema);

@@ -42,10 +42,10 @@ export default function DialogView() {
 
             <div className="h-[2px] mx-5 bg-neutral-200"></div>
             <div className="flex items-center justify-center w-full h-full p-4">
-                {dialogState.type && <div> {dialogState.type === "warning" ? <FaRegQuestionCircle size={40} /> : <FaInfoCircle size={40} />}
+                {dialogState.type && <div> {dialogState.type === "warning" ? <FaRegQuestionCircle size={40} color={"#C1121F"} /> : dialogState.type === "info" ? <FaInfoCircle color={"#669BBC"} size={40} /> : <></>}
                 </div>}
                 {dialogState?.content}</div>
-            {dialogState.type && <div>  {dialogState.type === "warning"
+            {dialogState.type && <div>  {dialogState.type === "warning" || dialogState.type === "normal"
                 ? <div className="p-4 pt-0 flex gap-4 justify-end">
                     <Button variant="outlined" color="error"
                         onClick={
@@ -73,7 +73,7 @@ export default function DialogView() {
                     sx: {
                         backgroundColor: "white",
                         color: "black",
-                        borderLeft: dialogState?.type === "warning" ? "2px solid red" : "4px solid green"
+                        borderLeft: dialogState?.type === "warning" ? "2px solid red" : "4px solid #33BFFF"
                     }
                 }}
                 anchorOrigin={{ vertical: "top", horizontal: "right" }}

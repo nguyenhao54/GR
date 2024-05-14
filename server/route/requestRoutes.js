@@ -32,7 +32,7 @@ router
   )
   .delete(
     authController.protect,
-    authController.restrictTo('admin'),
+    authController.restrictTo('student'),
     requestController.deleteRequest,
   );
 

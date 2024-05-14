@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { IAttendance, getCookie } from '../dashboard/AttendanceCard'
 import { getLessonById } from '../../../api/lesson'
 import { DetailList, DotFlashing } from '../../../common'
-import { getHourAndMinute } from '../../../utils'
+import { formatDate, getHourAndMinute } from '../../../utils'
 import { GoTriangleDown, GoTriangleUp } from "react-icons/go"
 import { FaUserGroup } from "react-icons/fa6";
 import { FaArrowLeft } from "react-icons/fa6";
@@ -64,8 +64,8 @@ function LessonDetail() {
               { title: "Tên học phần", text: lesson?.class.subject.title },
               { title: "Mã lớp", text: lesson?.class.classId },
               { title: "GVHD", text: lesson.class.teacher.name },
-              { title: "Thời gian", text: `${getHourAndMinute(lesson?.startDateTime)} - ${getHourAndMinute(lesson?.endDateTime)} ` },
-
+              { title: "Thời gian", text: `${formatDate(lesson?.startDateTime)} - ${formatDate(lesson?.endDateTime)} ` },
+              { title: "Hệ số điểm", text: lesson?.class.subject.gradeCoefficient },
             ]} ></DetailList>
           </div>
         </div>

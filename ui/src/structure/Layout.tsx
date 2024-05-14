@@ -16,6 +16,7 @@ const Layout = () => {
   useEffect(() => {
     if (url.pathname === "/") {
       if (user?.role === "student") navigate("/dashboard");
+      else if (user?.role === "admin") navigate("/admin/manage-user");
       else navigate("/calendar")
     }
   }, [navigate, url.pathname, user?.role]);

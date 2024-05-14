@@ -214,9 +214,9 @@ function GradeTable({ selectedClass }: { selectedClass: any }) {
                     variant="contained"
                     sx={{
                         textTransform: "none",
-                        backgroundColor: "green",
+                        backgroundColor: "#C1121F",
                         "&:hover": {
-                            backgroundColor: "green"
+                            backgroundColor: "#C1121F"
                         }
                     }}
                     onClick={() => handleSave()}
