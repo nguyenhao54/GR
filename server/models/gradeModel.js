@@ -39,7 +39,7 @@ gradeSchema.index({ class: 1, student: 1 }, { unique: true });
 gradeSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'class',
-    select: 'classId _id subject -teacher -students',
+    select: 'classId _id subject -teacher -students semester',
     populate: { path: 'subject', select: 'title subjectId' },
   });
   next();

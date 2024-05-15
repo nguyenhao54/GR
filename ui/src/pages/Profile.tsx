@@ -96,6 +96,7 @@ function Profile() {
                             },
                             textTransform: "none",
                         }}
+                        disabled={user?.role === "student"}
                         disableRipple>
                         <img src={userPhoto.img} className="w-36 border-8 shadow-md border-neutral-200 h-36 rounded-full"></img>
                         <div className="absolute top-0 bottom-0 w-36 right-0 left-0 height-[100%] opacity-0 rounded-full hover:cursor-pointer transition-all hover:opacity-60 hover:bg-neutral-400 ">

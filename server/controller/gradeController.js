@@ -22,18 +22,18 @@ exports.getMyGrades = catchAsync(async (req, res, next) => {
       {
         $match: {
           students: req.user._id,
-          semester: semester,
+          semester: Number(semester),
         },
       },
       { $unset: 'students' },
     ]);
-    console.log(classes);
+    console.log(classes, 'classes');
     const ids = classes.map((i) => i._id);
     grades = await Grade.find({ student: req.user.id, class: { $in: ids } });
   } else {
     grades = await Grade.find({ student: req.user.id });
   }
- 
+
   res.status(200).json({
     status: 'success',
     results: grades.length,

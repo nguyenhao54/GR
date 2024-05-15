@@ -10,13 +10,17 @@ function LoginByField({ setCookie }: { setCookie: (name: string, value: any) => 
     const navigate = useNavigate()
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
+    const [error, setError] = useState<string>("")
 
     const handleLogin = async () => {
-        const data = (await login({ email, password }))
+        const data = await login({ email, password })
         if (data?.data.user) {
             dispatch(setCurrentUser(data.data.user))
             setCookie("token", data.token)
-            data.data.user.role === "student" ? navigate('/dashboard') :  data.data.user.role === "teacher" ?  navigate("/calendar"): navigate("/admin/manage-user")
+            data.data.user.role === "student" ? navigate('/dashboard') : data.data.user.role === "teacher" ? navigate("/calendar") : navigate("/admin/manage-user")
+        }
+        else {
+            setError("Tài khoản hoặc mật khẩu không chính xác")
         }
     }
 
@@ -24,11 +28,19 @@ function LoginByField({ setCookie }: { setCookie: (name: string, value: any) => 
         <div>
             <form className="mt-4 mb-2 font-montserrat">
                 <div className="my-4">
-                    <TextField sx={{ fontWeight: 600 }} onChange={(e) => setEmail(e.target.value)} fullWidth required id="email" label="Email" variant="standard" />
+                    <TextField sx={{ fontWeight: 600 }} onChange={(e) => {
+                        setError("");
+                        setEmail(e.target.value)
+                    }
+                    } fullWidth required id="email" label="Email" variant="standard" />
                 </div>
                 <div className="mt-4">
-                    <TextField onChange={(e) => setPassword(e.target.value)} fullWidth required id="password" label="Password" type='password' variant="standard" />
+                    <TextField onChange={(e) => {
+                        setError("");
+                        setPassword(e.target.value)
+                    }} fullWidth required id="password" label="Password" type='password' variant="standard" />
                 </div>
+                {error && <div className="text-[10px] text-lightRed mt-1 -mb-5 pb-3 italic w-full">{error}</div>}
                 <Link
                     className="inline-block mt-4 align-baseline text-xs font-semibold text-neutral-800 hover:text-venetianRed"
                     to="#"
@@ -65,7 +77,7 @@ function SignIn({ setCookie }: any) {
                     <LoginByField setCookie={setCookie}></LoginByField>
                 </div>
 
-                <div className="w-full">
+                {/* <div className="w-full">
                     <hr className="divide-white my-1"></hr>
                 </div>
                 <p className=" text-l font-bold mt-2">
@@ -78,7 +90,7 @@ function SignIn({ setCookie }: any) {
                     <p className="text-l font-semibold">
                         Đăng ký
                     </p>
-                </div>
+                </div> */}
             </div>
         </div>
     )

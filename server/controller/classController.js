@@ -20,6 +20,7 @@ exports.getMyClasses = catchAsync(async (req, res, next) => {
       {
         $match: {
           students: req.user._id,
+          // semester: req.query.semester,
         },
       },
       { $unset: 'students' },
