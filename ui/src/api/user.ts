@@ -40,5 +40,22 @@ export const deleteUser = async (token: string, userId: string) => {
     }
 }
 
+export const updateMe = async (token: string, user: any ) => {
+    try {
+        const res = await axios.patch(
+            `${BASE_URL}/users/updateMe`,
+            {
+                phone: user.phone,
+                photo: user.photo
+            },
+            { headers: { Authorization: `Bearer ${token}` } }
+        )
+        return res.data
+    }
+    catch (err) {
+        console.log(err)
+    }
+}
+
 
 
