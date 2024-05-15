@@ -73,7 +73,7 @@ export default function DialogView() {
                     sx: {
                         backgroundColor: "white",
                         color: "black",
-                        borderLeft: dialogState?.type === "warning" ? "2px solid red" : "4px solid #33BFFF"
+                        borderLeft: dialogState?.type === "warning" ? "2px solid red" : "4px solid #0072D0"
                     }
                 }}
                 anchorOrigin={{ vertical: "top", horizontal: "right" }}

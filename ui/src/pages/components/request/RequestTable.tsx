@@ -130,7 +130,7 @@ function RequestTable() {
       case "pending":
         return <div className="font-medium text-neutral-700">Chờ phê duyệt</div>
       case "approved":
-        return <div className="font-medium text-blue-500">{role === "student" ? "Được chấp nhận" : "Đã chấp nhận"}</div>
+        return <div className="font-medium text-[#0072D0]">{role === "student" ? "Được chấp nhận" : "Đã chấp nhận"}</div>
       case "denied":
         return <div className="font-medium text-lightRed">{role === "student" ? "Bị từ chối" : "Đã từ chối"}</div>
     }
@@ -306,7 +306,7 @@ function RequestTable() {
           {user?.role === "teacher" &&
             <>
               <ToolTip textContent='Chấp nhận' limit={1}>
-                <FaCheckCircle className={request.status !== "pending" ? "opacity-30 hover:cursor-default text-lg" : 'text-lg  cursor-pointer text-blue-500'}
+                <FaCheckCircle className={request.status !== "pending" ? "opacity-30 hover:cursor-default text-lg" : 'text-lg  cursor-pointer text-[#0072D0]'}
                   onClick={request.status === "pending" ? () => { handleDenyOrAccept(request, true) } : undefined} />
               </ToolTip>
               <ToolTip textContent='Từ chối' limit={1}>
@@ -320,7 +320,7 @@ function RequestTable() {
           {user?.role === "student" &&
             <><ToolTip textContent='Chỉnh sửa' limit={1}>
               {/* //TODO: set button disable  */}
-              <FaPen size={14} className={request.status !== "pending" ? "opacity-30 hover:cursor-default text-lg" : 'text-lg cursor-pointer text-blue-500'}
+              <FaPen size={14} className={request.status !== "pending" ? "opacity-30 hover:cursor-default text-lg" : 'text-lg cursor-pointer text-[#0072D0]'}
                 onClick={request.status === "pending" ? () => {
 
                   handleEdit(request)

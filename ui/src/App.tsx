@@ -24,11 +24,11 @@ function App(props: { cookies: Cookies }) {
       getMyInfo(cookies.get("token") || "").then((res) => {
         if (res) {
           if (res.data && res.data.data) dispatch(setCurrentUser(res.data.data))
-          else navigate("login")
+          else navigate("/login")
         }
-        else navigate("login")
+        else navigate("/login")
       })
-    } else navigate("login")
+    } else navigate("/login")
   }, [cookies, dispatch, navigate])
 
   const setCookie = (name: string, value: any) => {

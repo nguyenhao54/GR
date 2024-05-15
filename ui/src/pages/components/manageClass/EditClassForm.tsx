@@ -6,6 +6,7 @@ import { MenuProps } from '../../Grade';
 import { getStyles } from '../../Result';
 import { getUsers } from '../../../api/user';
 import { getCookie } from '../dashboard/AttendanceCard';
+import { getSubject } from '../../../api/subject';
 
 const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) => {
 
@@ -14,8 +15,13 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
     const [open, setOpen] = React.useState(false);
     const [semester, setSemester] = React.useState<number>(classObj.semester)
     const [teacher, setTeacher] = React.useState<any>({ email: classObj.teacher?.email || "" })
+    const [subject, setSubject] = React.useState<any>({ subjectId: classObj.subject?.subjectId || "" })
+
     const [teacherError, setTeacherError] = React.useState<string>("");
+    const [subjectError, setSubjectError] = React.useState<string>("");
+
     const semesterList = [20191, 20192, 20211, 20212, 20221, 20222, 20231, 20232, 20241, 20242, 20251, 20252]
+    const [classId, setClassId] = React.useState<string>("")
 
     React.useImperativeHandle(ref, () => {
         return {
@@ -36,12 +42,21 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
     const validate = async () => {
         let validate = true;
         const res = await getUsers(token, `?email=${teacher.email}`)
+        const sub = await getSubject(token, `?subjectId=${subject.subjectId}`)
         if (res.data.data[0]) {
             setTeacher({ ...teacher, id: res.data.data[0]._id })
         }
         else {
             validate = false;
             setTeacherError("Không có giáo viên với email này")
+        }
+        console.log("sub", sub)
+        if(sub.data[0]){
+            setSubject({ ...subject, subjectId: res.data[0].subejectId, id: res.data[0]._id })
+        }
+        else {
+            validate = false;
+            setSubjectError("Không có môn học với mã học phần này")
         }
         return validate;
     }
@@ -79,8 +94,9 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
                                 id="classId"
                                 label="Mã lớp"
                                 required
-                                value={""}
+                                value={classId}
                                 onChange={(e) => {
+                                    setClassId(e.target.value)
                                     console.log(e.target.value)
                                 }}
                                 style={{ width: "100%" }}
@@ -95,13 +111,16 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
                                 id="subjectId"
                                 label="Mã học phần"
                                 required
-                                value={classObj.subject?.subjectId}
+                                defaultValue={subject?.subjectId}
                                 onChange={(e) => {
+                                    setSubject({ subjectid: e.target.value })
                                     console.log(e.target.value)
                                 }}
                                 style={{ width: "100%" }}
                                 variant="outlined"
                             />
+                            {subjectError && <div className="text-[10px] text-lightRed mt-1 -mb-5 pb-3 italic w-full">{subjectError}</div>}
+
                         </div>
                         <div className="w-1/2">
                             <TextField

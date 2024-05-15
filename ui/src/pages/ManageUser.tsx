@@ -143,7 +143,7 @@ function ManageClass() {
       action: (
         <div className='flex gap-2 items-center justify-center'>
           <ToolTip textContent='Chỉnh sửa' limit={1}>
-            <FaPen size={14} className='text-lg text-[#33BFFF] cursor-pointer'
+            <FaPen size={14} className='text-lg text-[#0072D0] cursor-pointer'
               onClick={() => { handleEditUser(user) }} />
           </ToolTip>
           <ToolTip textContent='Xóa' limit={1}>
@@ -164,11 +164,11 @@ function ManageClass() {
           //   disabled={!(selected.length > 0)}
           // textTransform={"none"}
           sx={{
-            color: "#33BFFF",
+            color: "#0072D0",
             textTransform: "none",
-            borderColor: "#33BFFF",
+            borderColor: "#0072D0",
             "&:hover": {
-              borderColor: "#33BFFF"
+              borderColor: "#0072D0"
             }
           }}
 
@@ -193,11 +193,12 @@ function ManageClass() {
   return (
     <div className="bg-white rounded-md p-8 pt-4 w-[100%] h-max flex flex-col items-center">
       <TablePager<any>
-        tableTitle={"Danh sách lớp học"}
+        tableTitle={"Danh sách người dùng"}
         total={display?.length}
         data={display || []}
         mapDataToRowData={mapAttendanceDataToRowElement}
         headCells={headCells}
+        hideCheckbox
         showSearchBar={true}
         toolbarItems={toolbarItems}
       ></TablePager>

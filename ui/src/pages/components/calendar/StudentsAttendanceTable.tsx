@@ -114,7 +114,7 @@ export default function MenuTable(props: IMenuTableProps) {
       checkInTime: attendance.checkInTime || <div> <FaXmark className='text-lightRed text-md' /></div>,
       checkOutTime: attendance.checkOutTime || <div> <FaXmark className='text-lightRed text-md' /></div>,
       status: <div>{attendance.isSuccessful
-        ? <div className='flex gap-1 items-center text-[#33BFFF]'><FaUserCheck className='text-lg' /> Có mặt</div>
+        ? <div className='flex gap-1 items-center text-[#0072D0]'><FaUserCheck className='text-lg' /> Có mặt</div>
         : <div className='flex gap-1 items-center text-lightRed'><FaUserXmark className='text-lg' /> Vắng mặt</div>}</div>,
       action: (
         <div className='flex gap-2 items-center justify-center'>
@@ -124,7 +124,7 @@ export default function MenuTable(props: IMenuTableProps) {
               onClick={() => { handleDenyOrAccept(attendance, false) }} />
           </ToolTip>
           <ToolTip textContent='Chấp nhận' limit={1}>
-            <FaCheckCircle className='text-lg text-[#33BFFF] cursor-pointer'
+            <FaCheckCircle className='text-lg text-[#0072D0] cursor-pointer'
               onClick={() => { handleDenyOrAccept(attendance, true) }} />
           </ToolTip>
         </div>
@@ -196,11 +196,11 @@ export default function MenuTable(props: IMenuTableProps) {
           disabled={!(selected.length > 0)}
           // textTransform={"none"}
           sx={{
-            color: "#33BFFF",
+            color: "#0072D0",
             textTransform: "none",
-            borderColor: "#33BFFF",
+            borderColor: "#0072D0",
             "&:hover": {
-              borderColor: "#33BFFF"
+              borderColor: "#0072D0"
             }
           }}
 

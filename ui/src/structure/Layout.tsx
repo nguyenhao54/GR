@@ -1,6 +1,5 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-// import Header from "./Header";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import { Dialog } from "../common";
@@ -13,13 +12,25 @@ const Layout = () => {
   const url = useLocation();
   const user = useSelector((appState: AppState) => appState.user.user)
 
+
   useEffect(() => {
-    if (url.pathname === "/") {
-      if (user?.role === "student") navigate("/dashboard");
-      else if (user?.role === "admin") navigate("/admin/manage-user");
-      else navigate("/calendar")
+    console.log(user)
+    if (user) {
+      if (url.pathname === "/") {
+        if (user?.role === "student") {
+          navigate("/dashboard")
+        }
+        else if (user?.role === "admin") {
+          navigate("/admin/manage-user")
+        }
+        else {
+          console.log(user)
+          console.log("nav cal")
+          navigate("/calendar")
+        }
+      }
     }
-  }, [navigate, url.pathname, user?.role]);
+  }, [navigate, url.pathname, user]);
 
   return (
     <div className="h-full font-montserrat text-xs">
@@ -35,7 +46,7 @@ const Layout = () => {
         </div>
       </div>
       <Dialog></Dialog>
-      <TopLoading/>
+      <TopLoading />
     </div>
   );
 };

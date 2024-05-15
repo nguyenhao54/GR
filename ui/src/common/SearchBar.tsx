@@ -12,7 +12,7 @@ function SearchBar(props: ISearchBarProps) {
   return (
     <div className="flex w-full items-center">
       <div className="relative w-full">
-        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+        <div className="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
           <svg
             aria-hidden="true"
             className="w-5 h-5 text-gray-500 dark:text-gray-400"
@@ -37,7 +37,7 @@ function SearchBar(props: ISearchBarProps) {
               if (inputRef.current) setSearchText(inputRef.current.value);
             }
           }}
-          className="text-gray-900 text-xs rounded-lg block w-full pl-8 p-2 border-neutral-200 border"
+          className="text-gray-900 text-xs rounded-md block w-full pl-8 p-2 border-neutral-200 border focus:border-[#0072D0] "
         />
         {searchText && searchText !==""&&
           inputRef.current && (
