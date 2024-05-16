@@ -11,6 +11,7 @@ import { Button } from '@mui/material';
 import { SearchBar } from '../common';
 import { deleteUser, getUsers } from '../api/user';
 import { setDialog } from '../redux/dialog.reducer';
+import EditUserForm from './components/manageUser/EditUserForm';
 
 interface UserTableData {
   id?: string;
@@ -131,6 +132,37 @@ function ManageClass() {
     );
   }, [searchText, JSON.stringify(userList)]);
 
+  let editUserRef: any;
+
+  const handleAddNew = () => {
+
+    dispatch(setDialog({
+        title: "Thêm mới Người dùng",
+        customHeight: 680,
+        customWidth: 700,
+        open: true,
+        type: "normal",
+        onClickOk: async () => {
+            console.log(editUserRef.validateForm());
+            if (await editUserRef.validateForm()) {
+                dispatch(showTopLoading())
+                const newClass = editUserRef.changedClass
+                console.log(newClass)
+               
+                dispatch(closeTopLoading())
+            }
+
+        },
+        content: (
+            <EditUserForm user={{}} ref={(ref) => {
+                editUserRef = ref
+            }} />
+        )
+    }))
+
+
+}
+
 
   const createRowElements = (user: any): UserTableData => {
     return {
@@ -172,6 +204,7 @@ function ManageClass() {
             }
           }}
 
+          onClick={() => handleAddNew()}
         //   onClick={() => handleAcceptOrDenyAllSelected(true)}
         >Thêm mới
         </Button>

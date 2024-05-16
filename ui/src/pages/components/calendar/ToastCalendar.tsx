@@ -50,7 +50,8 @@ export default function ToastCalendar() {
                     end: minusSevenHours(item.endDateTime?.toString()|| ""),
                     backgroundColor: BACKGROUND_COLOR[random],
                     borderColor: BORDER_COLOR[random],
-                    title: item.class?.classId + " - " + item.class?.subject?.title
+                    title: item.class?.classId + " - " + item.class?.subject?.title,
+                    location: item.class?.location.description 
                 })
             }) || [])
         })
@@ -108,16 +109,18 @@ export default function ToastCalendar() {
             template: {
                 time(event: any) {
                     return (
-                        `<div class="flex flex-col justify-start">
+                        `<div class="flex flex-col justify-start pt-2">
                   <div class="whitespace-normal flex flex-row gap-2">
-                    <div class="rounded-md py-0.5 px-1 font-semibold" style="background-color:${event.borderColor}; ">
+                    <div class="rounded-md py-0.5 px-1 font-semibold text-white" style="background-color:${event.borderColor};">
                       ${moment(event.start.toDate()).format("HH:mm")}
                     </div>
-                    <div class="rounded-md py-0.5 px-1 font-semibold" style="background-color:${event.borderColor}; ">
+                    <div class="rounded-md py-0.5 px-1 font-semibold text-white" style="background-color:${event.borderColor}; ">
                       ${moment(event.end.toDate()).format("HH:mm")}
                     </div>
                   </div>
-                  <div class="whitespace-normal font-semibold">${event.title}</div>
+                  <div class="whitespace-normal text-neutral-700 font-semibold pt-1 pl-1">${event.title}</div>
+                  <div class="whitespace-normal text-neutral-500 font-semibold pt-1 pl-1"> <FaLocationDot /> ${event.location}</div>
+
                 </div>`
                     )
                 },

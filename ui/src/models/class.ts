@@ -7,4 +7,5 @@ export interface Class {
     classId?: string;
     subject?: Subject;
     teacher?: User;
+    location?: any;
 }

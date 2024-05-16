@@ -41,7 +41,7 @@ export default function DialogView() {
             {/* {dialogState.loading && <div className='w-full h-full flex items-center justify-center bg-["rgba(0,0,0,0.1)"]'><DotFlashing></DotFlashing></div>} */}
 
             <div className="h-[2px] mx-5 bg-neutral-200"></div>
-            <div className="flex items-center justify-center w-full h-full p-4">
+            <div className="flex items-start justify-start w-full h-full p-4">
                 {dialogState.type && <div> {dialogState.type === "warning" ? <FaRegQuestionCircle size={40} color={"#C1121F"} /> : dialogState.type === "info" ? <FaInfoCircle color={"#669BBC"} size={40} /> : <></>}
                 </div>}
                 {dialogState?.content}</div>
@@ -56,12 +56,10 @@ export default function DialogView() {
                     <Button variant="contained" color="error"
                         onClick={dialogState.onClickOk}>OK</Button>
                 </div>
-                :
-                <div className="p-4 pt-0 flex gap-4 justify-end">
+                : <div className="p-4 pt-0 flex gap-4 justify-end">
                     <Button variant="contained" color="error"
                         onClick={() => dispatch(setDialog({ open: false, content: <></> }))}>OK
                     </Button>
-
                 </div>}
             </div>}
         </Dialog> :

@@ -15,7 +15,7 @@ const MenuProps = {
     },
 };
 
-export function getStyles(name: number, personName: number, theme: Theme) {
+export function getStyles(name: number | string, personName: number | string, theme: Theme) {
     return {
         fontWeight:
             personName === name

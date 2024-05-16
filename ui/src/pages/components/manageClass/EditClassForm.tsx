@@ -7,6 +7,10 @@ import { getStyles } from '../../Result';
 import { getUsers } from '../../../api/user';
 import { getCookie } from '../dashboard/AttendanceCard';
 import { getSubject } from '../../../api/subject';
+import { formatDate, minusSevenHours } from '../../../utils';
+import dayjs, { Dayjs } from 'dayjs';
+import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) => {
 
@@ -22,7 +26,9 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
 
     const semesterList = [20191, 20192, 20211, 20212, 20221, 20222, 20231, 20232, 20241, 20242, 20251, 20252]
     const [classId, setClassId] = React.useState<string>("")
-
+    console.log(classObj.firstStartTime)
+    const [startTime, setStartTime] = React.useState<Dayjs | null>(dayjs(classObj.firstStartTime ? new Date(minusSevenHours(classObj.firstStartTime)) : new Date()));
+    const [endTime, setEndTime] = React.useState<Dayjs | null>(dayjs(classObj.lastStartTime ? new Date(minusSevenHours(classObj.lastStartTime)) : new Date()));
     React.useImperativeHandle(ref, () => {
         return {
             changedClass: { ...classObj, semester },
@@ -41,23 +47,38 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
 
     const validate = async () => {
         let validate = true;
-        const res = await getUsers(token, `?email=${teacher.email}`)
-        const sub = await getSubject(token, `?subjectId=${subject.subjectId}`)
-        if (res.data.data[0]) {
-            setTeacher({ ...teacher, id: res.data.data[0]._id })
+
+        if (!subject.subjectId) {
+            setSubjectError("Trường này là bắt buộc")
+            validate = false;
         }
         else {
-            validate = false;
-            setTeacherError("Không có giáo viên với email này")
+            const sub = await getSubject(token, `?subjectId=${subject.subjectId}`)
+            if (sub.data.data[0]) {
+                setSubject({ ...subject, subjectId: sub.data.data[0].subjectId, id: sub.data.data[0]._id })
+            }
+            else {
+                validate = false;
+                setSubjectError("Không có môn học với mã học phần này")
+            }
         }
-        console.log("sub", sub)
-        if(sub.data[0]){
-            setSubject({ ...subject, subjectId: res.data[0].subejectId, id: res.data[0]._id })
+
+        if (!teacher.email) {
+            setTeacherError("Trường này là bắt buộc")
+            validate = false;
         }
         else {
-            validate = false;
-            setSubjectError("Không có môn học với mã học phần này")
+            const res = await getUsers(token, `?email=${teacher.email}`)
+            if (res.data.data[0]) {
+                setTeacher({ ...teacher, id: res.data.data[0]._id })
+            }
+            else {
+                validate = false;
+                setTeacherError("Không có giáo viên với email này")
+            }
+
         }
+
         return validate;
     }
 
@@ -216,6 +237,27 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
                             style={{ width: "50%" }}
                             variant="outlined"
                         />
+                    </div>
+
+                    <div className="flex gap-2">
+
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <div className="flex justify-between flex-row gap-2 w-full">
+                                <DateTimePicker
+                                    label="Buổi học đầu"
+                                    value={startTime}
+                                    className='w-full'
+                                    onChange={(newValue) => setStartTime(newValue)}
+                                />
+                                <DateTimePicker
+                                    label="Buổi học cuối"
+                                    value={endTime}
+                                    className='w-full'
+                                    onChange={(newValue) => setEndTime(newValue)}
+                                />
+                            </div>
+
+                        </LocalizationProvider>
                     </div>
                 </div>
             </div>
