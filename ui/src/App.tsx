@@ -13,6 +13,7 @@ import { ToastCalendar } from './pages/components';
 import Grade from './pages/Grade';
 import ManageUser from './pages/ManageUser';
 import ManageClass from './pages/ManageClass';
+import ChangePassword from './pages/ChangePassword';
 
 function App(props: { cookies: Cookies }) {
 
@@ -46,7 +47,9 @@ function App(props: { cookies: Cookies }) {
     <Routes>
       <Route path="/login" element={<SignIn setCookie={setCookie}></SignIn>}></Route>
       <Route path="/" element={<Layout />}>
-        <Route path="/profile" element={<Profile />}></Route>
+        <Route path="/profile" element={<Profile />}>
+        </Route>
+        <Route path="/profile/changePassword" element={<ChangePassword />} />
         <Route path="/dashboard" element={<Dashboard />}></Route>
         <Route path="/requests" element={<Request />}></Route>
         <Route path="/grades" element={<Grade />}></Route>

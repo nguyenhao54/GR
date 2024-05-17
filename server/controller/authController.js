@@ -34,9 +34,17 @@ const signToken = (id) =>
   jwt.sign({ id: id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIReS_IN,
   });
+
 exports.signup = catchAsync(async (req, res, next) => {
-  const { name, email, password, passwordConfirm, passwordChangedAt, phone } =
-    req.body;
+  const {
+    name,
+    email,
+    password,
+    passwordConfirm,
+    passwordChangedAt,
+    phone,
+    codeNumber,
+  } = req.body;
   const newUser = await User.create({
     name,
     email,
@@ -44,6 +52,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordConfirm,
     passwordChangedAt,
     phone,
+    codeNumber,
   });
 
   createSendToken(newUser, 201, res);
@@ -111,13 +120,15 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
   // 1) getting token and check if it exists
   if (req.cookies.jwt) {
     // 2) validate token
-    const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
+    const decoded = await promisify(jwt.verify)(
+      req.cookies.jwt,
+      process.env.JWT_SECRET,
+    );
     // 3) Check if user still exists
     // console.log(decoded);
     const freshUser = await User.findById(decoded.id);
     if (!freshUser) {
-      return next(
-      );
+      return next();
     }
 
     // 4) Check if user changed password after the token was issued
@@ -130,13 +141,13 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
     // console.log('protect', req.user);
     next();
   }
-  next()
+  next();
 });
 
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
-  console.log(req.user.role)
-  console.log(roles)
+    console.log(req.user.role);
+    console.log(roles);
 
     //
     // console.log('uẻ', req.user);

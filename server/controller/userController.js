@@ -14,7 +14,7 @@ const filterObj = (obj, ...allowedFields) => {
 exports.getAllUsers = factory.getAll(User);
 exports.getOneUser = factory.getOne(User);
 exports.createUser = (req, res) => {};
-exports.updateUser = (req, res) => {};
+exports.updateUser = factory.updateOne(User);
 exports.deleteUser = factory.deleteOne(User);
 
 exports.getMe = (req, res, next) => {

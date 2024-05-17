@@ -9,7 +9,7 @@ import { FaPlus, FaTrash } from 'react-icons/fa6';
 import { FaPen } from 'react-icons/fa';
 import { Button } from '@mui/material';
 import { SearchBar } from '../common';
-import { deleteUser, getUsers } from '../api/user';
+import { createUser, deleteUser, getUsers, updateUser } from '../api/user';
 import { setDialog } from '../redux/dialog.reducer';
 import EditUserForm from './components/manageUser/EditUserForm';
 
@@ -65,7 +65,7 @@ const headCells: readonly HeadCell<UserTableData>[] = [
 ];
 
 
-function ManageClass() {
+function ManageUser() {
 
   const [userList, setUserList] = useState<any[]>([]);
   const [display, setDisplay] = React.useState<any[]>([]);
@@ -85,6 +85,38 @@ function ManageClass() {
   }, [])
 
   const handleEditUser = (user: any) => {
+
+    dispatch(setDialog({
+      title: "Chỉnh sửa Người dùng",
+      customHeight: 680,
+      customWidth: 700,
+      open: true,
+      type: "normal",
+      onClickOk: async () => {
+        if (await editUserRef.validateForm()) {
+          dispatch(showTopLoading())
+          const newUser = editUserRef.changedUser
+          console.log(newUser, " newUser")
+          const res = await updateUser(token, newUser)
+          if (res.status === "success") {
+            //TODO: show success message and add to the list in UI
+
+          }
+          else {
+
+            //TODO: show failed message
+          }
+
+          dispatch(closeTopLoading())
+        }
+
+      },
+      content: (
+        <EditUserForm user={user} ref={(ref) => {
+          editUserRef = ref
+        }} />
+      )
+    }))
 
   }
   const handleDeleteUser = (user: any) => {
@@ -137,31 +169,38 @@ function ManageClass() {
   const handleAddNew = () => {
 
     dispatch(setDialog({
-        title: "Thêm mới Người dùng",
-        customHeight: 680,
-        customWidth: 700,
-        open: true,
-        type: "normal",
-        onClickOk: async () => {
-            console.log(editUserRef.validateForm());
-            if (await editUserRef.validateForm()) {
-                dispatch(showTopLoading())
-                const newClass = editUserRef.changedClass
-                console.log(newClass)
-               
-                dispatch(closeTopLoading())
-            }
+      title: "Thêm mới Người dùng",
+      customHeight: 680,
+      customWidth: 700,
+      open: true,
+      type: "normal",
+      onClickOk: async () => {
+        if (await editUserRef.validateForm()) {
+          dispatch(showTopLoading())
+          const newUser = editUserRef.changedUser
+          console.log(newUser, " newUser")
+          const res = await createUser(token, newUser)
+          console.log(res)
+          if (res.status === "success") {
+            //TODO: show success message and add to the list in UI
 
-        },
-        content: (
-            <EditUserForm user={{}} ref={(ref) => {
-                editUserRef = ref
-            }} />
-        )
+          }
+          else {
+
+            //TODO: show failed message
+          }
+
+          dispatch(closeTopLoading())
+        }
+
+      },
+      content: (
+        <EditUserForm user={{}} ref={(ref) => {
+          editUserRef = ref
+        }} />
+      )
     }))
-
-
-}
+  }
 
 
   const createRowElements = (user: any): UserTableData => {
@@ -239,4 +278,4 @@ function ManageClass() {
   )
 }
 
-export default ManageClass
+export default ManageUser

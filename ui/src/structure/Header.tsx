@@ -5,6 +5,7 @@ import { AppState } from "../redux/store";
 import { Menu, MenuItem } from "@mui/material";
 import { FaCaretDown } from "react-icons/fa";
 import { eraseCookie } from "../utils";
+import { FaChessPawn } from "react-icons/fa6";
 
 function Header() {
   const user = useSelector((appState: AppState) => appState.user.user);
@@ -23,8 +24,8 @@ function Header() {
     <div className='fixed h-14 bg-whit top-0 w-full bg-white flex items-center justify-between'>
       <div className='bg-white h-12 flex items-center justify-between'>
         <NavLink to='/' className='bg-white w-full '>
-          <div className='w-32 p-30 px-8 text-3xl text-barnRed font-bold'>
-            TENDIFY
+          <div className='w-32 p-30 px-8 text-3xl text-neutral-800 flex font-bold'>
+            TEND<span><FaChessPawn color="#C1121F" /></span>FY
           </div>
         </NavLink>
       </div>
@@ -69,7 +70,7 @@ function Header() {
         </MenuItem>
         <MenuItem
           onClick={() => {
-            navigate("/changePass");
+            navigate("/profile/changePassword");
             setAnchorEl(null);
           }}
           style={{ margin: 4, borderRadius: 4, fontWeight: 600 }}

@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../api/login';
 import { useDispatch } from 'react-redux';
 import { setCurrentUser } from '../redux/user.reducer';
+import { FaChessPawn } from 'react-icons/fa6';
 
 function LoginByField({ setCookie }: { setCookie: (name: string, value: any) => void }) {
     const dispatch = useDispatch()
@@ -68,8 +69,8 @@ function SignIn({ setCookie }: any) {
                 className="w-full md:w-4/12 p-4 bg-lightOverlay rounded-md border-neutral-200 border
     flex flex-col items-center justify-center"
             >
-                <div className="text-center ">
-                    <p className='text-4xl font-bold text-venetianRed'>TENDIFY</p>
+                <div className='w-full text-3xl text-neutral-800 flex font-bold justify-center'>
+                    TEND<span><FaChessPawn color="#C1121F" /></span>FY
                 </div>
 
                 <div className="w-full">

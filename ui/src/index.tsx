@@ -31,7 +31,14 @@ const THEME = createTheme({
     "fontWeightLight": 300,
     "fontWeightRegular": 400,
     "fontWeightMedium": 500,
-  }
+  },
+  components: {
+    MuiFormLabel: {
+      styleOverrides: {
+        asterisk: { color: "red" },
+      },
+    },
+  },
 });
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
