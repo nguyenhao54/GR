@@ -28,7 +28,6 @@ function RequestForm() {
     const handleSend = async () => {
         const token = getCookie("token")
         const lessons = (await getMyLessons(token, `startDateTime=${startTime?.toDate().toUTCString()}&endDateTime=${endTime?.toDate().toUTCString()}`)).lessons
-        console.log(lessons.length)
         if (lessons.length > 0) {
             //if there is lesson in the selected time period
             dispatch(showTopLoading())
@@ -86,37 +85,33 @@ function RequestForm() {
             img: URL.createObjectURL(item),
             title: item.name,
         }));
-        console.log(items);
         setImage(items[0]);
     };
 
-
     return (
         <div className="w-full">
-            <div className="font-semibold text-lg my-4 text-neutral-800">Tạo yêu cầu</div>
-
+            <div className="font-semibold text-lg my-1 pb-3 sm:my-4 text-neutral-800">Tạo yêu cầu</div>
             <div className='flex flex-col items-stretch'>
-
-                <div className="flex-row flex gap-4">
+                <div className="flex-col flex gap-2 sm:gap-4">
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <div className="flex justify-between flex-col gap-4 w-1/2">
+                        <div className="flex justify-between flex-row gap-2 sm:gap-4  w-full">
                             <DateTimePicker
                                 label="Thời gian bắt đầu"
                                 value={startTime}
-                                className=''
+                                className='w-full'
                                 onChange={(newValue) => setStartTime(newValue)}
                             />
                             <DateTimePicker
                                 label="Thời gian kết thúc"
                                 value={endTime}
-                                className=''
+                                className='w-full'
                                 onChange={(newValue) => setEndTime(newValue)}
                             />
                         </div>
 
                     </LocalizationProvider>
 
-                    <div className="w-1/2">
+                    <div className="w-full">
                         <TextField
                             id="code"
                             label="Lý do"

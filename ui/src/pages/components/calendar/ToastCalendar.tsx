@@ -9,6 +9,7 @@ import { BACKGROUND_COLOR, BORDER_COLOR } from '../../../utils/styles';
 import { useNavigate } from 'react-router-dom';
 import { GoTriangleLeft, GoTriangleRight } from "react-icons/go";
 import { Lesson } from '../../../models';
+import { Tabs, Tab } from '@mui/material';
 
 export interface CalendarEvent {
     id: string;
@@ -39,6 +40,7 @@ export default function ToastCalendar() {
     const [startDate, setStartDate] = useState<string>("");
     const [endDate, setEndDate] = useState<string>("");
     const [events, setEvents] = useState<CalendarEvent[]>();
+    const [view, setView] = useState<any>("week")
     const token = getCookie("token")
 
     useEffect(() => {
@@ -46,12 +48,12 @@ export default function ToastCalendar() {
             setEvents(data?.lessons.map((item: Lesson) => {
                 const random = Number(item.startDateTime?.toString()[9]) % 5;
                 return ({
-                    ...item, start: minusSevenHours(item.startDateTime?.toString()|| ""),
-                    end: minusSevenHours(item.endDateTime?.toString()|| ""),
+                    ...item, start: minusSevenHours(item.startDateTime?.toString() || ""),
+                    end: minusSevenHours(item.endDateTime?.toString() || ""),
                     backgroundColor: BACKGROUND_COLOR[random],
                     borderColor: BORDER_COLOR[random],
                     title: item.class?.classId + " - " + item.class?.subject?.title,
-                    location: item.class?.location.description 
+                    location: item.class?.location.description
                 })
             }) || [])
         })
@@ -180,13 +182,20 @@ export default function ToastCalendar() {
                         <GoTriangleRight />
                     </div>
                 </div>
-                {/* <div className="">
-              <Radio.Group value={type} onChange={onChange}>
-                <Radio.Button value="month">Tháng</Radio.Button>
-                <Radio.Button value="week">Tuần</Radio.Button>
-                <Radio.Button value="day">Ngày</Radio.Button>
-              </Radio.Group>
-            </div> */}
+                <div className="calendar_tab">
+                    <Tabs
+                        TabIndicatorProps={{ style: { background: '#C1121F', transition: "none" }, sx: { bgcolor: "#FF5733" } }}
+                        value={view || "week"}
+                        onChange={(_, val) => setView(val)}
+                        textColor="inherit"
+                        aria-label="secondary tabs example"
+                    >
+                        <Tab value={"day"} label="Ngày" />
+
+                        <Tab value={"week"} label="Tuần" />
+                        <Tab value={"month"} label="Tháng" />
+                    </Tabs>
+                </div>
             </nav>
             <Calendar
                 ref={calendarRef}
@@ -194,7 +203,7 @@ export default function ToastCalendar() {
                 onAfterRenderEvent={onAfterRenderEvent}
                 usageStatistics={false}
                 height="calc(100vh - 180px)"
-                view="week"
+                view={view}
                 theme={{
                     scheduleView: ["time"],
                     common: {
@@ -218,7 +227,7 @@ export default function ToastCalendar() {
                     narrowWeekend: false,
                     workweek: false, /// hide weekend
                     showNowIndicator: true,
-                    showTimezoneCollapseButton: false,
+                    showTimezoneCollapseButton: true,
                     timezonesCollapsed: false,
                     hourStart: 0,
                     hourEnd: 24,

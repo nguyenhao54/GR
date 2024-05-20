@@ -59,7 +59,7 @@ export default function StackedAtendanceChart() {
         }).finally(() => { setLoading(false) });
     }, [week])
     return (
-        <div className="bg-white flex-1 rounded-md p-4 w-[99%] sm:w-[62%] flex flex-col gap-2 min-h-[calc(100vh-80px)]">
+        <div className="bg-white flex-1 rounded-md p-4 w-[99%] sm:w-[62%] flex flex-col gap-2 min-h-[calc(100vh-80px)] h-max">
             {
                 loading
                     ? <div className='bg-white flex-1 rounded-md p-4 flex lg:flex-col items-center h-stretch justify-center'>
@@ -96,6 +96,7 @@ export default function StackedAtendanceChart() {
                                         <Legend
                                             fontSize={11}
                                             height={20}
+                                            width={isPhone ? window.innerWidth - 10 : 500}
                                         />
                                         <Bar dataKey="Có mặt" stackId="a" fill="#C1121F" barSize={isPhone ? 30 : 40} />
                                         <Bar dataKey="Vắng mặt" stackId="a" fill="#E0E1E3" barSize={isPhone ? 30 : 40} radius={[5, 5, 0, 0]} />

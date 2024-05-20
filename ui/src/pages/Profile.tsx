@@ -61,7 +61,6 @@ function Profile() {
             newUser = { ...user, photo: url, phone: userPhone }
         }
         const res = await updateMe(token, newUser);
-        console.log("update me", res)
         if (res?.status === "success") {
 
             dispatch(setDialog({
@@ -81,6 +80,7 @@ function Profile() {
         }
         dispatch(closeTopLoading())
     }
+    console.log(user)
 
     return (
         <div className="bg-white rounded-md p-2 sm:p-8 pt-4 w-[100%] flex flex-col items-center h-max">

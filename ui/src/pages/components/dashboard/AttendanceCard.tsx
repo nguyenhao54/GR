@@ -149,7 +149,7 @@ function AttendanceCard() {
     // }
 
     return (
-        <div className='bg-white rounded-md flex-1 p-4 sm:w-[37%] w-[99%] flex flex-col items-center min-h-[calc(100vh-280px)] sm:min-h-[calc(100vh-80px)]'>
+        <div className='bg-white rounded-md flex-1 p-4 sm:w-[37%] w-[99%] flex flex-col items-center min-h-[calc(100vh-280px)] sm:min-h-[calc(100vh-80px)] h-max'>
             <div className='text-base font-semibold mt-2'>{clock}</div>
             <div className='text-xs font-semibold text-neutral-500'>
                 {`${getToday()}, Ngày ${new Date().toLocaleString("en-GB", {

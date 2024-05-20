@@ -118,7 +118,6 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
                                 value={classId}
                                 onChange={(e) => {
                                     setClassId(e.target.value)
-                                    console.log(e.target.value)
                                 }}
                                 style={{ width: "100%" }}
                                 variant="outlined"
@@ -135,7 +134,6 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
                                 defaultValue={subject?.subjectId}
                                 onChange={(e) => {
                                     setSubject({ subjectid: e.target.value })
-                                    console.log(e.target.value)
                                 }}
                                 style={{ width: "100%" }}
                                 variant="outlined"
@@ -152,7 +150,6 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
                                 onChange={(e) => {
                                     setTeacherError("")
                                     setTeacher({ email: e.target.value })
-                                    console.log(e.target.value)
                                 }}
                                 style={{ width: "100%" }}
 
@@ -170,7 +167,6 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
                             required
                             defaultValue={classObj.location?.coordinates[0] || ""}
                             onChange={(e) => {
-                                console.log(e.target.value)
                             }}
                             style={{ width: "33%" }}
                             variant="outlined"
@@ -181,7 +177,6 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
                             required
                             defaultValue={classObj.location?.coordinates[1] || ""}
                             onChange={(e) => {
-                                console.log(e.target.value)
                             }}
                             style={{ width: "33%" }}
                             variant="outlined"
@@ -191,7 +186,6 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
                             required
                             defaultValue={classObj.location?.description}
                             onChange={(e) => {
-                                console.log(e.target.value)
                             }}
                             style={{ width: "33%" }}
                             variant="outlined"
@@ -232,7 +226,6 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
                             type="number"
                             defaultValue={classObj.duration}
                             onChange={(e) => {
-                                console.log(e.target.value)
                             }}
                             style={{ width: "50%" }}
                             variant="outlined"

@@ -100,11 +100,21 @@ function ManageUser() {
           const res = await updateUser(token, newUser)
           if (res.status === "success") {
             //TODO: show success message and add to the list in UI
-
+            dispatch(setDialog({
+              title: "Chỉnh sửa thông tin người dùng thành công",
+              open: true,
+              type: "info",
+              isMessagebar: true
+            }))
           }
           else {
+            dispatch(setDialog({
+              title: "Chỉnh sửa thông tin người dùng thất bại",
+              open: true,
+              type: "warning",
+              isMessagebar: true
+            }))
 
-            //TODO: show failed message
           }
 
           dispatch(closeTopLoading())
@@ -183,11 +193,20 @@ function ManageUser() {
           console.log(res)
           if (res.status === "success") {
             //TODO: show success message and add to the list in UI
-
+            dispatch(setDialog({
+              title: "Thêm người dùng thành công",
+              open: true,
+              type: "info",
+              isMessagebar: true
+            }))
           }
           else {
-
-            //TODO: show failed message
+            dispatch(setDialog({
+              title: "Thêm người dùng thất bại",
+              open: true,
+              type: "warning",
+              isMessagebar: true
+            }))
           }
 
           dispatch(closeTopLoading())

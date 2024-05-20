@@ -65,10 +65,11 @@ export default function DialogView() {
         </Dialog> :
             <Snackbar
                 open={dialogState?.open || false}
-                autoHideDuration={6000}
+                autoHideDuration={60000}
                 key={"top right"}
                 ContentProps={{
                     sx: {
+                        minWidth: "350px !important",
                         backgroundColor: "white",
                         color: "black",
                         borderLeft: dialogState?.type === "warning" ? "2px solid red" : "4px solid #0072D0"
