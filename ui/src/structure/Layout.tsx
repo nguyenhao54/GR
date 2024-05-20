@@ -38,8 +38,8 @@ const Layout = () => {
         <Header></Header>
         <Sidebar />
         <div className="bg-neutral-100 h-full w-full">
-          <div className="fixed left-[288px] top-14 ml-4 w-full h-full">
-            <div className='flex mt-2 gap-2 w-[calc(100%-305px)] h-[calc(100vh-66px)] overflow-scroll'>
+          <div className="fixed left-0 sm:left-[288px] top-14 ml-1 sm:ml-4 mr-1 w-full h-full">
+            <div className='flex mt-2 gap-2 w-full h-full sm:w-[calc(100%-305px)] sm:h-[calc(100vh-66px)] overflow-scroll'>
               <Outlet />
             </div>
           </div>

@@ -55,11 +55,11 @@ function ChangePassword() {
     }
 
     return (
-        <div className="bg-white rounded-md p-8 pt-4 w-[100%] h-max flex flex-col items-center">
+        <div className="bg-white rounded-md p-4 sm:p-8 pt-4 w-[100%] h-max flex flex-col items-center">
             <div className="w-full">
                 <p className='text-lg font-semibold my-1 pb-3'>Đổi mật khẩu</p>
                 <div className="flex flex-col gap-2">
-                    <div className="w-full">
+                    <div className="w-3/4 sm:w-1/3">
                         <TextField
                             id="password"
                             label="Mật khẩu cũ"
@@ -70,12 +70,12 @@ function ChangePassword() {
                                 setOldPassword(e.target.value)
                                 console.log(e.target.value)
                             }}
-                            style={{ width: "30%" }}
+                            style={{ width: "100%" }}
                             variant="outlined"
                         />
                         {oldPasswordError && <div className="text-[10px] text-lightRed mt-1 -mb-5 pb-3 italic w-full">{oldPasswordError}</div>}
                     </div>
-                    <div className="w-full">
+                    <div className="w-3/4 sm:w-1/3">
                         <TextField
                             id="password"
                             label="Mật khẩu mới"
@@ -86,12 +86,12 @@ function ChangePassword() {
                                 setPassword(e.target.value)
                                 console.log(e.target.value)
                             }}
-                            style={{ width: "30%" }}
+                            style={{ width: "100%" }}
                             variant="outlined"
                         />
                         {passwordError && <div className="text-[10px] text-lightRed mt-1 -mb-5 pb-3 italic w-full">{passwordError}</div>}
                     </div>
-                    <div className="w-full">
+                    <div className="w-3/4 sm:w-1/3">
                         <TextField
                             id="passwordConfirm"
                             label="Xác nhận mật khẩu mới"
@@ -102,7 +102,7 @@ function ChangePassword() {
                                 setPasswordConfirm(e.target.value)
                                 console.log(e.target.value)
                             }}
-                            style={{ width: "30%" }}
+                            style={{ width: "100%" }}
                             variant="outlined"
                         />
                         {passwordConfirmError && <div className="text-[10px] text-lightRed mt-1 -mb-5 pb-3 italic w-full">{passwordConfirmError}</div>}

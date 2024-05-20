@@ -5,7 +5,9 @@ import { AppState } from "../redux/store";
 import { Menu, MenuItem } from "@mui/material";
 import { FaCaretDown } from "react-icons/fa";
 import { eraseCookie } from "../utils";
-import { FaChessPawn } from "react-icons/fa6";
+import { FaBars, FaChessPawn } from "react-icons/fa6";
+import { getListItems } from './Sidebar';
+import { isActiveStyles, isNotActiveStyles } from '../utils/styles';
 
 function Header() {
   const user = useSelector((appState: AppState) => appState.user.user);
@@ -24,23 +26,25 @@ function Header() {
     <div className='fixed h-14 bg-whit top-0 w-full bg-white flex items-center justify-between'>
       <div className='bg-white h-12 flex items-center justify-between'>
         <NavLink to='/' className='bg-white w-full '>
-          <div className='w-32 p-30 px-8 text-3xl text-neutral-800 flex font-bold'>
-            TEND<span><FaChessPawn color="#C1121F" /></span>FY
+          <div className='w-32 p-30 sm:px-8 px-4 text-3xl text-neutral-800 flex font-bold'>
+            <p className="hidden sm:block">TEND</p><span><FaChessPawn color="#C1121F" /></span><p className="hidden sm:block">FY </p>
           </div>
         </NavLink>
       </div>
-      <div className='p-4 px-8 flex justify-center hover:cursor-pointer items-center' onClick={handleClick}>
-        <img
+      <div className='pt-3 px-4 sm:p-4 sm:px-8 flex justify-center hover:cursor-pointer items-center' onClick={handleClick}>
+        <div className="sm:flex hidden"><img
           alt="user-photo"
           className='w-10 h-10 border-4 shadow-md border-neutral-200 bg-barnRed rounded-full'
           src={user?.photo}
         ></img>
-        <div className='flex flex-col p-4 text-neutral-800'>
-          <p className='font-semibold'>{user?.name}</p>
-          <p>{user?.codeNumber}</p>
+          <div className='flex flex-col px-2 pt-1 text-neutral-800'>
+            <p className='font-semibold'>{user?.name}</p>
+            <p>{user?.codeNumber}</p>
+          </div>
         </div>
         <div className='hover:cursor-pointer pl-2 pb-2' ref={carretRef}>
-          <FaCaretDown/>
+          <FaCaretDown className="hidden sm:block" />
+          <FaBars className="block sm:hidden text-xl" />
         </div>
       </div>
       <Menu
@@ -59,15 +63,36 @@ function Header() {
         }}
         sx={{ ".MuiList-root": { padding: 0 } }}
       >
-        <MenuItem
-          onClick={() => {
-            navigate("/profile");
-            setAnchorEl(null);
-          }}
-          style={{ margin: 4, borderRadius: 4, fontWeight: 600 }}
-        >
-          Hồ sơ
-        </MenuItem>
+        <div className="block sm:hidden border-b-neutral-200 border-b font-montserrat">{getListItems(user?.role).map((item, index) => {
+          return (
+            <NavLink
+              to={item.route || ""}
+              key={index}
+              className={({ isActive }) =>
+                isActive
+                  ? `p-2 sm:p-4 py-1 sm:py-2 m-2 flex flex-horizontal hover:bg-gray-200 items-center ${isActiveStyles}`
+                  : `p-2 sm:p-4 py-1 sm:py-2 m-2 flex flex-horizontal hover:bg-gray-200 items-center ${isNotActiveStyles}`
+              }
+            >
+              {item.icon}
+              <p className="ml-4 mt-1 font-semibold text-md scale-105">
+                {item.title}
+              </p>
+            </NavLink>
+          );
+        })}
+        </div>
+        <div className="hidden sm:block">
+          <MenuItem
+            onClick={() => {
+              navigate("/profile");
+              setAnchorEl(null);
+            }}
+            style={{ margin: 4, borderRadius: 4, fontWeight: 600 }}
+          >
+            Hồ sơ
+          </MenuItem>
+        </div>
         <MenuItem
           onClick={() => {
             navigate("/profile/changePassword");

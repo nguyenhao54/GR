@@ -35,7 +35,7 @@ function Result() {
         setSelectedSemester(semesterList.find((item) => item === value) || semesterList[0] );
     }
     return (
-        <div className="bg-white rounded-md p-8 pt-4 w-[100%] h-max flex flex-col items-center">
+        <div className="bg-white rounded-md p-4 sm:p-8 pt-4 w-[100%] h-max flex flex-col items-center">
             <div className='h-[calc(100vh-120px)] w-full'>
                 <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">Học kỳ</InputLabel>

@@ -4,7 +4,7 @@ import { AttendanceCard } from './components'
 
 function Dashboard() {
   return (
-    <div className='w-screen h-max flex flex-row items-stretch gap-2 sm:flex-col md:flex-col lg:flex-row'>
+    <div className='w-screen h-max flex items-stretch gap-2 flex-col sm:flex-row'>
       <AttendanceCard></AttendanceCard>
       <StackedAtendanceChart></StackedAtendanceChart>
     </div>

@@ -12,6 +12,9 @@ import { PieChart, Pie } from "recharts";
 import { getMyAttendanceStats } from "../../../api/attendance";
 import { getCookie } from "./AttendanceCard";
 import { DotFlashing } from "../../../common";
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import dayjs, { Dayjs } from 'dayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const renderColorfulLegendText = (value: string, entry: any) => {
     return (
@@ -22,14 +25,18 @@ const renderColorfulLegendText = (value: string, entry: any) => {
 };
 
 export default function StackedAtendanceChart() {
+
+    const isPhone = window.innerWidth < 500
+    console.log(window.innerWidth)
     const token = getCookie('token')
     const [barData, setBarData] = useState<any[]>();
     const [pieData, setPieData] = useState<any[]>();
+    const [week, setweek] = useState<Dayjs | null>(dayjs(new Date()));
 
     const [loading, setLoading] = useState<boolean>(true);
     useEffect(() => {
         setLoading(true)
-        getMyAttendanceStats(token).then(res => {
+        getMyAttendanceStats(token, week).then(res => {
             if (res) {
                 setBarData(res.map((item: any) => ({
                     name: new Date(item.date).toLocaleString("en-GB", { day: '2-digit', month: '2-digit' }),
@@ -50,9 +57,9 @@ export default function StackedAtendanceChart() {
                 ])
             }
         }).finally(() => { setLoading(false) });
-    }, [])
+    }, [week])
     return (
-        <div className="bg-white flex-1 rounded-md p-4 w-[69%] md:w-[62%] flex flex-col gap-2 min-h-[calc(100vh-80px)]">
+        <div className="bg-white flex-1 rounded-md p-4 w-[99%] sm:w-[62%] flex flex-col gap-2 min-h-[calc(100vh-80px)]">
             {
                 loading
                     ? <div className='bg-white flex-1 rounded-md p-4 flex lg:flex-col items-center h-stretch justify-center'>
@@ -64,15 +71,22 @@ export default function StackedAtendanceChart() {
                         </div>
                         {!pieData || !barData ? <div>Không có dữ liệu</div> :
                             <>
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DatePicker label="Chọn tuần học"
+                                        value={week}
+                                        format="DD/MM/YYYY"
+                                        onChange={(newValue) => setweek(newValue)}
+                                        sx={{ width: "50%", marginLeft: "16px" }} />
+                                </LocalizationProvider>
                                 <div className="flex justify-center">
                                     <BarChart
-                                        width={600}
+                                        width={isPhone ? 370 : 600}
                                         height={300}
                                         data={barData}
                                         margin={{
                                             top: 20,
-                                            right: 30,
-                                            left: 20,
+                                            right: isPhone ? 20 : 30,
+                                            left: isPhone ? -20 : 20,
                                             bottom: 5
                                         }}
                                     >
@@ -81,10 +95,10 @@ export default function StackedAtendanceChart() {
                                         <Tooltip cursor={{ fill: 'none' }} contentStyle={{ color: "black" }} />
                                         <Legend
                                             fontSize={11}
-                                            height={5}
+                                            height={20}
                                         />
-                                        <Bar dataKey="Có mặt" stackId="a" fill="#C1121F" barSize={40} />
-                                        <Bar dataKey="Vắng mặt" stackId="a" fill="#E0E1E3" barSize={40} radius={[5, 5, 0, 0]} />
+                                        <Bar dataKey="Có mặt" stackId="a" fill="#C1121F" barSize={isPhone ? 30 : 40} />
+                                        <Bar dataKey="Vắng mặt" stackId="a" fill="#E0E1E3" barSize={isPhone ? 30 : 40} radius={[5, 5, 0, 0]} />
                                     </BarChart>
                                 </div>
 

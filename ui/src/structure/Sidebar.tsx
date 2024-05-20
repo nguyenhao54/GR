@@ -9,7 +9,7 @@ import { FaPaperPlane } from "react-icons/fa";
 import { FaBook } from "react-icons/fa";
 import { FaChalkboardTeacher } from "react-icons/fa";
 
-const getListItems = (role?: string) => {
+export const getListItems = (role?: string) => {
 
   let listItems = [];
   listItems.push({
@@ -64,7 +64,7 @@ function Sidebar() {
 
   return (
     <div className="font-bold text-xs w-58 fixed top-14 left-2 h-full">
-      <div className="bg-white rounded-md w-72 mt-2 py-2 mr-2">
+      <div className="hidden sm:block bg-white rounded-md w-72 mt-2 py-2 mr-2">
         {getListItems(user?.role).map((item, index) => {
           return (
             <NavLink
@@ -72,7 +72,7 @@ function Sidebar() {
               key={index}
               className={({ isActive }) =>
                 isActive
-                  ? `p-4 py-2 m-2 flex flex-horizontal hover:bg-gray-200 items-center${isActiveStyles}`
+                  ? `p-4 py-2 m-2 flex flex-horizontal hover:bg-gray-200 items-center ${isActiveStyles}`
                   : `p-4 py-2 m-2 flex flex-horizontal hover:bg-gray-200 items-center ${isNotActiveStyles}`
               }
             >

@@ -66,7 +66,7 @@ function SignIn({ setCookie }: any) {
     return (
         <div className="absolute inset-0 flex font-montserrat items-center justify-center p-4">
             <div
-                className="w-full md:w-4/12 p-4 bg-lightOverlay rounded-md border-neutral-200 border
+                className="w-full sm:w-4/12 p-4 bg-lightOverlay rounded-md border-neutral-200 border
     flex flex-col items-center justify-center"
             >
                 <div className='w-full text-3xl text-neutral-800 flex font-bold justify-center'>

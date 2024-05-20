@@ -11,7 +11,7 @@ router
     // authController.restrictTo('admin'),
     attendanceController.createAttendance,
   );
-router.route('/my-attendance-stats').get(authController.protect, attendanceController.getMyAttendanceStats);
+router.route('/my-attendance-stats/:id').get(authController.protect, attendanceController.getMyAttendanceStats);
 // router.get('/my', authController.protect, attendanceController.getMyAttendances);
 
 router

@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom'
 
 function Calendar() {
   return (
-    <div className="bg-white rounded-md p-8 pt-4 w-[100%] h-max flex flex-col items-center">
+    <div className="bg-white rounded-md p-4 sm:p-8 pt-4 w-max sm:w-full h-max flex flex-col items-center">
       <Outlet></Outlet>
     </div>
   )

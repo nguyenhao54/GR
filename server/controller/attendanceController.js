@@ -13,7 +13,9 @@ const catchAsync = require('../utils/catchAsync');
 const Lesson = require('../models/lessonModel');
 
 exports.getMyAttendanceStats = catchAsync(async (req, res, next) => {
-  const date = new Date(new Date().getTime() - 7*24*60*60*1000)
+  const date = new Date(
+    new Date(req.params.id).getTime() - 7 * 24 * 60 * 60 * 1000,
+  );
   const weekdays = selectWeek(date);
 
   const stats = await Promise.all( weekdays.map(async (day) => {

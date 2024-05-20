@@ -119,7 +119,7 @@ function AttendanceCard() {
 
     if (loading) {
         return (
-            <div className='bg-white flex-1 rounded-md p-4 md:w-[37%] sm:w-[99%] flex lg:flex-col items-center h-stretch justify-center'>
+            <div className='bg-white flex-1 rounded-md p-4 sm:w-[37%] sm:w-[99%] flex lg:flex-col items-center h-stretch justify-center'>
                 <DotFlashing></DotFlashing>
             </div>
         );
@@ -127,7 +127,7 @@ function AttendanceCard() {
 
     if (!lesson) {
         return (
-            <div className='bg-white flex-1 rounded-md p-4 md:w-[37%]  sm:w-[99%] flex lg:flex-col  min-h-[calc(100vh-80px)] items-center h-stretch'>
+            <div className='bg-white flex-1 rounded-md p-4 sm:w-[37%]  sm:w-[99%] flex lg:flex-col  min-h-[calc(100vh-80px)] items-center h-stretch'>
                 <div className='text-neutral-400 flex flex-col justify-center items-center'>
                     <IoMdCheckmarkCircleOutline size={60} color={"#0072D0"} />
                     <div className='font-semibold text-md py-8 px-4'>
@@ -149,7 +149,7 @@ function AttendanceCard() {
     // }
 
     return (
-        <div className='bg-white rounded-md flex-1 p-4 md:w-[37%]  sm:w-[99%] flex lg:flex-col items-center min-h-[calc(100vh-80px)]'>
+        <div className='bg-white rounded-md flex-1 p-4 sm:w-[37%] w-[99%] flex flex-col items-center min-h-[calc(100vh-280px)] sm:min-h-[calc(100vh-80px)]'>
             <div className='text-base font-semibold mt-2'>{clock}</div>
             <div className='text-xs font-semibold text-neutral-500'>
                 {`${getToday()}, Ngày ${new Date().toLocaleString("en-GB", {

@@ -140,7 +140,7 @@ function RequestTable() {
     dispatch(
       setDialog({
         customWidth: 400,
-        customHeight: 180,
+        customHeight: 190,
         title: "Xác nhận" + (accept ? " phê duyệt" : " từ chối"),
         open: true,
         type: "warning",
@@ -187,7 +187,7 @@ function RequestTable() {
     dispatch(
       setDialog({
         customWidth: 400,
-        customHeight: 180,
+        customHeight: 190,
         title: "Xác nhận xóa yêu cầu",
         open: true,
         type: "warning",

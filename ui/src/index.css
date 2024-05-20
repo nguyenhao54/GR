@@ -24,6 +24,7 @@ code {
   width: 6px;
   height: 6px;
 }
+
 ::-webkit-scrollbar-track {
   border-radius: 3px;
   background: #aaaaaa54;
@@ -33,6 +34,7 @@ code {
   border-radius: 3px;
   background: #717172;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #626262;
 }
@@ -48,6 +50,7 @@ code {
   animation: dot-flashing 1s infinite linear alternate;
   animation-delay: 0.5s;
 }
+
 .dot-flashing::before,
 .dot-flashing::after {
   content: "";
@@ -55,6 +58,7 @@ code {
   position: absolute;
   top: 0;
 }
+
 .dot-flashing::before {
   left: -15px;
   width: 10px;
@@ -65,6 +69,7 @@ code {
   animation: dot-flashing 1s infinite alternate;
   animation-delay: 0s;
 }
+
 .dot-flashing::after {
   left: 15px;
   width: 10px;
@@ -80,6 +85,7 @@ code {
   0% {
     background-color: gray;
   }
+
   50%,
   100% {
     background-color: rgba(163, 163, 163, 0.2);
@@ -91,13 +97,66 @@ code {
   height: 100%;
   width: 100%;
 }
+
 #root {
-	width: 100%;
-	height: 100%;
-}
-#map-wrapper {
-	position: relative;
-	width: 75%;
-	height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
+#map-wrapper {
+  position: relative;
+  width: 75%;
+  height: 100%;
+}
+
+.toastui-calendar-week-view-day-names {
+  height: 40px !important;
+  overflow: hidden !important;
+}
+
+.toastui-calendar-week {
+  height: 40px !important;
+}
+
+@media only screen and (max-width: 568px) {
+
+  /* For mobile phones: */
+  .toastui-calendar-timegrid-time-column {
+    width: 36px !important;
+  }
+
+  .toastui-calendar-columns {
+    left: 36px !important;
+    /* min-width: 500px !important;
+    overflow-x: scroll; */
+  }
+
+  .toastui-calendar-day-name-container {
+    margin-left: 32px !important;
+    /* min-width: 500px !important;
+    height: 40px !important;
+    overflow-x: scroll !important; */
+  }
+
+  .toastui-calendar-day-name__date {
+    font-size: 16px !important;
+    padding: 0 !important;
+    font-weight: 500 !important;
+  }
+
+  .toastui-calendar-day-name-item>span {
+    /* display: flex !important;
+    flex-direction: column !important;
+    height: 30px !important; */
+    height: 40px !important;
+  }
+
+  .toastui-calendar-day-name__name {
+    display: none;
+  }
+
+  .toastui-calendar-layout {
+    min-width: 800px !important;
+    overflow-x: scroll !important;
+  }
+}
