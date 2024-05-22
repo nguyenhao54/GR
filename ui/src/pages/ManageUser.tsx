@@ -76,7 +76,6 @@ function ManageUser() {
   useEffect(() => {
     dispatch(showTopLoading())
     getUsers(token).then(res => {
-      console.log(res.data)
       setUserList(res.data.data);
       setDisplay(res.data.data)
     }).finally(() => {
@@ -96,16 +95,20 @@ function ManageUser() {
         if (await editUserRef.validateForm()) {
           dispatch(showTopLoading())
           const newUser = editUserRef.changedUser
-          console.log(newUser, " newUser")
           const res = await updateUser(token, newUser)
           if (res.status === "success") {
-            //TODO: show success message and add to the list in UI
+            //DONE: show success message and add to the list in UI
+            const processedUserList = userList.map(item => {
+              if (item.id === user._id) return { ...item, ...newUser }
+              else return { ...item }
+            })
             dispatch(setDialog({
               title: "Chỉnh sửa thông tin người dùng thành công",
               open: true,
               type: "info",
               isMessagebar: true
             }))
+            setUserList(processedUserList)
           }
           else {
             dispatch(setDialog({
@@ -116,7 +119,6 @@ function ManageUser() {
             }))
 
           }
-
           dispatch(closeTopLoading())
         }
 
@@ -188,17 +190,18 @@ function ManageUser() {
         if (await editUserRef.validateForm()) {
           dispatch(showTopLoading())
           const newUser = editUserRef.changedUser
-          console.log(newUser, " newUser")
           const res = await createUser(token, newUser)
-          console.log(res)
           if (res.status === "success") {
-            //TODO: show success message and add to the list in UI
             dispatch(setDialog({
               title: "Thêm người dùng thành công",
               open: true,
               type: "info",
               isMessagebar: true
             }))
+
+            let processedUserList = [...userList];
+            processedUserList.push(res.data.user);
+            setUserList(processedUserList);
           }
           else {
             dispatch(setDialog({

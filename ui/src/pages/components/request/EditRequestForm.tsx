@@ -34,7 +34,6 @@ const EditRequestForm = React.forwardRef(({ request }: { request: any }, ref) =>
             img: URL.createObjectURL(item),
             title: item.name,
         }));
-        console.log(items);
         setImage(items[0]);
     };
 
@@ -77,7 +76,6 @@ const EditRequestForm = React.forwardRef(({ request }: { request: any }, ref) =>
                             rows='4.7'
                             value={reason}
                             onChange={(e) => {
-                                console.log(e.target.value)
                                 setReason(e.target.value)
                             }}
                             style={{ width: "100%" }}

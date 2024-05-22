@@ -90,7 +90,6 @@ function ManageClass() {
     useEffect(() => {
         dispatch(showTopLoading())
         getClasses(token).then(res => {
-            console.log(res.data)
             setClassList(res.data);
             setDisplay(res.data)
         }).finally(() => {
@@ -107,7 +106,6 @@ function ManageClass() {
             open: true,
             type: "normal",
             onClickOk: async () => {
-                console.log(editClassRef.validateForm());
                 if (await editClassRef.validateForm()) {
                     dispatch(showTopLoading())
                     const newClass = editClassRef.changedClass
@@ -156,11 +154,10 @@ function ManageClass() {
             open: true,
             type: "normal",
             onClickOk: async () => {
-                console.log(editClassRef.validateForm());
                 if (await editClassRef.validateForm()) {
                     dispatch(showTopLoading())
+                    //TODO: add class 
                     const newClass = editClassRef.changedClass
-                    console.log(newClass)
                     dispatch(closeTopLoading())
                 }
 
@@ -171,8 +168,6 @@ function ManageClass() {
                 }} />
             )
         }))
-
-
     }
 
     const handleDeleteClass = (classObj: any) => {
@@ -198,7 +193,6 @@ function ManageClass() {
                         isMessagebar: true
                     }))
                     setClassList(processedClassList)
-
                 },
                 content: (
                     <div className='pl-6 font-montserrat text-xs font-medium'>

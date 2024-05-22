@@ -12,6 +12,7 @@ import { ThemePic } from "./../../../assets/img";
 import { getMyAttendanceForLesson } from "../../../api/attendance";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { Lesson, User } from '../../../models';
+import { FaInfo } from "react-icons/fa6";
 import { getHourAndMinute } from '../../../utils';
 export interface IAttendance {
     id?: string;
@@ -103,7 +104,6 @@ function AttendanceCard() {
         getCurrentLesson(token)
             .then((res: any) => {
                 setLesson(res?.lessons[0]);
-                console.log(res?.lessons[0])
             })
             .finally(() => setLoading(false));
     }, []);
@@ -119,7 +119,7 @@ function AttendanceCard() {
 
     if (loading) {
         return (
-            <div className='bg-white flex-1 rounded-md p-4 sm:w-[37%] sm:w-[99%] flex lg:flex-col items-center h-stretch justify-center'>
+            <div className='bg-white flex-1 rounded-md p-4 sm:w-[37%] w-[99%] flex lg:flex-col items-center h-stretch justify-center'>
                 <DotFlashing></DotFlashing>
             </div>
         );
@@ -127,7 +127,7 @@ function AttendanceCard() {
 
     if (!lesson) {
         return (
-            <div className='bg-white flex-1 rounded-md p-4 sm:w-[37%]  sm:w-[99%] flex lg:flex-col  min-h-[calc(100vh-80px)] items-center h-stretch'>
+            <div className='bg-white flex-1 rounded-md p-4 sm:w-[37%] w-[99%] flex lg:flex-col  min-h-[calc(100vh-80px)] items-center h-stretch'>
                 <div className='text-neutral-400 flex flex-col justify-center items-center'>
                     <IoMdCheckmarkCircleOutline size={60} color={"#0072D0"} />
                     <div className='font-semibold text-md py-8 px-4'>
@@ -141,12 +141,18 @@ function AttendanceCard() {
 
     const { subject = "", location = " " } = lesson?.class;
     const { endDateTime = " ", startDateTime = "" } = lesson;
-    console.log(location)
-
-    // if (Math.abs(position.latitude - location.coordinates[0])> 0.001 || Math.abs(position.longitude - location.coordinates[1]) > 0.001) {
-    //     console.log(position, location.coordinates )
-    //     return <div> Vui lòng di chuyển tói vị trí lớp học và kết nối wifi của lớp học</div>
-    // }
+    // console.log(location)
+    // sai so 100m cx ok
+    if (Math.abs(position.latitude - location.coordinates[0]) > 0.001 || Math.abs(position.longitude - location.coordinates[1]) > 0.001) {
+        // console.log(position, location.coordinates)
+        return <div className='bg-white rounded-md flex-1 p-4 sm:w-[37%] w-[99%] flex flex-col items-center min-h-[calc(100vh-280px)] sm:min-h-[calc(100vh-80px)] h-stretch'>
+            <div className="text-neutral-400 rounded-full border-4 border-neutral-400 p-2 mt-2"><FaInfo size={30}></FaInfo>
+            </div>
+            <div className='text-sm font-semibold text-neutral-400 mt-2 p-0 sm:p-2'>
+                <div>Vị trí hiện tại chưa đáp ứng yêu cầu. Vui lòng di chuyển tới vị trí lớp học và kết nối wifi của lớp học.</div>
+            </div>
+        </div>
+    }
 
     return (
         <div className='bg-white rounded-md flex-1 p-4 sm:w-[37%] w-[99%] flex flex-col items-center min-h-[calc(100vh-280px)] sm:min-h-[calc(100vh-80px)] h-max'>
@@ -160,6 +166,7 @@ function AttendanceCard() {
             </div>
             {attendance?.checkInTime ? (
                 <div
+                    role={'none'}
                     className='border-lightRed hover:cursor-pointer border-8 rounded-full min-w-40 min-h-40 m-4 gap-2 flex shadow-2xl justify-center flex-col text-neutal-800 items-center'
                     onClick={() => {
                         dispatch(
@@ -205,6 +212,7 @@ function AttendanceCard() {
                 </div>
             ) : (
                 <div
+                    role={"none"}
                     className='bg-[#D9D9D9] hover:cursor-pointer rounded-full min-w-40 min-h-40 m-4 gap-2 flex shadow-2xl justify-center flex-col text-neutal-800 items-center'
                     onClick={() => {
                         dispatch(

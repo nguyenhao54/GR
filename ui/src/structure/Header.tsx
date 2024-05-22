@@ -32,11 +32,16 @@ function Header() {
         </NavLink>
       </div>
       <div className='pt-3 px-4 sm:p-4 sm:px-8 flex justify-center hover:cursor-pointer items-center' onClick={handleClick}>
-        <div className="sm:flex hidden"><img
-          alt="user-photo"
-          className='w-10 h-10 border-4 shadow-md border-neutral-200 bg-barnRed rounded-full'
-          src={user?.photo}
-        ></img>
+        <div className="sm:flex hidden">
+          {user?.photo ? <img
+            alt="user-photo"
+            className='w-10 h-10 border-4 shadow-md border-neutral-200 rounded-full'
+            src={user?.photo}
+          ></img>
+            : <div className="w-10 h-10 border-4 shadow-md border-neutral-200 bg-neutral-100 rounded-full">
+              <span className="font-semibold text-neutral-600 text-xl flex justify-center items-center">{user?.name!.slice(0, 1).toUpperCase()}</span>
+            </div>
+          }
           <div className='flex flex-col px-2 pt-1 text-neutral-800'>
             <p className='font-semibold'>{user?.name}</p>
             <p>{user?.codeNumber}</p>

@@ -147,7 +147,6 @@ function RequestTable() {
         onClickOk: async () => {
           const promise = handleRequest;
           const res = await promise(token, request._id, accept)
-          console.log(res)
           if (res.status === "success") {
             const processedRequestList = requestList.map(item => {
               if (item.id === request._id) return { ...item, status: accept ? "approved" : "denied" }
@@ -264,7 +263,6 @@ function RequestTable() {
               isMessagebar: true
             }))
           }
-          console.log(editRequestRef.changedRequest)
         },
         content: (
           <EditRequestForm ref={(ref) => { editRequestRef = ref }} request={request} />
@@ -310,16 +308,13 @@ function RequestTable() {
                   onClick={request.status === "pending" ? () => { handleDenyOrAccept(request, true) } : undefined} />
               </ToolTip>
               <ToolTip textContent='Từ chối' limit={1}>
-                {/* //TODO: set button disable  */}
                 <FaCircleXmark className={request.atus !== "pending" ? "opacity-30 hover:cursor-default text-lg" : 'text-lg cursor-pointer text-lightRed'}
                   onClick={request.status === "pending" ? () => { handleDenyOrAccept(request, false) } : undefined} />
               </ToolTip>
-
             </>}
 
           {user?.role === "student" &&
             <><ToolTip textContent='Chỉnh sửa' limit={1}>
-              {/* //TODO: set button disable  */}
               <FaPen size={14} className={request.status !== "pending" ? "opacity-30 hover:cursor-default text-lg" : 'text-lg cursor-pointer text-[#0072D0]'}
                 onClick={request.status === "pending" ? () => {
 

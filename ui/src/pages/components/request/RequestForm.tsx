@@ -59,7 +59,6 @@ function RequestForm() {
             }
         }
         else {
-            console.log("no class")
             dispatch(setDialog({
                 customWidth: 400,
                 customHeight: 240,
@@ -120,7 +119,6 @@ function RequestForm() {
                             rows='4.7'
                             value={reason}
                             onChange={(e) => {
-                                console.log(e.target.value)
                                 setReason(e.target.value)
                             }}
                             style={{ width: "100%" }}

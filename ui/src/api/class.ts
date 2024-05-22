@@ -45,15 +45,16 @@ export const deleteClass = async (token: string, classId: string) => {
 
 export const editClass = async (token: string, classId: string, classObj: any) => {
     try {
+        console.log(classObj.students);
         const res = await axios.patch(
             `${BASE_URL}/classes/${classId}`,
             {
-                semester: classObj.semester
-                // teacher:
-                //duration
-                //location
-                //subjectId/
-
+                semester: classObj.semester,
+                teacher: classObj.teacher._id,
+                duration: classObj.duration,
+                // location: classObj.location,
+                subject: classObj.subject._id,
+                students: classObj.students.map((item: any) => item._id),
             },
             { headers: { Authorization: `Bearer ${token}` } }
         )

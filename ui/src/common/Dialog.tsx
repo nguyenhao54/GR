@@ -65,7 +65,7 @@ export default function DialogView() {
         </Dialog> :
             <Snackbar
                 open={dialogState?.open || false}
-                autoHideDuration={60000}
+                autoHideDuration={3000}
                 key={"top right"}
                 ContentProps={{
                     sx: {

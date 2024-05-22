@@ -12,9 +12,7 @@ const Layout = () => {
   const url = useLocation();
   const user = useSelector((appState: AppState) => appState.user.user)
 
-
   useEffect(() => {
-    console.log(user)
     if (user) {
       if (url.pathname === "/") {
         if (user?.role === "student") {
@@ -24,8 +22,6 @@ const Layout = () => {
           navigate("/admin/manage-user")
         }
         else {
-          console.log(user)
-          console.log("nav cal")
           navigate("/calendar")
         }
       }

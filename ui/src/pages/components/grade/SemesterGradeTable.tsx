@@ -77,7 +77,6 @@ function SemesterGradeTable({ semester }: { semester: number }) {
     useEffect(() => {
         dispatch(showTopLoading())
         getMyGrade(token, semester).then((res: any) => {
-            // console.log(res)
             setClassList(res?.grades || [])
         }).finally(() => {
             dispatch(closeTopLoading())

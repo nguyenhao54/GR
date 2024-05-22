@@ -143,7 +143,6 @@ function GradeTable({ selectedClass }: { selectedClass: any }) {
                     inputProps={{ min: 0, max: 10 }}
                     value={student.midGrade || ""}
                     onChange={(e) => {
-                        console.log(e.target.value)
                         setGrade(student._id, "midGrade", e.target.value)
                     }}
                     style={{ width: "100%" }}

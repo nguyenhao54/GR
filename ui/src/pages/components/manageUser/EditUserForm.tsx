@@ -26,7 +26,9 @@ const EditUserForm = React.forwardRef(({ user }: { user: any }, ref) => {
     const [gender, setGender] = useState(user?.gender || "male")
     const [major, setMajor] = useState(user?.major || "")
     const [faculty, setFaculty] = useState(user?.faculty || "")
-    const [dob, setDob] = React.useState<Dayjs | null>(user?.DOB ? dayjs(new Date(user?.DOB)) : null);
+    const [dob, setDob] = React.useState<Dayjs | null>(user?.DOB ? dayjs(new Date(user?.DOB))
+        : user?.email
+            ? null : dayjs(new Date()));
     const theme = useTheme();
 
     React.useImperativeHandle(ref, () => {
