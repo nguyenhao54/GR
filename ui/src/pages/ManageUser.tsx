@@ -17,6 +17,7 @@ interface UserTableData {
   id?: string;
   action?: JSX.Element;
   codeNumber?: string;
+  name?: string;
   email?: string;
   gender?: string;
   dob?: string;
@@ -30,6 +31,12 @@ const headCells: readonly HeadCell<UserTableData>[] = [
     numeric: false,
     disablePadding: true,
     label: "Mã số",
+  },
+  {
+    id: "name",
+    numeric: false,
+    disablePadding: true,
+    label: "Họ tên",
   },
   {
     id: "email",
@@ -229,6 +236,7 @@ function ManageUser() {
     return {
       id: user._id || "0",
       codeNumber: user.codeNumber,
+      name: user.name,
       email: user.email,
       gender: user.gender ? "Nam" : "Nữ",
       dob: user.DOB ? new Date(user.DOB).toLocaleString('en-GB', { day: "2-digit", month: "2-digit", year: "numeric" }) : "",

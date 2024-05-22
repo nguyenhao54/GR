@@ -23,7 +23,7 @@ const EditUserForm = React.forwardRef(({ user }: { user: any }, ref) => {
     const [photo, setPhoto] = useState(user?.photo || "")
     const [photoError, setPhotoError] = useState("")
     const [role, setRole] = useState(user?.role || "student")
-    const [gender, setGender] = useState(user?.gender || "male")
+    const [gender, setGender] = useState(user?.gender || "female")
     const [major, setMajor] = useState(user?.major || "")
     const [faculty, setFaculty] = useState(user?.faculty || "")
     const [dob, setDob] = React.useState<Dayjs | null>(user?.DOB ? dayjs(new Date(user?.DOB))
@@ -33,8 +33,8 @@ const EditUserForm = React.forwardRef(({ user }: { user: any }, ref) => {
 
     React.useImperativeHandle(ref, () => {
         return {
-            changedUser: !user.email ? { phone, codeNumber, role, email, name, password, passwordConfirm }
-                : { ...user, phone, codeNumber, role, email, name },
+            changedUser: !user.email ? { phone, codeNumber, gender, photo, role, email, name, password, dob, passwordConfirm }
+                : { ...user, phone, codeNumber, role, email, name, gender, dob, photo },
             validateForm: validate
         }
     })
@@ -193,7 +193,6 @@ const EditUserForm = React.forwardRef(({ user }: { user: any }, ref) => {
                             onChange={
                                 (e) => {
                                     setGender(e.target.value)
-
                                 }
                             }
                             input={<OutlinedInput label="Giới tính" className='w-64 text-black' />}

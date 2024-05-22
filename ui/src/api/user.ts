@@ -82,6 +82,11 @@ export const updateUser = async (token: string, user: any) => {
                 phone: user.phone,
                 photo: user.photo,
                 codeNumber: user.codeNumber,
+                role: user.role,
+                email: user.email,
+                name: user.name,
+                DOB: user.dob,
+                gender: user.gender,
             },
             { headers: { Authorization: `Bearer ${token}` } }
         )
