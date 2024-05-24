@@ -176,3 +176,7 @@ code {
     overflow-x: scroll !important;
   }
 }
+
+.toastui-calendar-weekday-event-block{
+  height: 26px !important;
+}

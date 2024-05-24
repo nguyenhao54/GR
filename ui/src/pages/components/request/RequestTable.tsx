@@ -308,7 +308,7 @@ function RequestTable() {
                   onClick={request.status === "pending" ? () => { handleDenyOrAccept(request, true) } : undefined} />
               </ToolTip>
               <ToolTip textContent='Từ chối' limit={1}>
-                <FaCircleXmark className={request.atus !== "pending" ? "opacity-30 hover:cursor-default text-lg" : 'text-lg cursor-pointer text-lightRed'}
+                <FaCircleXmark className={request.status !== "pending" ? "opacity-30 hover:cursor-default text-lg" : 'text-lg cursor-pointer text-lightRed'}
                   onClick={request.status === "pending" ? () => { handleDenyOrAccept(request, false) } : undefined} />
               </ToolTip>
             </>}

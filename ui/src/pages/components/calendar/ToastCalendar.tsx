@@ -106,36 +106,35 @@ export default function ToastCalendar() {
 
         setStartDate(dateStart);
         setEndDate(dateEnd);
-
         calendarInstance.setOptions({
             template: {
                 time(event: any) {
                     return (
-                        `<div class="flex flex-col justify-start pt-2">
-                  <div class="whitespace-normal flex flex-row gap-2">
-                    <div class="rounded-md py-0.5 px-1 font-semibold text-white" style="background-color:${event.borderColor};">
+                        `<div class="flex flex-col justify-start ${view !== "month" ? "pt-1" : ""} rounded-md">
+                  ${view !== "month" ? `<div class="whitespace-normal flex flex-row gap-2">
+                    <div class="rounded-md pt-0.5 px-1 font-semibold text-white" style="background-color:${event.borderColor};">
                       ${moment(event.start.toDate()).format("HH:mm")}
                     </div>
-                    <div class="rounded-md py-0.5 px-1 font-semibold text-white" style="background-color:${event.borderColor}; ">
+                    <div class="rounded-md pt-0.5 px-1 font-semibold text-white" style="background-color:${event.borderColor}; ">
                       ${moment(event.end.toDate()).format("HH:mm")}
                     </div>
-                  </div>
-                  <div class="whitespace-normal text-neutral-700 font-semibold pt-1 pl-1">${event.title}</div>
+                  </div>`: ``}
+                  <div class="whitespace-normal text-neutral-700 font-semibold  ${view !== "month" ? "pt-1" : ""} pl-1">${event.title}</div>
                   <div class="whitespace-normal text-neutral-500 font-semibold pt-1 pl-1"> <FaLocationDot /> ${event.location}</div>
 
                 </div>`
                     )
                 },
-                task(event: any) {
-                    return (
-                        `<div class="flex flex-row justify-start gap-2">
-                  <div class="rounded-md py-0.5 px-1 font-semibold" style="background-color:${event.borderColor}; ">
-                      ${moment(event.end.toDate()).format("HH:mm")}
-                  </div>
-                  <div class="whitespace-normal font-semibold">${event.title}</div>
-                </div>`
-                    )
-                },
+                // task(event: any) {
+                //     return (
+                //         `<div class="flex flex-row justify-start gap-2">
+                //   <div class="rounded-md py-0.5 px-1 font-semibold" style="background-color:${event.backgroundColor}; ">
+                //       ${moment(event.end.toDate()).format("HH:mm")}
+                //   </div>
+                //   <div class="whitespace-normal font-semibold">${event.title}</div>
+                // </div>`
+                //     )
+                // },
             },
         });
     };
@@ -202,7 +201,7 @@ export default function ToastCalendar() {
                 onClickEvent={(event) => handleClickEvent(event)}
                 onAfterRenderEvent={onAfterRenderEvent}
                 usageStatistics={false}
-                height="calc(100vh - 180px)"
+                height="calc(100vh - 188px)"
                 view={view}
                 theme={{
                     scheduleView: ["time"],

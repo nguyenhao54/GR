@@ -62,7 +62,7 @@ export default function StackedAtendanceChart() {
         <div className="bg-white flex-1 rounded-md p-4 w-[99%] sm:w-[62%] flex flex-col gap-2 min-h-[calc(100vh-80px)] h-max">
             {
                 loading
-                    ? <div className='bg-white flex-1 rounded-md p-4 flex lg:flex-col items-center h-stretch justify-center'>
+                    ? <div className='bg-white flex-1 rounded-md p-4 w-[600px] flex items-center h-stretch justify-center'>
                         <DotFlashing></DotFlashing>
                     </div>
                     : <div>
