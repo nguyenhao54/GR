@@ -108,33 +108,35 @@ function ManageClass() {
             onClickOk: async () => {
                 if (await editClassRef.validateForm()) {
                     dispatch(showTopLoading())
-                    const newClass = editClassRef.changedClass
-                    const res = await editClass(token, classObj._id, newClass)
-                    if (res?.status === "success") {
-                        const processedClassList = classList.map(item => {
-                            if (item.id === classObj._id) return { ...item, ...newClass }
-                            else return { ...item }
-                        })
-                        //display success dialog
-                        setClassList(processedClassList)
-                        dispatch(setDialog({
-                            title: "Chỉnh sửa lớp học thành công",
-                            open: true,
-                            type: "info",
-                            isMessagebar: true
-                        }))
+                    setTimeout(async () => {
+                        const newClass = editClassRef.changedClass
+                        console.log(newClass)
+                        const res = await editClass(token, classObj._id, newClass)
+                        if (res?.status === "success") {
+                            const processedClassList = classList.map(item => {
+                                if (item.id === classObj._id) return { ...item, ...newClass }
+                                else return { ...item }
+                            })
+                            //display success dialog
+                            setClassList(processedClassList)
+                            dispatch(setDialog({
+                                title: "Chỉnh sửa lớp học thành công",
+                                open: true,
+                                type: "info",
+                                isMessagebar: true
+                            }))
 
-                    } else {
-                        dispatch(setDialog({
-                            title: "Chỉnh sửa lớp học thất bại, vui lòng thử lại sau",
-                            open: true,
-                            type: "warning",
-                            isMessagebar: true
-                        }))
-                    }
-                    dispatch(closeTopLoading())
+                        } else {
+                            dispatch(setDialog({
+                                title: "Chỉnh sửa lớp học thất bại, vui lòng thử lại sau",
+                                open: true,
+                                type: "warning",
+                                isMessagebar: true
+                            }))
+                        }
+                        dispatch(closeTopLoading())
+                    }, 100)
                 }
-
             },
             content: (
                 <EditClassForm classObj={classObj} ref={(ref) => {

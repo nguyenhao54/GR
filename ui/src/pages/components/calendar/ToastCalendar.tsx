@@ -52,7 +52,8 @@ export default function ToastCalendar() {
                     end: minusSevenHours(item.endDateTime?.toString() || ""),
                     backgroundColor: BACKGROUND_COLOR[random],
                     borderColor: BORDER_COLOR[random],
-                    title: item.class?.classId + " - " + item.class?.subject?.title,
+                    title: item.class?.classId,
+                    body: item.class?.subject?.title,
                     location: item.class?.location.description
                 })
             }) || [])
@@ -109,6 +110,7 @@ export default function ToastCalendar() {
         calendarInstance.setOptions({
             template: {
                 time(event: any) {
+                    console.log(event)
                     return (
                         `<div class="flex flex-col justify-start ${view !== "month" ? "pt-1" : ""} rounded-md">
                   ${view !== "month" ? `<div class="whitespace-normal flex flex-row gap-2">
@@ -120,8 +122,8 @@ export default function ToastCalendar() {
                     </div>
                   </div>`: ``}
                   <div class="whitespace-normal text-neutral-700 font-semibold  ${view !== "month" ? "pt-1" : ""} pl-1">${event.title}</div>
+                  <div class="whitespace-normal text-neutral-500 font-semibold  ${view !== "month" ? "pt-1" : ""} pl-1">${event.body}</div>
                   <div class="whitespace-normal text-neutral-500 font-semibold pt-1 pl-1"> <FaLocationDot /> ${event.location}</div>
-
                 </div>`
                     )
                 },

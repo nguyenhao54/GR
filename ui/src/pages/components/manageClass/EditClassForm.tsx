@@ -107,6 +107,7 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
         else {
             const validationPromises = userList.split(',').map(user => isExistedStudent(Number(user)));
             const validationRes = await Promise.all(validationPromises);
+            console.log(validationRes)
             setUserIds(validationRes)
             validate = validate && validationRes.every(result => result);
         }

@@ -13,7 +13,7 @@ router
   );
 router.route('/my-attendance-stats/:id').get(authController.protect, attendanceController.getMyAttendanceStats);
 // router.get('/my', authController.protect, attendanceController.getMyAttendances);
-
+router.route('/attendance-ratio/:classId').get(authController.protect,attendanceController.getAttendanceRatio);
 router
   .route('/:id')
   .get(attendanceController.getAttendance)

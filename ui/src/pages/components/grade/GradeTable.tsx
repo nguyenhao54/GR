@@ -7,6 +7,7 @@ import { AppState } from '../../../redux/store';
 import { Button, TextField } from '@mui/material';
 import { createGrade, getGrade, updateGrade } from '../../../api/grade';
 import { closeTopLoading, showTopLoading } from '../../../redux/toploading.reducer';
+import { getAttendanceRatioForClass } from '../../../api/attendance';
 
 
 interface GradeTableData {
@@ -15,6 +16,7 @@ interface GradeTableData {
     studentCode?: string;
     midGrade?: JSX.Element
     processGrade?: JSX.Element
+    attendanceRatio?: JSX.Element
     finalGrade?: JSX.Element
 }
 
@@ -31,6 +33,13 @@ const headCells: readonly HeadCell<GradeTableData>[] = [
         disablePadding: true,
         label: "Họ và tên",
         minWidth: 180,
+    },
+    {
+        id: "attendanceRatio",
+        numeric: false,
+        disablePadding: true,
+        label: "Tỉ lệ có mặt",
+        minWidth: 80,
     },
     {
         id: "midGrade",
@@ -72,24 +81,32 @@ function GradeTable({ selectedClass }: { selectedClass: any }) {
 
     useEffect(() => {
         dispatch(showTopLoading())
-        Promise.all([...(selectedClass?.students || []).map(async (student: any) => {
-            const grade = await getGrade(token, selectedClass._id, student._id)
-            if (grade) {
-                return {
-                    ...student,
-                    midGrade: grade.midGrade,
-                    processGrade: grade.processGrade,
-                    finalGrade: grade.finalGrade,
-                    isFromDb: true,
-                    gradeObjId: grade._id
-                }
-            }
-            else return { ...student }
-        })]).then((tempGradeList) => {
-            setGradeList(tempGradeList || [])
-            dispatch(closeTopLoading())
-        })
-
+        if (selectedClass?.classId) {
+            getAttendanceRatioForClass(token, selectedClass?.classId).then(res => {
+                console.log(res);
+                Promise.all([...(selectedClass?.students || []).map(async (student: any) => {
+                    const grade = await getGrade(token, selectedClass._id, student._id)
+                    if (grade) {
+                        return {
+                            ...student,
+                            ratio: res.find((item: any) => item.student._id === student._id)?.ratio,
+                            midGrade: grade.midGrade,
+                            processGrade: grade.processGrade,
+                            finalGrade: grade.finalGrade,
+                            isFromDb: true,
+                            gradeObjId: grade._id
+                        }
+                    }
+                    else return {
+                        ...student,
+                        ratio: res.find((item: any) => item.student._id === student._id)?.ratio,
+                    }
+                })]).then((tempGradeList) => {
+                    setGradeList(tempGradeList || [])
+                    dispatch(closeTopLoading())
+                })
+            })
+        }
     }, [selectedClass?._id])
 
     useEffect(() => {
@@ -131,10 +148,12 @@ function GradeTable({ selectedClass }: { selectedClass: any }) {
     }
 
     const createRowElements = (student: any): GradeTableData => {
+        console.log("studentjsk", student)
         return {
             id: student._id,
             studentCode: student.codeNumber,
             studentName: student.name,
+            attendanceRatio: student.ratio,
             midGrade: <div className='w-full'>
                 <TextField
                     id={`${selectedClass?._id}mid`}
