@@ -104,9 +104,10 @@ function ManageUser() {
           const newUser = editUserRef.changedUser
           const res = await updateUser(token, newUser)
           if (res.status === "success") {
+            
             //DONE: show success message and add to the list in UI
             const processedUserList = userList.map(item => {
-              if (item.id === user._id) return { ...item, ...newUser }
+              if (item._id === user._id) return { ...item, ...newUser }
               else return { ...item }
             })
             dispatch(setDialog({
@@ -115,6 +116,7 @@ function ManageUser() {
               type: "info",
               isMessagebar: true
             }))
+            console.log(processedUserList, newUser, "processList")
             setUserList(processedUserList)
           }
           else {

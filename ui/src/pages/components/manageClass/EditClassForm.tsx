@@ -26,18 +26,21 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
     const [teacherError, setTeacherError] = React.useState<string>("");
     const [subjectError, setSubjectError] = React.useState<string>("");
     const semesterList = [20191, 20192, 20211, 20212, 20221, 20222, 20231, 20232, 20241, 20242, 20251, 20252]
-    const [classId, setClassId] = React.useState<string>("");
+    const [classId, setClassId] = React.useState<string>(classObj.classId || "");
     const [userList, setUserList] = React.useState<string>(classObj.students?.map((i: any) => i.codeNumber).join(', '))
     const [userError, setUserError] = React.useState<string>("");
     const [userIds, setUserIds] = React.useState<any[]>([]);
     const [classError, setClassError] = React.useState<string>("");
     const [startTime, setStartTime] = React.useState<Dayjs | null>(dayjs(classObj.firstStartTime ? new Date(minusSevenHours(classObj.firstStartTime)) : new Date()));
     const [endTime, setEndTime] = React.useState<Dayjs | null>(dayjs(classObj.lastStartTime ? new Date(minusSevenHours(classObj.lastStartTime)) : new Date()));
+    const [lat, setLat] = React.useState<any>(classObj.location?.coordinates[0]);
+    const [lon, setLon] = React.useState<any>(classObj.location?.coordinates[1]);
+    const [desc, setDesc] = React.useState<any>(classObj.location?.description)
 
     React.useImperativeHandle(ref, () => {
         return {
             //TODO : change other properties as well 
-            changedClass: { ...classObj, semester, teacher: teacher, subject: subject, students: userIds },
+            changedClass: { ...classObj, classId: classId, semester, teacher: teacher, subject: subject, students: userIds, firstStartTime: startTime?.toDate(), lastStartTime: endTime?.toDate(), duration, location: { coordinates: [lat, lon], description: desc } },
             validateForm: validate
         }
     })
@@ -55,7 +58,7 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
         const res = await getUsers(token, `?codeNumber=${item}`)
 
         if (res.data.data[0]) {
-             return res.data.data[0]
+            return res.data.data[0]
         }
         else {
             setUserError("Không có sinh viên với mã " + item)
@@ -66,13 +69,17 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
     const validate = async () => {
         let validate = true;
 
+        if (!classId) {
+            setClassError("Trường này là bắt buộc")
+            validate = false;
+        }
         if (!subject.subjectId) {
             setSubjectError("Trường này là bắt buộc")
             validate = false;
         }
         else {
             const sub = await getSubject(token, `?subjectId=${subject.subjectId}`)
-            if (sub.data.data[0]) {
+            if (sub?.data?.data[0]) {
                 setSubject({ ...subject, ...sub.data.data[0] })
             }
             else {
@@ -154,6 +161,7 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
                                 style={{ width: "100%" }}
                                 variant="outlined"
                             />
+                            {classError && <div className="text-[10px] text-lightRed mt-1 -mb-5 pb-3 italic w-full">{classError}</div>}
                         </div>
                     }
                     <div className="flex gap-2">
@@ -165,7 +173,7 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
                                 required
                                 defaultValue={subject?.subjectId}
                                 onChange={(e) => {
-                                    setSubject({ subjectid: e.target.value })
+                                    setSubject({ subjectId: e.target.value })
                                 }}
                                 style={{ width: "100%" }}
                                 variant="outlined"
@@ -196,9 +204,10 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
                         <TextField
                             id="lat"
                             label="Kinh độ"
-                            required
-                            defaultValue={classObj.location?.coordinates[0] || ""}
+                            // required
+                            defaultValue={lat || ""}
                             onChange={(e) => {
+                                setLat(e.target.value)
                             }}
                             style={{ width: "33%" }}
                             variant="outlined"
@@ -206,18 +215,20 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
                         <TextField
                             id="long"
                             label="Vĩ độ"
-                            required
-                            defaultValue={classObj.location?.coordinates[1] || ""}
+                            // required
+                            defaultValue={lon || ""}
                             onChange={(e) => {
+                                setLon(e.target.value)
                             }}
                             style={{ width: "33%" }}
                             variant="outlined"
                         /><TextField
                             id="desc"
                             label="Mô tả"
-                            required
-                            defaultValue={classObj.location?.description}
+                            // required
+                            defaultValue={desc || ""}
                             onChange={(e) => {
+                                setDesc(e.target.value)
                             }}
                             style={{ width: "33%" }}
                             variant="outlined"

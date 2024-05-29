@@ -98,7 +98,7 @@ export default function StackedAtendanceChart() {
                                             height={20}
                                             width={isPhone ? window.innerWidth - 10 : 500}
                                         />
-                                        <Bar dataKey="Có mặt" stackId="a" fill="#C1121F" barSize={isPhone ? 30 : 40} />
+                                        <Bar dataKey="Có mặt" stackId="a" fill="#C1121F" barSize={isPhone ? 30 : 40} radius={[5, 5, 0, 0]} />
                                         <Bar dataKey="Vắng mặt" stackId="a" fill="#E0E1E3" barSize={isPhone ? 30 : 40} radius={[5, 5, 0, 0]} />
                                     </BarChart>
                                 </div>

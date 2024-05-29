@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import TablePager, { HeadCell } from '../common/TablePager';
 import { getCookie } from './components/dashboard/AttendanceCard';
 import { useDispatch } from 'react-redux';
-import { deleteClass, editClass, getClasses } from '../api/class';
+import { createClass, deleteClass, editClass, getClasses } from '../api/class';
 import { closeTopLoading, showTopLoading } from '../redux/toploading.reducer';
 import ToolTip from '../common/ToolTip';
 import { FaPlus, FaTrash } from 'react-icons/fa6';
@@ -158,9 +158,33 @@ function ManageClass() {
             onClickOk: async () => {
                 if (await editClassRef.validateForm()) {
                     dispatch(showTopLoading())
-                    //TODO: add class 
-                    const newClass = editClassRef.changedClass
-                    dispatch(closeTopLoading())
+                    setTimeout(async () => {
+                        //TODO: add class 
+                        const newClass = editClassRef.changedClass
+                        const res = await createClass(token, newClass)
+                        console.log(res)
+                        if (res?.status === "success") {
+                            dispatch(setDialog({
+                                title: "Thêm lớp học thành công",
+                                open: true,
+                                type: "info",
+                                isMessagebar: true
+                            }))
+
+                            let processedClassList = [...classList];
+                            processedClassList.push(newClass);
+                            setClassList(processedClassList);
+                        }
+                        else {
+                            dispatch(setDialog({
+                                title: "Thêm lớp học thất bại, Vui lòng thử lại sau",
+                                open: true,
+                                type: "warning",
+                                isMessagebar: true
+                            }))
+                        }
+                        dispatch(closeTopLoading())
+                    }, 100)
                 }
 
             },
@@ -225,7 +249,7 @@ function ManageClass() {
             teacher: classObj.teacher.name,
             semester: classObj.semester,
             duration: classObj.duration,
-            location: classObj.location.description,
+            location: classObj.location?.description,
             action: (
                 <div className='flex gap-2 items-center justify-center'>
                     <ToolTip textContent='Chỉnh sửa' limit={1}>

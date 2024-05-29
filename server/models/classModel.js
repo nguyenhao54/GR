@@ -73,6 +73,7 @@ classSchema.pre(/^find/, function (next) {
 
 classSchema.statics.addRelatedLessons = async function (classInfo) {
   let startTime = classInfo.firstStartTime;
+  console.log(classInfo, 'classInfo');
   for (
     startTime;
     startTime.getTime() < classInfo.lastStartTime.getTime();

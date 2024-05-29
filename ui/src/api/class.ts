@@ -43,6 +43,22 @@ export const deleteClass = async (token: string, classId: string) => {
     }
 }
 
+export const createClass = async (token: string, classObj: any) => {
+    try {
+        const res = await axios.post(
+            `${BASE_URL}/classes`,
+            {
+                ...classObj
+            },
+            { headers: { Authorization: `Bearer ${token}` } }
+        )
+        return res.data
+    }
+    catch (err) {
+        console.log(err)
+    }
+}
+
 export const editClass = async (token: string, classId: string, classObj: any) => {
     try {
         console.log(classObj.students);
@@ -52,9 +68,11 @@ export const editClass = async (token: string, classId: string, classObj: any) =
                 semester: classObj.semester,
                 teacher: classObj.teacher._id,
                 duration: classObj.duration,
-                // location: classObj.location,
+                location: classObj.location,
                 subject: classObj.subject._id,
                 students: classObj.students.map((item: any) => item._id),
+                firstStartTime: classObj.firstStartTime,
+                lastStartTime: classObj.lastStartTime,
             },
             { headers: { Authorization: `Bearer ${token}` } }
         )
