@@ -175,7 +175,7 @@ function RequestTable() {
           }
         },
         content: (
-          <div className='pl-6 font-montserrat text-xs font-medium'>
+          <div className='pl-6 font-nunitoSans text-xs font-medium'>
             {accept ? "Bạn có chắc chắn chấp nhận yêu cầu?" : "Bạn có chắc chắn muốn từ chối yêu cầu?"}
           </div>
         ),
@@ -208,7 +208,7 @@ function RequestTable() {
 
         },
         content: (
-          <div className='pl-6 font-montserrat text-xs font-medium'>
+          <div className='pl-6 font-nunitoSans text-xs font-medium'>
             {"Những dữ liệu liên quan sẽ không thể khôi phục, bạn có chắc chắn muốn xóa yêu cầu này?"}
           </div>
         ),
@@ -281,8 +281,7 @@ function RequestTable() {
       reason: request.reason,
       status: getStatusElement(request.status, user!.role),
       action: (
-        <div className='flex gap-2 items-center justify-center'>
-
+        <div className='flex gap-4 items-center justify-center'>
           <ToolTip textContent='Xem ảnh minh chứng' limit={1}>
             <FaEye className='text-lg text-neutral-600 cursor-pointer'
               onClick={() => {

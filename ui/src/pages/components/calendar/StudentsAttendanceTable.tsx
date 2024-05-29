@@ -117,7 +117,7 @@ export default function MenuTable(props: IMenuTableProps) {
         ? <div className='flex gap-1 items-center text-[#0072D0]'><FaUserCheck className='text-lg' /> Có mặt</div>
         : <div className='flex gap-1 items-center text-lightRed'><FaUserXmark className='text-lg' /> Vắng mặt</div>}</div>,
       action: (
-        <div className='flex gap-2 items-center justify-center'>
+        <div className='flex gap-4 items-center justify-center'>
 
           <ToolTip textContent='Từ chối' limit={1}>
             <FaCircleXmark className='text-lg text-lightRed cursor-pointer'

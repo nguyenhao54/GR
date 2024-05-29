@@ -26,7 +26,7 @@ firebase.initializeApp(firebaseConfig)
 
 const THEME = createTheme({
   typography: {
-    "fontFamily": ` "Montserrat", sans-serif`,
+    "fontFamily": `"Nunito Sans", sans-serif;`,
     "fontSize": 11,
     "fontWeightLight": 300,
     "fontWeightRegular": 400,

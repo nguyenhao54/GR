@@ -3,20 +3,21 @@ import { IAttendance, getCookie } from '../dashboard/AttendanceCard'
 import { getLessonById } from '../../../api/lesson'
 import { DetailList, DotFlashing } from '../../../common'
 import { formatDate, getHourAndMinute } from '../../../utils'
-import { GoTriangleDown, GoTriangleUp } from "react-icons/go"
-import { FaUserGroup } from "react-icons/fa6";
 import { FaArrowLeft } from "react-icons/fa6";
-import { Button, Tab, Tabs } from '@mui/material'
+import { Tab, Tabs } from '@mui/material'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getMyAttendanceForLesson } from '../../../api/attendance'
 import { useSelector } from 'react-redux'
 import { AppState } from '../../../redux/store'
 import StudentsAttendanceTable from './StudentsAttendanceTable'
+import ReactQuill from 'react-quill'
+import CustomToolbar from './CustomToolbar'
 
 export enum LessonDetailTab {
   basic = 1,
   attendance = 2,
   list = 3,
+  note = 4
 }
 
 function LessonDetail() {
@@ -24,12 +25,63 @@ function LessonDetail() {
   const token = getCookie('token')
   const [loading, setLoading] = useState<boolean>(true)
   const [lesson, setLesson] = useState<any>()
-  const [showList, setShowList] = useState<boolean>(true);
   const user = useSelector((appState: AppState) => appState.user.user)
   const [attendance, setAttendance] = useState<IAttendance>()
-  const [attendanceList, setAttendanceList] = useState<IAttendance[]>([])
+  // const [attendanceList, setAttendanceList] = useState<IAttendance[]>([])
   const navigate = useNavigate()
   const [tab, setTab] = React.useState<LessonDetailTab>(LessonDetailTab.basic);
+
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      ["bold", "italic", "underline", "strike", "blockquote"],
+      [{ size: [] }],
+      [{ font: [] }],
+      [{ align: ["right", "center", "justify"] }],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["link", "image"],
+      [{ color: ["#0065A2", "#00A5E3", "#669BBC", "#8DD7BF", "#FFBF65", "#FF96C5", "#FC6238", "#FF5768", "white"] }],
+      [{ background: ["black", "#0065A2", "#00A5E3", "#669BBC", "#8DD7BF", "#FFBF65", "#FF96C5", "#FC6238", "#FF5768"] }]
+    ]
+  };
+
+  const formats = [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "bullet",
+    "size",
+    "font",
+    'size',
+    'color',
+    'background',
+    'script',
+    'blockquote',
+    'code-block',
+    'indent',
+    'list',
+    'direction',
+    'align',
+    'link',
+    'image',
+    'video',
+    'formula',
+  ];
+
+  const [code, setCode] = useState("");
+  const handleProcedureContentChange = (content: any, delta: any, source: any, editor: any) => {
+    setCode(content);
+    //let has_attribues = delta.ops[1].attributes || "";
+    //console.log(has_attribues);
+    //const cursorPosition = e.quill.getSelection().index;
+    // this.quill.insertText(cursorPosition, "★");
+    //this.quill.setSelection(cursorPosition + 1);
+  };
+
 
   const handleChange = (event: React.SyntheticEvent, newValue: LessonDetailTab) => {
     setTab(newValue);
@@ -57,7 +109,6 @@ function LessonDetail() {
           <div className="class-info">
             <div className='flex justify-between items-center py-2'>
               <div className='font-semibold'>{lesson?.class.subject.subjectId} - {lesson?.class.subject.title}</div>
-              {/* <div className='bg-neutral-200 px-2 py-1 rounded-md my-2 w-max text-xs font-medium'> {getHourAndMinute(lesson?.startDateTime)} - {getHourAndMinute(lesson?.endDateTime)}</div> */}
             </div>
             <DetailList list={[
               { title: "Mã học phần", text: lesson?.class.subject.subjectId },
@@ -71,10 +122,6 @@ function LessonDetail() {
         </div>
       case LessonDetailTab.attendance:
         return <div className='attendance-info'>
-          {/* <div className="font-semibold flex items-center">
-            <FaCheckCircle size={18} />
-            <p className='ml-2'>Thông tin điểm danh</p>
-          </div> */}
           {user?.role === "student"
             ? <div className="pt-2">
               <DetailList
@@ -86,34 +133,37 @@ function LessonDetail() {
               ></DetailList>
             </div>
             : <div className="pt-2">
-               <StudentsAttendanceTable lessonId={lessonId}></StudentsAttendanceTable>
+              <StudentsAttendanceTable lessonId={lessonId}></StudentsAttendanceTable>
             </div>}
         </div>
       case LessonDetailTab.list: return <div className='student-list overflow-auto max-h-56 w-full'>
-        {/* <div className="flex justify-between items-center">
-          <div className='font-semibold flex justify-center items-center'> <FaUserGroup size={18} /> <p className='ml-2'>Danh sách lớp</p></div>
-           <div onClick={() => setShowList(!showList)} className="rounded-full hover:bg-neutral-200 hover: cursor-pointer p-1">{showList ? <GoTriangleDown /> : <GoTriangleUp />}</div> 
-
-        </div> */}
-        {showList && <ol type="1" className="pl-4 pt-2 list-decimal">
+        {<ol type="1" className="pl-4 pt-2 list-decimal">
           {lesson.class.students.map((student: any) => <li className="py-2"><span className="font-semibold">{student.codeNumber} </span>{student.name}</li>)}
         </ol>}
       </div>
+      case LessonDetailTab.note: return <>
+        {/* <CustomToolbar /> */}
+        <ReactQuill theme="snow"
+          modules={modules}
+          formats={formats}
+          placeholder='Ghi chú'
+          value={code}
+          onChange={handleProcedureContentChange} />
+      </>
       default: return <></>
-
     }
   }
   return (
-    <div className="font-montserrat flex flex-col items-center justify-center w-full h-[calc(100vh-120px)]">
+    <div className="font-nunitoSans flex flex-col items-center justify-center w-full h-[calc(100vh-120px)]">
       {
         loading ? <DotFlashing></DotFlashing> :
           <div className='w-full h-full'>
             <button className="text-lightRed rounded-full p-2 hover:bg-neutral-200  cursor-pointer"
-            onClick={()=>{
-              navigate('/calendar')
+              onClick={() => {
+                navigate('/calendar')
 
-            }}
-            ><FaArrowLeft/></button>
+              }}
+            ><FaArrowLeft /></button>
             <Tabs
               TabIndicatorProps={{ style: { background: '#C1121F', transition: "none" }, sx: { bgcolor: "#FF5733" } }}
               value={tab}
@@ -124,6 +174,7 @@ function LessonDetail() {
               <Tab value={LessonDetailTab.basic} label="Thông tin" />
               <Tab value={LessonDetailTab.attendance} label="Điểm danh" />
               {user?.role === "student" && <Tab value={LessonDetailTab.list} label="Danh sách lớp" />}
+              <Tab value={LessonDetailTab.note} label="Ghi chú" />
             </Tabs>
             <div className='pt-2'>
               {renderTabContent(tab)}

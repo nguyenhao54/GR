@@ -44,7 +44,7 @@ function MyLocationMap() {
                         url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
                     />
                     <Marker position={[position.latitude, position.longitude]}>
-                        <Popup className='font-montserrat'>
+                        <Popup className='font-nunitoSans'>
                             Vị trí của bạn
                         </Popup>
                     </Marker>

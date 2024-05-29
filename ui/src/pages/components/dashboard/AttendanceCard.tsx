@@ -196,7 +196,7 @@ function AttendanceCard() {
                                     );
                                 },
                                 content: (
-                                    <div className='pl-6 font-montserrat text-xs font-medium'>
+                                    <div className='pl-6 font-nunitoSans text-xs font-medium'>
                                         Bạn có chắc chắn muốn check-out?
                                     </div>
                                 ),

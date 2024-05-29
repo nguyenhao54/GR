@@ -27,7 +27,7 @@ function LoginByField({ setCookie }: { setCookie: (name: string, value: any) => 
 
     return (
         <div>
-            <form className="mt-4 mb-2 font-montserrat">
+            <form className="mt-4 mb-2 font-nunitoSans">
                 <div className="my-4">
                     <TextField sx={{ fontWeight: 600 }} onChange={(e) => {
                         setError("");
@@ -64,7 +64,7 @@ function LoginByField({ setCookie }: { setCookie: (name: string, value: any) => 
 
 function SignIn({ setCookie }: any) {
     return (
-        <div className="absolute inset-0 flex font-montserrat items-center justify-center p-4">
+        <div className="absolute inset-0 flex font-nunitoSans items-center justify-center p-4">
             <div
                 className="w-full sm:w-4/12 p-4 bg-lightOverlay rounded-md border-neutral-200 border
     flex flex-col items-center justify-center"

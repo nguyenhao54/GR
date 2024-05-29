@@ -29,7 +29,7 @@ const Layout = () => {
   }, [navigate, url.pathname, user]);
 
   return (
-    <div className="h-full font-montserrat text-xs">
+    <div className="h-full font-nunitoSans text-xs">
       <div className="flex h-[100vh]">
         <Header></Header>
         <Sidebar />

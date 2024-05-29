@@ -68,7 +68,7 @@ function Header() {
         }}
         sx={{ ".MuiList-root": { padding: 0 } }}
       >
-        <div className="block sm:hidden border-b-neutral-200 border-b font-montserrat">{getListItems(user?.role).map((item, index) => {
+        <div className="block sm:hidden border-b-neutral-200 border-b font-nunitoSans">{getListItems(user?.role).map((item, index) => {
           return (
             <NavLink
               to={item.route || ""}

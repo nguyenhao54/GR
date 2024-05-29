@@ -221,7 +221,7 @@ function ManageClass() {
                     setClassList(processedClassList)
                 },
                 content: (
-                    <div className='pl-6 font-montserrat text-xs font-medium'>
+                    <div className='pl-6 font-nunitoSans text-xs font-medium'>
                         {`Những dữ liệu liên quan sẽ không thể khôi phục, bạn có chắc chắn muốn xóa lớp ${classObj.classId}?`}
                     </div>
                 ),
@@ -251,7 +251,7 @@ function ManageClass() {
             duration: classObj.duration,
             location: classObj.location?.description,
             action: (
-                <div className='flex gap-2 items-center justify-center'>
+                <div className='flex gap-4 items-center justify-center'>
                     <ToolTip textContent='Chỉnh sửa' limit={1}>
                         <FaPen size={14} className='text-lg text-[#0072D0] cursor-pointer'
                             onClick={() => { handleEditClass(classObj) }} />

@@ -79,7 +79,7 @@ const EditUserForm = React.forwardRef(({ user }: { user: any }, ref) => {
     }
 
     return (
-        <div className="w-full flex flex-col font-montserrat font-[13px] gap-4">
+        <div className="w-full flex flex-col font-nunitoSans font-[13px] gap-4">
             <div className="flex gap-2">
                 <div className="w-1/2">
                     <TextField

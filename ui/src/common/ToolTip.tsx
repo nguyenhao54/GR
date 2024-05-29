@@ -12,9 +12,9 @@ export default function ToolTipOnHover({
   const [show, setShow] = React.useState(false);
   const hasToolTip = textContent?.length > limit;
   return (
-    <div className="relative font-montserrat w-full">
+    <div className="relative font-nunitoSans w-full">
       <div
-        className={"w-full text-left justify-start cursor-default"}
+        className={"w-full flex text-left justify-start cursor-default"}
         onMouseEnter={() => setShow(true)}
         onMouseLeave={() => setShow(false)}
       >

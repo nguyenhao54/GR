@@ -166,7 +166,7 @@ function ManageUser() {
 
         },
         content: (
-          <div className='pl-6 font-montserrat text-xs font-medium'>
+          <div className='pl-6 font-nunitoSans text-xs font-medium'>
             {`Những dữ liệu liên quan sẽ không thể khôi phục, bạn có chắc chắn muốn xóa người dùng ${user.name}?`}
           </div>
         ),
@@ -244,7 +244,7 @@ function ManageUser() {
       dob: user.DOB ? new Date(user.DOB).toLocaleString('en-GB', { day: "2-digit", month: "2-digit", year: "numeric" }) : "",
       role: user?.role === "teacher" ? "Giáo viên" : user?.role === "student" ? "Sinh viên" : "Quản trị",
       action: (
-        <div className='flex gap-2 items-center justify-center'>
+        <div className='flex gap-4 items-center justify-center'>
           <ToolTip textContent='Chỉnh sửa' limit={1}>
             <FaPen size={14} className='text-lg text-[#0072D0] cursor-pointer'
               onClick={() => { handleEditUser(user) }} />

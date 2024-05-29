@@ -39,7 +39,7 @@ const EditRequestForm = React.forwardRef(({ request }: { request: any }, ref) =>
 
 
     return (
-        <div className='overflow-auto font-montserrat w-full h-[430px]'>
+        <div className='overflow-auto font-nunitoSans w-full h-[430px]'>
             <div className="flex flex-col ">
                 <div className="flex-col flex gap-4">
                     <div className="font-semibold flex flex-row gap-1 items-center">
