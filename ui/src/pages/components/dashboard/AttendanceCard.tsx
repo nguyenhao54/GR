@@ -143,14 +143,30 @@ function AttendanceCard() {
     const { endDateTime = " ", startDateTime = "" } = lesson;
     // console.log(location)
     // sai so 100m cx ok
+
+    const locationDetails = <>    <div className='text-sm font-semibold mt-2'>
+        {subject.title} {subject.subjectId}
+    </div>
+        <div className='text-xs font-semibold mt-1 text-lightRed'>
+            {getHourAndMinute(startDateTime)} - {getHourAndMinute(endDateTime)}
+        </div>
+        <div className='text-xs font-semibold mt-1 text-neutral-500 flex items-center gap-1'>
+            <MdLocationPin size={14} />
+            Vị trí: {location.description || "Không có dữ liệu"}
+        </div>
+        <div className='w-3/4 h-3/5 mt-2'>
+            <MyLocation></MyLocation>
+        </div></>
+
     if (Math.abs(position.latitude - location.coordinates[0]) > 0.001 || Math.abs(position.longitude - location.coordinates[1]) > 0.001) {
         // console.log(position, location.coordinates)
         return <div className='bg-white rounded-md flex-1 p-4 sm:w-[37%] w-[99%] flex flex-col items-center min-h-[calc(100vh-280px)] sm:min-h-[calc(100vh-80px)] h-stretch'>
             <div className="text-neutral-400 rounded-full border-4 border-neutral-400 p-2 mt-2"><FaInfo size={30}></FaInfo>
             </div>
             <div className='text-sm font-semibold text-neutral-400 mt-2 p-0 sm:p-2'>
-                <div>Vị trí hiện tại chưa đáp ứng yêu cầu. Vui lòng di chuyển tới vị trí lớp học và kết nối wifi của lớp học.</div>
+                <div>Vị trí hiện tại không trùng vị trí lớp học.</div>
             </div>
+            {locationDetails}
         </div>
     }
 
@@ -241,19 +257,7 @@ function AttendanceCard() {
                     <div />
                 </div>
             )}
-            <div className='text-sm font-semibold mt-2'>
-                {subject.title} {subject.subjectId}
-            </div>
-            <div className='text-xs font-semibold mt-1 text-lightRed'>
-                {getHourAndMinute(startDateTime)} - {getHourAndMinute(endDateTime)}
-            </div>
-            <div className='text-xs font-semibold mt-1 text-neutral-500 flex items-center gap-1'>
-                <MdLocationPin size={14} />
-                Vị trí: {location.description || "Không có dữ liệu"}
-            </div>
-            <div className='w-3/4 h-3/5 mt-2'>
-                <MyLocation></MyLocation>
-            </div>
+            {locationDetails}
         </div>
     );
 }

@@ -4,14 +4,16 @@ import { getLessonById } from '../../../api/lesson'
 import { DetailList, DotFlashing } from '../../../common'
 import { formatDate, getHourAndMinute } from '../../../utils'
 import { FaArrowLeft } from "react-icons/fa6";
-import { Tab, Tabs } from '@mui/material'
+import { Button, Tab, Tabs } from '@mui/material'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getMyAttendanceForLesson } from '../../../api/attendance'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { AppState } from '../../../redux/store'
 import StudentsAttendanceTable from './StudentsAttendanceTable'
 import ReactQuill from 'react-quill'
 import CustomToolbar from './CustomToolbar'
+import { createNote, getNote, updateNote } from '../../../api/note'
+import { setDialog } from '../../../redux/dialog.reducer'
 
 export enum LessonDetailTab {
   basic = 1,
@@ -22,6 +24,7 @@ export enum LessonDetailTab {
 
 function LessonDetail() {
   const lessonId = useParams().id || "";
+  const dispatch = useDispatch()
   const token = getCookie('token')
   const [loading, setLoading] = useState<boolean>(true)
   const [lesson, setLesson] = useState<any>()
@@ -73,7 +76,8 @@ function LessonDetail() {
   ];
 
   const [code, setCode] = useState("");
-  const handleProcedureContentChange = (content: any, delta: any, source: any, editor: any) => {
+  const [noteId, setNoteId] = useState<string>()
+  const handleProcedureContentChange = (content: string, delta: any, source: any, editor: any) => {
     setCode(content);
     //let has_attribues = delta.ops[1].attributes || "";
     //console.log(has_attribues);
@@ -88,18 +92,60 @@ function LessonDetail() {
   };
   useEffect(() => {
     setLoading(true);
-    getLessonById(token, lessonId).then(res => {
-      setLesson(res)
-    }).finally(() => setLoading(false))
+    if (user?._id && user?.role === "student") {
+      Promise.all([
+        getLessonById(token, lessonId),
+        getNote(token, `?lesson=${lessonId}&user=${user._id}`),
+        getMyAttendanceForLesson(token, lessonId, user._id)
+      ])
+        .then(res => {
+          setLesson(res[0])
+          if (res[1]?.data[0]?.content) {
+            setCode((res[1]?.data[0]?.content as string).replace(/&lt;/g, "<").replace(/&gt;/g, ">") || "")
+            setNoteId(res[1]?.data[0]?._id)
+          }
+          setAttendance(res[2]?.data[0])
+        }).finally(() => setLoading(false))
+    }
 
-  }, [lessonId])
-
-  useEffect(() => {
-    if (user?._id && user?.role === "student")
-      getMyAttendanceForLesson(token, lessonId, user._id).then(
-        (res) => setAttendance(res?.data[0])
-      )
   }, [lessonId, user?._id])
+
+
+  const handleRes = (res: any) => {
+    if (res?.status === "success") {
+      dispatch(setDialog({
+        title: "Chỉnh sửa ghi chú thành công",
+        open: true,
+        type: "info",
+        isMessagebar: true
+      }))
+    }
+    else {
+      dispatch(setDialog({
+        title: "Chỉnh sửa ghi chú thất bại, vui lòng thử lại sau",
+        open: true,
+        type: "warning",
+        isMessagebar: true
+      }))
+    }
+  }
+  const handleSaveNote = () => {
+    if (code)
+      if (noteId) {
+        updateNote(token, noteId, code).then((res: any) => {
+          console.log(res)
+          //TODO: show message failed or succeed
+          handleRes(res)
+        })
+      }
+      else
+        createNote(token, lessonId, user!._id, code).then((res: any) => {
+          console.log(res)
+          //TODO: show message failed or succeed
+          handleRes(res)
+        })
+  }
+
   if (!lesson) return <></>
 
   const renderTabContent = (tab: LessonDetailTab) => {
@@ -143,12 +189,28 @@ function LessonDetail() {
       </div>
       case LessonDetailTab.note: return <>
         {/* <CustomToolbar /> */}
+
         <ReactQuill theme="snow"
           modules={modules}
           formats={formats}
           placeholder='Ghi chú'
           value={code}
           onChange={handleProcedureContentChange} />
+        <div className="w-full flex justify-end"><Button
+          variant="contained"
+          sx={{
+            textTransform: "none",
+            backgroundColor: "#C1121F",
+            "&:hover": {
+              backgroundColor: "#C1121F"
+            },
+            marginTop: 2,
+          }}
+          disabled={code === ""}
+          onClick={() => handleSaveNote()}
+        >Lưu thay đổi
+        </Button>
+        </div>
       </>
       default: return <></>
     }
