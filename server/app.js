@@ -8,7 +8,6 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 
-const tourRouter = require('./route/tourRoutes');
 const userRouter = require('./route/userRoutes');
 const reviewRouter = require('./route/reviewRouter');
 const subjectRouter = require('./route/subjectRoutes');
@@ -62,7 +61,6 @@ app.use(
 
 app.use(express.static(`${__dirname}/public`));
 
-app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/subjects', subjectRouter);

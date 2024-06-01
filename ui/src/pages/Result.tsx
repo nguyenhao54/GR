@@ -27,7 +27,7 @@ export function getStyles(name: number | string, personName: number | string, th
 function Result() {
     const theme = useTheme();
     const semesterList = [20191, 20192, 20211, 20212, 20221, 20222, 20231, 20232, 20241, 20242, 20251, 20252]
-    const [selectedSemester, setSelectedSemester] = React.useState<number>(semesterList[0]);
+    const [selectedSemester, setSelectedSemester] = React.useState<number>(20232);
     const token = getCookie("token")
 
     const handleChange = (event: SelectChangeEvent<typeof selectedSemester>) => {

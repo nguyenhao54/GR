@@ -17,6 +17,11 @@ const gradeSchema = new mongoose.Schema(
       min: 0,
       max: 10
     },
+    overallGrade: {
+      type: Number,
+      min: 0,
+      max: 10
+    },
     student: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',

@@ -31,8 +31,8 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
     const [userError, setUserError] = React.useState<string>("");
     const [userIds, setUserIds] = React.useState<any[]>([]);
     const [classError, setClassError] = React.useState<string>("");
-    const [startTime, setStartTime] = React.useState<Dayjs | null>(dayjs(classObj.firstStartTime ? new Date(minusSevenHours(classObj.firstStartTime)) : new Date()));
-    const [endTime, setEndTime] = React.useState<Dayjs | null>(dayjs(classObj.lastStartTime ? new Date(minusSevenHours(classObj.lastStartTime)) : new Date()));
+    const [startTime, setStartTime] = React.useState<Dayjs | null>(dayjs(classObj.firstStartTime ? new Date((classObj.firstStartTime)) : new Date()));
+    const [endTime, setEndTime] = React.useState<Dayjs | null>(dayjs(classObj.lastStartTime ? new Date((classObj.lastStartTime)) : new Date()));
     const [lat, setLat] = React.useState<any>(classObj.location?.coordinates[0]);
     const [lon, setLon] = React.useState<any>(classObj.location?.coordinates[1]);
     const [desc, setDesc] = React.useState<any>(classObj.location?.description)

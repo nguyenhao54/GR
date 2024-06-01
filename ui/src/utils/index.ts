@@ -17,7 +17,7 @@ export const getHourAndMinute = (dateTime: string) => {
 }
 
 export const formatDate = (dateTime: string) => {
-  return new Date(minusSevenHours(dateTime)).toLocaleString("en-GB", { day: "2-digit", month: "2-digit", hour: '2-digit', minute: '2-digit' })
+  return new Date((dateTime)).toLocaleString("en-GB", { day: "2-digit", month: "2-digit", hour: '2-digit', minute: '2-digit' })
 }
 
 export function eraseCookie(name: string) {

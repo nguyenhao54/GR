@@ -128,7 +128,7 @@ function AttendanceCard() {
     if (!lesson) {
         return (
             <div className='bg-white flex-1 rounded-md p-4 sm:w-[37%] w-[99%] flex lg:flex-col  min-h-[calc(100vh-80px)] items-center h-stretch'>
-                <div className='text-neutral-400 flex flex-col justify-center items-center'>
+                <div className='text-neutral-400 flex mt-4 flex-col justify-center items-center'>
                     <IoMdCheckmarkCircleOutline size={60} color={"#0072D0"} />
                     <div className='font-semibold text-md py-8 px-4'>
                         Bạn không có lớp học nào vào thời điểm này

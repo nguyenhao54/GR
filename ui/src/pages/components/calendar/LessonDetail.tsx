@@ -86,11 +86,37 @@ function LessonDetail() {
     //this.quill.setSelection(cursorPosition + 1);
   };
 
-
   const handleChange = (event: React.SyntheticEvent, newValue: LessonDetailTab) => {
     setTab(newValue);
   };
+
+
   useEffect(() => {
+    console.log(lessonId);
+    setLoading(true);
+    if (user?._id) {
+      let promises = [
+        getLessonById(token, lessonId),
+        getNote(token, `?lesson=${lessonId}&user=${user._id}`),
+      ]
+      if (user?.role === "student") promises.push(
+        getMyAttendanceForLesson(token, lessonId, user._id)
+      )
+
+      Promise.all(promises)
+        .then(res => {
+          setLesson(res[0])
+          if (res[1]?.data[0]?.content) {
+            setCode((res[1]?.data[0]?.content as string).replace(/&lt;/g, "<").replace(/&gt;/g, ">") || "")
+            setNoteId(res[1]?.data[0]?._id)
+          }
+          setAttendance(res[2]?.data[0])
+        }).finally(() => setLoading(false))
+    }
+  }, [])
+
+  useEffect(() => {
+    console.log(lessonId);
     setLoading(true);
     if (user?._id && user?.role === "student") {
       Promise.all([
@@ -134,19 +160,16 @@ function LessonDetail() {
       if (noteId) {
         updateNote(token, noteId, code).then((res: any) => {
           console.log(res)
-          //TODO: show message failed or succeed
           handleRes(res)
         })
       }
       else
         createNote(token, lessonId, user!._id, code).then((res: any) => {
           console.log(res)
-          //TODO: show message failed or succeed
           handleRes(res)
         })
   }
 
-  if (!lesson) return <></>
 
   const renderTabContent = (tab: LessonDetailTab) => {
     switch (tab) {

@@ -48,8 +48,9 @@ export default function ToastCalendar() {
             setEvents(data?.lessons.map((item: Lesson) => {
                 const random = Number(item.startDateTime?.toString()[9]) % 5;
                 return ({
-                    ...item, start: minusSevenHours(item.startDateTime?.toString() || ""),
-                    end: minusSevenHours(item.endDateTime?.toString() || ""),
+                    ...item,
+                    start: (item.startDateTime?.toString() || ""),
+                    end: (item.endDateTime?.toString() || ""),
                     backgroundColor: BACKGROUND_COLOR[random],
                     borderColor: BORDER_COLOR[random],
                     title: item.class?.classId,
@@ -230,8 +231,8 @@ export default function ToastCalendar() {
                     showNowIndicator: true,
                     showTimezoneCollapseButton: true,
                     timezonesCollapsed: false,
-                    hourStart: 0,
-                    hourEnd: 24,
+                    hourStart: 6,
+                    hourEnd: 19,
                     eventView: ["time"],
                     taskView: false,
                     collapseDuplicateEvents: false,

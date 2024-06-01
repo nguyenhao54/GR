@@ -1,7 +1,9 @@
 const catchAsync = require('./../utils/catchAsync');
 const Request = require('../models/requestModel');
 const factory = require('./handlerFactory');
+const Lesson = require('../models/lessonModel');
 
+const Class = require('../models/classModel');
 exports.getAllRequests = factory.getAll(Request);
 exports.getRequest = factory.getOne(Request);
 exports.createRequest = factory.createOne(Request);
@@ -38,11 +40,24 @@ exports.getMyRequests = catchAsync(async (req, res, next) => {
       student: req.user._id,
     });
   } else {
-    requests = await Request.find({}).populate({
+    let classes = await Class.aggregate([
+      {
+        $match: {
+          teacher: req.user._id,
+        },
+      },
+      { $unset: 'students' },
+    ]);
+    const ids = classes.map((i) => i._id);
+    const lessons = await Lesson.find({
+      class: { $in: ids },
+    });
+    const lessonIds = lessons.map((i) => i._id);
+    requests = await Request.find({ lesson: { $in: lessonIds } }).populate({
       path: 'lesson',
       populate: {
         path: 'class',
-        match: { teacher: req.user._id },
+        // match: { teacher: req.user._id },
       },
     });
   }

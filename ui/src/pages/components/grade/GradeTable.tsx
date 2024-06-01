@@ -18,6 +18,7 @@ interface GradeTableData {
     processGrade?: JSX.Element
     attendanceRatio?: JSX.Element
     finalGrade?: JSX.Element
+    overallGrade?: string;
 }
 
 const headCells: readonly HeadCell<GradeTableData>[] = [
@@ -62,6 +63,13 @@ const headCells: readonly HeadCell<GradeTableData>[] = [
         label: "Điểm cuối kỳ",
         minWidth: 100
     },
+    {
+        id: "overallGrade",
+        numeric: false,
+        disablePadding: true,
+        label: "Điểm tổng kết",
+        minWidth: 100
+    },
 ]
 
 function GradeTable({ selectedClass }: { selectedClass: any }) {
@@ -93,6 +101,7 @@ function GradeTable({ selectedClass }: { selectedClass: any }) {
                             midGrade: grade.midGrade,
                             processGrade: grade.processGrade,
                             finalGrade: grade.finalGrade,
+                            overallGrade: grade.overallGrade,
                             isFromDb: true,
                             gradeObjId: grade._id
                         }
@@ -123,12 +132,12 @@ function GradeTable({ selectedClass }: { selectedClass: any }) {
     const handleSave = async () => {
         dispatch(showTopLoading())
         await Promise.all(gradeList.map(async (grade: any) => {
-            const { midGrade, finalGrade, processGrade } = grade
+            const { midGrade, finalGrade, processGrade, overallGrade } = grade
             if (!grade.isFromDb)
-                await createGrade(token, grade._id, selectedClass._id, { midGrade, finalGrade, processGrade })
+                await createGrade(token, grade._id, selectedClass._id, { midGrade, finalGrade, processGrade, overallGrade })
             else
                 //update
-                await updateGrade(token, grade.gradeObjId, grade._id, selectedClass._id, { midGrade, finalGrade, processGrade })
+                await updateGrade(token, grade.gradeObjId, grade._id, selectedClass._id, { midGrade, finalGrade, processGrade, overallGrade })
         })).then(res => {
             console.log(res)
         })
@@ -140,7 +149,8 @@ function GradeTable({ selectedClass }: { selectedClass: any }) {
             if (item._id === id) {
                 return ({
                     ...item,
-                    [`${type}`]: grade
+                    [`${type}`]: grade,
+                    overallGrade: item.finalGrade && item.processGrade ? (item.processGrade * selectedClass.subject.gradeCoefficient + Number(grade) * (1 - selectedClass.subject.gradeCoefficient)).toFixed(2) : ""
                 })
             }
             else return item
@@ -148,7 +158,7 @@ function GradeTable({ selectedClass }: { selectedClass: any }) {
     }
 
     const createRowElements = (student: any): GradeTableData => {
-        console.log("studentjsk", student)
+        console.log("studentjsk", selectedClass)
         return {
             id: student._id,
             studentCode: student.codeNumber,
@@ -192,12 +202,15 @@ function GradeTable({ selectedClass }: { selectedClass: any }) {
 
                     inputProps={{ min: 0, max: 10 }}
                     value={student.finalGrade || ""}
-                    onChange={(e) => setGrade(student._id, "finalGrade", e.target.value)}
+                    onChange={(e) => {
+                        setGrade(student._id, "finalGrade", e.target.value)
+                    }}
                     style={{ width: "100%" }}
                     variant="outlined"
                 />
                 {(student.finalGrade > 10 || student.finalGrade < 0) && <div className="text-[10px] text-lightRed mt-1 -mb-5 pb-3 italic w-32">{"Điểm phải >=0 hoặc <=10"}</div>}
-            </div>
+            </div>,
+            overallGrade: student.overallGrade
         }
     }
 

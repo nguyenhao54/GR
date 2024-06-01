@@ -15,6 +15,7 @@ interface ClassGradeTableData {
     midGrade?: number
     processGrade?: number
     finalGrade?: number
+    overallGrade?: string;
 }
 
 const headCells: readonly HeadCell<ClassGradeTableData>[] = [
@@ -66,6 +67,13 @@ const headCells: readonly HeadCell<ClassGradeTableData>[] = [
         label: "Điểm cuối kỳ",
         minWidth: 40
     },
+    {
+        id: "overallGrade",
+        numeric: false,
+        disablePadding: true,
+        label: "Điểm tổng kết",
+        minWidth: 40
+    },
 ]
 
 function SemesterGradeTable({ semester }: { semester: number }) {
@@ -93,7 +101,8 @@ function SemesterGradeTable({ semester }: { semester: number }) {
             gradeCoefficient: item.class.subject.gradeCoefficient,
             midGrade: item.midGrade,
             processGrade: item.processGrade,
-            finalGrade: item.finalGrade
+            finalGrade: item.finalGrade,
+            overallGrade: item.overallGrade
         }
     }
 
