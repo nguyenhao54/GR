@@ -4,6 +4,7 @@ export interface Dialog {
   title?: string;
   content?: JSX.Element;
   onClickOk?: () => void;
+  onClickClose?: () => void;
   open?: boolean;
   customWidth?: number;
   customHeight?: number;

@@ -13,13 +13,16 @@ export default function DialogView() {
     const dispatch = useDispatch()
     const dialogState = useSelector((appState: AppState) => appState.dialog.dialog)
     if (!dialogState) return <></>;
-    const { customWidth, customHeight } = dialogState;
+    const { customWidth, customHeight, onClickClose} = dialogState;
     return (
         <>{!dialogState?.isMessagebar ? <Dialog
             sx={{ root: { zIndex: "10 !important" } }}
             open={dialogState?.open || false}
             title={dialogState?.title}
-            onClose={() => dispatch(setDialog({ open: false }))}
+            onClose={() => {
+                onClickClose?.();
+                dispatch(setDialog({ open: false }))
+            }}
             fullWidth={true}
             PaperProps={{
                 style: { borderRadius: 8, width: customWidth || 560, height: customHeight || 300, zIndex: 10 },

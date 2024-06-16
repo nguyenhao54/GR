@@ -106,5 +106,26 @@ classSchema.post('findOneAndDelete', async function () {
   });
 });
 
+classSchema.post("findOneAndUpdate", async function(){
+  await Lesson.deleteMany({
+    class: this._id,
+  });
+  let startTime = this.firstStartTime;
+  for (
+    startTime;
+    startTime.getTime() < this.lastStartTime.getTime();
+    startTime = new Date(startTime.getTime() + 7 * 24 * 60 * 60 * 1000)
+  ) {
+    const endTime = new Date(
+      startTime.getTime() + this.duration * 60 * 1000,
+    );
+    await Lesson.create({
+      class: this._id,
+      startDateTime: startTime,
+      endDateTime: endTime,
+    });
+  }
+})
+
 const Class = mongoose.model('Class', classSchema);
 module.exports = Class;

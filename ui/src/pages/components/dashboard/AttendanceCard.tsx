@@ -14,6 +14,7 @@ import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { Lesson, User } from '../../../models';
 import { FaInfo } from "react-icons/fa6";
 import { getHourAndMinute } from '../../../utils';
+import React from 'react';
 export interface IAttendance {
     id?: string;
     _id?: string;
@@ -75,10 +76,14 @@ function AttendanceCard() {
     const [loading, setLoading] = useState<boolean>(true);
     const dispatch = useDispatch();
     const [clock, setClock] = useState<string>(getClock());
+    const [captureVideo, setCaptureVideo] = React.useState(true);
+
     const [position, setPosition] = useState<any>({
         latitude: null,
         longitude: null,
     });
+
+    const videoRef = React.useRef<any>();
 
     useEffect(() => {
         if ("geolocation" in navigator) {
@@ -127,7 +132,7 @@ function AttendanceCard() {
 
     if (!lesson) {
         return (
-            <div className='bg-white flex-1 rounded-md p-4 sm:w-[37%] w-[99%] flex lg:flex-col  min-h-[calc(100vh-80px)] items-center h-stretch'>
+            <div className='bg-white flex-1 rounded-md p-4 sm:w-[37%] w-[99%] flex flex-col min-h-[calc(100vh-80px)] items-center h-stretch'>
                 <div className='text-neutral-400 flex mt-4 flex-col justify-center items-center'>
                     <IoMdCheckmarkCircleOutline size={60} color={"#0072D0"} />
                     <div className='font-semibold text-md py-8 px-4'>
@@ -158,17 +163,39 @@ function AttendanceCard() {
             <MyLocation></MyLocation>
         </div></>
 
-    if (Math.abs(position.latitude - location.coordinates[0]) > 0.001 || Math.abs(position.longitude - location.coordinates[1]) > 0.001) {
-        // console.log(position, location.coordinates)
-        return <div className='bg-white rounded-md flex-1 p-4 sm:w-[37%] w-[99%] flex flex-col items-center min-h-[calc(100vh-280px)] sm:min-h-[calc(100vh-80px)] h-stretch'>
-            <div className="text-neutral-400 rounded-full border-4 border-neutral-400 p-2 mt-2"><FaInfo size={30}></FaInfo>
-            </div>
-            <div className='text-sm font-semibold text-neutral-400 mt-2 p-0 sm:p-2'>
-                <div>Vị trí hiện tại không trùng vị trí lớp học.</div>
-            </div>
-            {locationDetails}
-        </div>
-    }
+    // if (Math.abs(position.latitude - location.coordinates[0]) > 0.001 || Math.abs(position.longitude - location.coordinates[1]) > 0.001) {
+    //     // console.log(position, location.coordinates)
+    //     return <div className='bg-white rounded-md flex-1 p-4 sm:w-[37%] w-[99%] flex flex-col items-center min-h-[calc(100vh-280px)] sm:min-h-[calc(100vh-80px)] h-stretch'>
+    //         <div className="text-neutral-400 rounded-full border-4 border-neutral-400 p-2 mt-2"><FaInfo size={30}></FaInfo>
+    //         </div>
+    //         <div className='text-sm font-semibold text-neutral-400 mt-2 p-0 sm:p-2'>
+    //             <div>Vị trí hiện tại không trùng vị trí lớp học.</div>
+    //         </div>
+    //         {locationDetails}
+    //     </div>
+    // }
+
+
+    const closeWebcam = () => {
+
+        // navigator.mediaDevices.getUserMedia().
+        let pausePromise = videoRef.current?.pause();
+        if (pausePromise !== undefined) {
+            pausePromise.then((res: any) => {
+
+                // Automatic playback started!
+                // Show playing UI.
+            })
+                .catch((e: any) => {
+                    // Auto-play was prevented
+                    // Show paused UI.
+                });
+        }
+        // videoRef.current?.pause();
+        videoRef.current?.srcObject?.getTracks().forEach((track: any) => track.stop())
+        setCaptureVideo(false);
+
+    };
 
     return (
         <div className='bg-white rounded-md flex-1 p-4 sm:w-[37%] w-[99%] flex flex-col items-center min-h-[calc(100vh-280px)] sm:min-h-[calc(100vh-80px)] h-max'>
@@ -185,6 +212,7 @@ function AttendanceCard() {
                     role={'none'}
                     className='border-lightRed hover:cursor-pointer border-8 rounded-full min-w-40 min-h-40 m-4 gap-2 flex shadow-2xl justify-center flex-col text-neutal-800 items-center'
                     onClick={() => {
+                        setCaptureVideo(true);
                         dispatch(
                             setDialog({
                                 customWidth: 360,
@@ -205,9 +233,16 @@ function AttendanceCard() {
                                                         attendance={attendance}
                                                         setAttendance={setAttendance}
                                                         lesson={lesson}
+                                                        videoRef={videoRef}
+                                                        // captureVideo={captureVideo}
+                                                        // setCaptureVideo={setCaptureVideo}
                                                     ></Attendify>
                                                 </div>
                                             ),
+                                            onClickClose: () => {
+                                                closeWebcam();
+                                                // setCaptureVideo(true);
+                                            }
                                         })
                                     );
                                 },
@@ -243,9 +278,16 @@ function AttendanceCard() {
                                             attendance={attendance}
                                             setAttendance={setAttendance}
                                             lesson={lesson}
+                                            videoRef={videoRef}
+                                            // captureVideo={captureVideo}
+                                            // setCaptureVideo={setCaptureVideo}
                                         ></Attendify>
                                     </div>
                                 ),
+                                onClickClose: () => {
+                                    closeWebcam();
+                                    // setCaptureVideo(true);
+                                }
                             })
                         );
                     }}
