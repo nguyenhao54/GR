@@ -40,7 +40,9 @@ function Attendify({ attendance, setAttendance, lesson, videoRef }: any) {
       ]).then(() => setModelsLoaded(true));
     };
     loadModels();
-    return ()=>{
+    return () => {
+      closeWebcam()
+      clearInterval(myInterval)
       setCaptureVideo(false)
     }
   }, []);
