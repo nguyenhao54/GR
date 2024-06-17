@@ -28,7 +28,6 @@ function Attendify({ attendance, setAttendance, lesson, videoRef }: any) {
   let myInterval: any;
 
   useEffect(() => {
-    setCaptureVideo(true)
     const loadModels = async () => {
       const MODEL_URL = process.env.PUBLIC_URL + "/models";
 
@@ -56,6 +55,7 @@ function Attendify({ attendance, setAttendance, lesson, videoRef }: any) {
   }, [])
 
   useEffect(() => {
+    setCaptureVideo(true)
     navigator.mediaDevices
       .getUserMedia({ video: { width: 300 } })
       .then((stream) => {
@@ -83,13 +83,11 @@ function Attendify({ attendance, setAttendance, lesson, videoRef }: any) {
       });
 
     return () => {
-      // clearInterval(myInterval)
+      clearInterval(myInterval)
+      closeWebcam()
       videoRef?.current?.srcObject?.getTracks().forEach((track: any) => track.stop())
     }
-  })
-
-
-
+  }, [])
 
   const handleVideoOnPlay = async () => {
     if (videoRef.current && captureVideo) {
@@ -174,11 +172,13 @@ function Attendify({ attendance, setAttendance, lesson, videoRef }: any) {
             }
             catch (e) {
               clearInterval(myInterval)
+              closeWebcam()
               setCaptureVideo(false)
 
-              console.log(e)
-              alert(new Error("Something went wrong"))
-              return;
+              // console.log(e)
+              // alert(new Error("Something went wrong"))
+              throw(e)
+              // return;
             }
             clearInterval(myInterval)
 
@@ -189,7 +189,6 @@ function Attendify({ attendance, setAttendance, lesson, videoRef }: any) {
       if (res) {
         setTimeout(() => {
           setCaptureVideo(false)
-
           console.log("success")
           const token = getCookie("token")
           const dateTimeNow = (new Date()).toISOString()
@@ -212,7 +211,6 @@ function Attendify({ attendance, setAttendance, lesson, videoRef }: any) {
   }
 
   const closeWebcam = () => {
-
     // navigator.mediaDevices.getUserMedia().
     let pausePromise = videoRef.current?.pause();
     if (pausePromise !== undefined) {
@@ -229,7 +227,6 @@ function Attendify({ attendance, setAttendance, lesson, videoRef }: any) {
     // videoRef.current?.pause();
     videoRef?.current?.srcObject?.getTracks().forEach((track: any) => track.stop())
     // setCaptureVideo(false);
-
   };
 
   return (

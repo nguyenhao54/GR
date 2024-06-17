@@ -234,68 +234,73 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
                             variant="outlined"
                         />
                     </div>
-                    <div className="flex gap-2">
-                        <div className="w-1/2">
-                            <FormControl fullWidth >
-                                <InputLabel id="demo-simple-select-label">Học kỳ</InputLabel>
-                                <Select
-                                    className='w-full text-black'
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    // multiple
-                                    value={semester || ""}
-                                    onChange={handleChange}
-                                    input={<OutlinedInput label="Học kỳ" className='w-64 text-black' />}
-                                    MenuProps={MenuProps}
-                                >
-                                    {semesterList.map((item: number) => (
-                                        <MenuItem
-                                            key={item}
-                                            value={item}
-                                            style={getStyles(item, semester, theme)}
+                    {!classObj.classId &&
+                        <>
+                            <div className="flex gap-2">
+                                <div className="w-1/2">
+                                    <FormControl fullWidth >
+                                        <InputLabel id="demo-simple-select-label">Học kỳ</InputLabel>
+                                        <Select
+                                            className='w-full text-black'
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            // multiple
+                                            value={semester || ""}
+                                            onChange={handleChange}
+                                            input={<OutlinedInput label="Học kỳ" className='w-64 text-black' />}
+                                            MenuProps={MenuProps}
                                         >
-                                            {item}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </div>
+                                            {semesterList.map((item: number) => (
+                                                <MenuItem
+                                                    key={item}
+                                                    value={item}
+                                                    style={getStyles(item, semester, theme)}
+                                                >
+                                                    {item}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </div>
 
-                        <div className="w-1/2">
-                            <TextField
-                                id="duration"
-                                label="Thời lượng (phút)"
-                                required
-                                type="number"
-                                defaultValue={duration}
-                                onChange={(e) => {
-                                    setDuration(e.target.value)
-                                }}
-                                style={{ width: "100%" }}
-                                variant="outlined"
-                            />
-                            {durationError && <div className="text-[10px] text-lightRed mt-1 -mb-5 pb-3 italic w-full">{durationError}</div>}
-                        </div>
-                    </div>
-
-                    <div className="flex gap-2">
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <div className="flex justify-between flex-row gap-2 w-full">
-                                <DateTimePicker
-                                    label="Buổi học đầu"
-                                    value={startTime}
-                                    className='w-full'
-                                    onChange={(newValue) => setStartTime(newValue)}
-                                />
-                                <DateTimePicker
-                                    label="Buổi học cuối"
-                                    value={endTime}
-                                    className='w-full'
-                                    onChange={(newValue) => setEndTime(newValue)}
-                                />
+                                <div className="w-1/2">
+                                    <TextField
+                                        id="duration"
+                                        label="Thời lượng (phút)"
+                                        required
+                                        type="number"
+                                        defaultValue={duration}
+                                        onChange={(e) => {
+                                            setDuration(e.target.value)
+                                        }}
+                                        style={{ width: "100%" }}
+                                        variant="outlined"
+                                    />
+                                    {durationError && <div className="text-[10px] text-lightRed mt-1 -mb-5 pb-3 italic w-full">{durationError}</div>}
+                                </div>
                             </div>
-                        </LocalizationProvider>
-                    </div>
+
+                            <div className="flex gap-2">
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <div className="flex justify-between flex-row gap-2 w-full">
+                                        <DateTimePicker
+                                            label="Buổi học đầu"
+                                            value={startTime}
+                                            className='w-full'
+                                            onChange={(newValue) => setStartTime(newValue)}
+                                        />
+                                        <DateTimePicker
+                                            label="Buổi học cuối"
+                                            value={endTime}
+                                            className='w-full'
+                                            onChange={(newValue) => setEndTime(newValue)}
+                                        />
+                                    </div>
+                                </LocalizationProvider>
+                            </div>
+                        </>
+                    }
+
                     <div>
                         <TextField
                             id="duration"
