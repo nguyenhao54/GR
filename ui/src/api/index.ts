@@ -1,1 +1,1 @@
-export const BASE_URL: string = process.env.BASE_URL || "";
+export const BASE_URL: string = 'https://gr-4x9h.onrender.com';

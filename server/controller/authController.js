@@ -32,7 +32,7 @@ const createSendToken = (user, statuscode, res) => {
 };
 const signToken = (id) =>
   jwt.sign({ id: id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIReS_IN,
+    expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
 exports.signup = catchAsync(async (req, res, next) => {
