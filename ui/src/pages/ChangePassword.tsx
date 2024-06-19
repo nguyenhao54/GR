@@ -3,8 +3,11 @@ import React, { useState } from 'react'
 import { updatePassword } from '../api/user'
 import { getCookie } from './components/dashboard/AttendanceCard'
 import { setDialog } from '../redux/dialog.reducer'
+import { useNavigate } from 'react-router-dom'
+import { FaArrowLeft } from 'react-icons/fa6'
 
 function ChangePassword() {
+    const navigate = useNavigate()
     const [oldPassword, setOldPassword] = useState("")
     const [oldPasswordError, setOldPasswordError] = useState("")
     const [password, setPassword] = useState("")
@@ -57,6 +60,11 @@ function ChangePassword() {
     return (
         <div className="bg-white rounded-md p-4 sm:p-8 pt-4 w-[100%] h-max flex flex-col items-center">
             <div className="w-full">
+            <button className="text-lightRed rounded-full p-2 hover:bg-neutral-200  cursor-pointer"
+              onClick={() => {
+                navigate('/profile')
+              }}
+            ><FaArrowLeft /></button>
                 <p className='text-lg font-semibold my-1 pb-3'>Đổi mật khẩu</p>
                 <div className="flex flex-col gap-2">
                     <div className="w-3/4 sm:w-1/3">

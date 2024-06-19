@@ -5,7 +5,7 @@ import TablePager, { HeadCell } from '../../../common/TablePager';
 import { IAttendance, getCookie } from '../dashboard/AttendanceCard';
 import { createAttendance, getAllAttendancesForLesson, updateAttendance } from '../../../api/attendance';
 import { getLessonById } from '../../../api/lesson';
-import { DotFlashing, SearchBar } from '../../../common';
+import { SearchBar } from '../../../common';
 import { FaCircleXmark, FaXmark, FaUserXmark } from "react-icons/fa6";
 import ToolTip from '../../../common/ToolTip';
 import { Button } from '@mui/material';

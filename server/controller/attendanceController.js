@@ -14,7 +14,7 @@ const Lesson = require('../models/lessonModel');
 
 exports.getMyAttendanceStats = catchAsync(async (req, res, next) => {
   const date = new Date(
-    new Date(req.params.id).getTime() - 7 * 24 * 60 * 60 * 1000,
+    new Date(req.params.id).getTime(),
   );
   const weekdays = selectWeek(date);
 

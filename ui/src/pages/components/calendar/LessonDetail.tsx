@@ -241,12 +241,14 @@ function LessonDetail() {
   return (
     <div className="font-nunitoSans flex flex-col items-center justify-center w-full h-[calc(100vh-120px)]">
       {
-        loading ? <DotFlashing></DotFlashing> :
+        loading ?
+          <div className='w-[calc(100vh-40px)] flex justify-center items-center'>
+            <DotFlashing></DotFlashing>
+          </div> :
           <div className='w-full h-full'>
             <button className="text-lightRed rounded-full p-2 hover:bg-neutral-200  cursor-pointer"
               onClick={() => {
                 navigate('/calendar')
-
               }}
             ><FaArrowLeft /></button>
             <Tabs

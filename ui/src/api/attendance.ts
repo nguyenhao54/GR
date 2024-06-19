@@ -85,7 +85,7 @@ export const updateAttendance = async (token: string, attendanceId: string, chec
             },
             { headers: { Authorization: `Bearer ${token}` } }
         )
-        return res.data.data
+        return res.data
     }
     catch (err) {
         console.log(err)

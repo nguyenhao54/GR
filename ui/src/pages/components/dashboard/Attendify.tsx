@@ -1,14 +1,39 @@
 import * as faceapi from "face-api.js";
-import React, { useEffect, useLayoutEffect } from "react";
+import React, { useEffect } from "react";
 import { AppState } from "../../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { setDialog } from "../../../redux/dialog.reducer";
 import { DotFlashing } from "../../../common";
 import { createAttendance, updateAttendance } from "../../../api/attendance";
 import { getCookie } from "./AttendanceCard";
-// import { addSevenHours } from "../../../utils";
 import { closeTopLoading, showTopLoading } from '../../../redux/toploading.reducer';
 
+const asyncIntervals: any = [];
+
+const runAsyncInterval = async (cb: any, interval: any, intervalIndex: any) => {
+  await cb();
+  if (asyncIntervals[intervalIndex].run) {
+    asyncIntervals[intervalIndex].id = setTimeout(() => runAsyncInterval(cb, interval, intervalIndex), interval)
+  }
+};
+
+const setAsyncInterval = (cb: any, interval: any) => {
+  if (cb && typeof cb === "function") {
+    const intervalIndex = asyncIntervals.length;
+    asyncIntervals.push({ run: true, id: 0 })
+    runAsyncInterval(cb, interval, intervalIndex);
+    return intervalIndex;
+  } else {
+    throw new Error('Callback must be a function');
+  }
+};
+
+const clearAsyncInterval = (intervalIndex: any) => {
+  if (asyncIntervals[intervalIndex]?.run) {
+    clearTimeout(asyncIntervals[intervalIndex]?.id)
+    asyncIntervals[intervalIndex].run = false
+  };
+}
 
 function minutesDiff(dateTimeValue2: any, dateTimeValue1: any) {
   var differenceValue =
@@ -17,15 +42,15 @@ function minutesDiff(dateTimeValue2: any, dateTimeValue1: any) {
   return Math.abs(Math.round(differenceValue));
 }
 
-function Attendify({ attendance, setAttendance, lesson, videoRef }: any) {
+function Attendify({ attendance, setAttendance, lesson }: any) {
   const user = useSelector((appState: AppState) => appState.user.user)
   const dispatch = useDispatch();
   const [modelsLoaded, setModelsLoaded] = React.useState<boolean>(false);
-  const [captureVideo, setCaptureVideo] = React.useState<boolean>(true)
+  const [captureVideo, setCaptureVideo] = React.useState<boolean>(true);
+  const videoRef = React.useRef<any>();
   const videoHeight = 420;
   const videoWidth = 540;
   const canvasRef = React.useRef<any>();
-  let myInterval: any;
 
   useEffect(() => {
     const loadModels = async () => {
@@ -39,27 +64,14 @@ function Attendify({ attendance, setAttendance, lesson, videoRef }: any) {
       ]).then(() => setModelsLoaded(true));
     };
     loadModels();
-    return () => {
-      closeWebcam()
-      clearInterval(myInterval)
-      setCaptureVideo(false)
-    }
   }, []);
-
-  useLayoutEffect(() => {
-    return () => {
-      clearInterval(myInterval)
-      setCaptureVideo(false)
-      closeWebcam()
-    }
-  }, [])
 
   useEffect(() => {
     setCaptureVideo(true)
     navigator.mediaDevices
       .getUserMedia({ video: { width: 300 } })
       .then((stream) => {
-        let video = videoRef?.current;
+        let video = videoRef.current;
         if (video) {
           video.srcObject = stream
 
@@ -75,7 +87,6 @@ function Attendify({ attendance, setAttendance, lesson, videoRef }: any) {
                 // Show paused UI.
               });
           }
-
         }
       })
       .catch((err) => {
@@ -83,131 +94,155 @@ function Attendify({ attendance, setAttendance, lesson, videoRef }: any) {
       });
 
     return () => {
-      clearInterval(myInterval)
-      closeWebcam()
-      videoRef?.current?.srcObject?.getTracks().forEach((track: any) => track.stop())
+      setCaptureVideo(false)
+
+      asyncIntervals.forEach((item: any, index: number) => { clearAsyncInterval(index); })
+
+      videoRef.current?.srcObject?.getTracks().forEach((track: any) => track.stop())
     }
-  }, [])
+  })
+
+
+  const checkIsValid = async () => {
+
+    if (user?.photo) {
+      console.log("about fetching face")
+
+      const refFace = await faceapi.fetchImage(user.photo);
+      console.log("done fetching face")
+      let refFaceData = await faceapi.detectAllFaces(refFace, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
+      try {
+        const detections = await faceapi
+          .detectAllFaces(
+            videoRef.current,
+            new faceapi.TinyFaceDetectorOptions()
+          )
+          .withFaceLandmarks()
+          .withFaceDescriptors()
+        console.log("done detection")
+
+        if (!detections || !videoRef.current) { return }
+        const resizedDetections = faceapi.resizeResults(
+          detections,
+          videoRef.current
+        );
+
+        let faceMatcher = new faceapi.FaceMatcher(refFaceData)
+        resizedDetections.every(async face => {
+          const { detection, descriptor } = face;
+          let label = faceMatcher.findBestMatch(descriptor).toString();
+          if (label.includes("unknown")) {
+            console.log("false")
+            return true
+          } else {
+            console.log("true")
+            console.log(asyncIntervals)
+            // clearAsyncInterval(myInterval)
+            asyncIntervals.forEach((item: any, index: number) => { clearAsyncInterval(index); })
+            let options = { label: user.name };
+            const drawBox = new faceapi.draw.DrawBox(detection.box, options)
+            canvasRef.current
+              .getContext("2d")
+              .clearRect(0, 0, videoWidth, videoHeight);
+            let pausePromise = videoRef.current?.pause();
+            if (pausePromise !== undefined) {
+              pausePromise.then((res: any) => {
+
+                // Automatic playback started!
+                // Show playing UI.
+              })
+                .catch((e: any) => {
+                  // Auto-play was prevented
+                  // Show paused UI.
+                });
+            }
+
+            videoRef.current?.srcObject?.getTracks()[0].stop();
+            drawBox.draw(canvasRef.current);
+
+            dispatch(showTopLoading())
+            setTimeout(() => {
+              closeWebcam();
+              dispatch(setDialog({
+                open: false
+              }))
+              const token = getCookie("token")
+              const dateTimeNow =(new Date()).toISOString()
+              if (!attendance?.checkInTime)
+                createAttendance(token, lesson._id, dateTimeNow, user._id).then(res =>
+                  setAttendance({ checkInTime: dateTimeNow })
+                ).catch(err => console.log(err))
+              else {
+                const duration = minutesDiff(attendance.checkInTime, dateTimeNow)
+                updateAttendance(token, attendance._id, dateTimeNow, duration >= lesson.duration).then((res) => {
+                  console.log(res)
+                  if (res.status === "success") {
+                    setAttendance({ ...attendance, checkOutTime: dateTimeNow });
+                    dispatch(setDialog({
+                      title: "Điểm danh thành công",
+                      open: true,
+                      type: "info",
+                      isMessagebar: true
+                    }))
+                  }
+                  else {
+                    dispatch(setDialog({
+                      title: "Điểm danh thất bại, vui lòng thử lại sau",
+                      open: true,
+                      type: "warning",
+                      isMessagebar: true
+                    }))
+
+                  }
+                })
+              }
+              dispatch(closeTopLoading())
+
+            }, 500)
+            return false;
+          }
+        }
+        )
+      }
+      catch (e) {
+        throw new Error("Something went wrong")
+        // console.log(e)
+      }
+    }
+  }
 
   const handleVideoOnPlay = async () => {
-    if (videoRef.current && captureVideo) {
-
-      console.log("playing video")
-      const res = await new Promise(resolve => {
-        let myInterval = setInterval(async () => {
-          console.log(myInterval, "my ")
+    setTimeout(() => {
+      if (videoRef.current && captureVideo) {
+        let myInterval = setAsyncInterval(async () => {
+          console.log("inside interval")
           if (canvasRef?.current) {
-            canvasRef.current.innerHTML = faceapi.createCanvasFromMedia(
-              videoRef.current
-            );
-            const displaySize = {
-              width: videoWidth - 40,
-              height: videoHeight - 40,
-            };
             try {
+              console.log("create canvas")
+              canvasRef.current.innerHTML = faceapi.createCanvasFromMedia(
+                videoRef.current
+              );
+              console.log("done creating")
+              const displaySize = {
+                width: videoWidth - 40,
+                height: videoHeight - 40,
+              };
 
               faceapi.matchDimensions(canvasRef.current, displaySize);
-              if (user?.photo) {
-                const refFace = await faceapi.fetchImage(user.photo);
-                let refFaceData = await faceapi.detectAllFaces(refFace, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
-                const detections = await faceapi
-                  .detectAllFaces(
-                    videoRef.current,
-                    new faceapi.TinyFaceDetectorOptions()
-                  )
-                  .withFaceLandmarks()
-                  .withFaceDescriptors()
-
-                if (!detections || !videoRef.current) { return }
-                const resizedDetections = faceapi.resizeResults(
-                  detections,
-                  videoRef.current
-                );
-
-                let faceMatcher = new faceapi.FaceMatcher(refFaceData)
-                resizedDetections.some(async face => {
-                  const { detection, descriptor } = face;
-                  let label = faceMatcher.findBestMatch(descriptor).toString();
-                  if (label.includes("unknown")) {
-                    return false
-                  } else {
-
-                    // recognized
-
-                    clearInterval(myInterval)
-                    closeWebcam();
-
-
-                    let options = { label: user.name };
-                    const drawBox = new faceapi.draw.DrawBox(detection.box, options)
-                    canvasRef.current
-                      .getContext("2d")
-                      .clearRect(0, 0, videoWidth, videoHeight);
-                    let pausePromise = videoRef.current?.pause();
-                    if (pausePromise !== undefined) {
-                      pausePromise.then((res: any) => {
-
-                        // Automatic playback started!
-                        // Show playing UI.
-                      })
-                        .catch((e: any) => {
-                          // Auto-play was prevented
-                          // Show paused UI.
-                        });
-                    }
-
-                    // videoRef?.current?.srcObject?.getTracks()[0].stop();
-                    drawBox.draw(canvasRef.current);
-                    resolve("true")
-
-                    dispatch(showTopLoading())
-
-                    // clearInterval(myInterval)
-                    return true;
-                  }
-                }
-                )
-              }
-
+            } catch (e) {
+              throw new Error("cannot create canvas")
+            } finally {
+              await checkIsValid()
             }
-            catch (e) {
-              clearInterval(myInterval)
-              closeWebcam()
-              setCaptureVideo(false)
-
-              // console.log(e)
-              // alert(new Error("Something went wrong"))
-              throw(e)
-              // return;
-            }
-            clearInterval(myInterval)
-
+          }
+          else {
+            console.log("nothing")
+            await Promise.resolve();
+            clearAsyncInterval(myInterval)
           }
         }, 100);
-      })
-
-      if (res) {
-        setTimeout(() => {
-          setCaptureVideo(false)
-          console.log("success")
-          const token = getCookie("token")
-          const dateTimeNow = (new Date()).toISOString()
-          if (!attendance?.checkInTime)
-            createAttendance(token, lesson._id, dateTimeNow, user!._id).then(res =>
-              setAttendance({ checkInTime: dateTimeNow })
-            ).catch(err => console.log(err))
-          else {
-            const duration = minutesDiff(attendance.checkInTime, dateTimeNow)
-            updateAttendance(token, attendance._id, dateTimeNow, duration >= (lesson.duration * 2 / 3))
-            setAttendance({ ...attendance, checkOutTime: dateTimeNow });
-          }
-          dispatch(closeTopLoading())
-          dispatch(setDialog({
-            open: false
-          }))
-        }, 5000)
       }
-    };
+    }, 100) //waiting for the media to be loaded
   }
 
   const closeWebcam = () => {
@@ -225,32 +260,34 @@ function Attendify({ attendance, setAttendance, lesson, videoRef }: any) {
         });
     }
     // videoRef.current?.pause();
-    videoRef?.current?.srcObject?.getTracks().forEach((track: any) => track.stop())
-    // setCaptureVideo(false);
+    videoRef.current?.srcObject?.getTracks().forEach((track: any) => track.stop())
+    setCaptureVideo(false);
   };
 
   return (
     <div className="flex items-center justify-center">
-      {captureVideo &&
+      {captureVideo ? (
         modelsLoaded ? (
-        <div className="w-full h-full flex items-center justify-center">
-          <div
-            className="flex justify-center items-center w-full h-full"
-          >
-            <video
-              ref={videoRef}
-              height={videoHeight}
-              width={videoWidth}
-              onPlay={handleVideoOnPlay}
-              style={{ borderRadius: "10px", position: "absolute" }}
-            />
-            <canvas ref={canvasRef} style={{ position: "absolute" }} />
+          <div className="w-full h-full flex items-center justify-center">
+            <div
+              className="flex justify-center items-center w-full h-full"
+            >
+              <video
+                ref={videoRef}
+                height={videoHeight}
+                width={videoWidth}
+                onPlay={handleVideoOnPlay}
+                style={{ borderRadius: "10px", position: "absolute" }}
+              />
+              <canvas ref={canvasRef} style={{ position: "absolute" }} />
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-[#00000007]"><DotFlashing></DotFlashing></div>
+        )
       ) : (
-        <div className="w-full h-full flex items-center justify-center bg-[#00000007]"><DotFlashing></DotFlashing></div>
-      )
-      }
+        <></>
+      )}
     </div>
   );
 }

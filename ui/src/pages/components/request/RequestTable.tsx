@@ -7,7 +7,6 @@ import { getCookie } from '../dashboard/AttendanceCard';
 import ToolTip from '../../../common/ToolTip';
 import { FaCheckCircle, FaEye } from "react-icons/fa";
 import { SearchBar } from '../../../common';
-import { minusSevenHours } from '../../../utils';
 import { setDialog } from '../../../redux/dialog.reducer';
 import { FaCircleXmark, FaPen, FaXmark } from 'react-icons/fa6';
 import { FaTrash } from "react-icons/fa6";
@@ -276,8 +275,8 @@ function RequestTable() {
       studentCode: request.student.codeNumber,
       studentName: request.student.name,
       lessonName: request.lesson.class.classId + ": " + request.lesson.class.subject.title,
-      startTime: new Date(minusSevenHours(request.lesson.startDateTime)).toLocaleString('en-GB', { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }),
-      endTime: new Date(minusSevenHours(request.lesson.endDateTime)).toLocaleString('en-GB', { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }),
+      startTime: new Date(request.lesson.startDateTime).toLocaleString('en-GB', { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }),
+      endTime: new Date(request.lesson.endDateTime).toLocaleString('en-GB', { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }),
       reason: request.reason,
       status: getStatusElement(request.status, user!.role),
       action: (

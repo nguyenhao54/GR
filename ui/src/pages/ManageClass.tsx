@@ -97,6 +97,7 @@ function ManageClass() {
         })
     }, [])
 
+
     let editClassRef: any;
     const handleEditClass = (classObj: any) => {
         dispatch(setDialog({

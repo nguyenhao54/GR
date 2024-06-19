@@ -233,16 +233,16 @@ function AttendanceCard() {
                                                         attendance={attendance}
                                                         setAttendance={setAttendance}
                                                         lesson={lesson}
-                                                        videoRef={videoRef}
+                                                        // videoRef={videoRef}
                                                         // captureVideo={captureVideo}
                                                         // setCaptureVideo={setCaptureVideo}
                                                     ></Attendify>
                                                 </div>
                                             ),
-                                            onClickClose: () => {
-                                                closeWebcam();
-                                                // setCaptureVideo(true);
-                                            }
+                                            // onClickClose: () => {
+                                            //     closeWebcam();
+                                            //     // setCaptureVideo(true);
+                                            // }
                                         })
                                     );
                                 },
@@ -278,16 +278,16 @@ function AttendanceCard() {
                                             attendance={attendance}
                                             setAttendance={setAttendance}
                                             lesson={lesson}
-                                            videoRef={videoRef}
+                                            // videoRef={videoRef}
                                             // captureVideo={captureVideo}
                                             // setCaptureVideo={setCaptureVideo}
                                         ></Attendify>
                                     </div>
                                 ),
-                                onClickClose: () => {
-                                    closeWebcam();
-                                    // setCaptureVideo(true);
-                                }
+                                // onClickClose: () => {
+                                //     closeWebcam();
+                                //     // setCaptureVideo(true);
+                                // }
                             })
                         );
                     }}

@@ -1,9 +1,5 @@
 export { }
 
-export const minusSevenHours = (dateTime: string) => {
-  return new Date(new Date(dateTime).getTime() - 7 * 60 * 60 * 1000).toString()
-}
-
 export const addSevenHours = (dateTime: string) => {
   return new Date(new Date(dateTime).getTime() + 7 * 60 * 60 * 1000).toISOString()
 }
@@ -13,7 +9,7 @@ export function randomIntFromInterval(min: number, max: number) {
 }
 
 export const getHourAndMinute = (dateTime: string) => {
-  return new Date(minusSevenHours(dateTime)).toLocaleString("en-GB", { hour: '2-digit', minute: '2-digit' })
+  return new Date(dateTime).toLocaleString("en-GB", { hour: '2-digit', minute: '2-digit' })
 }
 
 export const formatDate = (dateTime: string) => {

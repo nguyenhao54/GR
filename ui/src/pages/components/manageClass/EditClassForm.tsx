@@ -7,7 +7,7 @@ import { getStyles } from '../../Result';
 import { getUsers } from '../../../api/user';
 import { getCookie } from '../dashboard/AttendanceCard';
 import { getSubject } from '../../../api/subject';
-import { formatDate, minusSevenHours } from '../../../utils';
+import { formatDate } from '../../../utils';
 import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';

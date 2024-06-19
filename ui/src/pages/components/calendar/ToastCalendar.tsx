@@ -4,12 +4,13 @@ import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { getCookie } from '../dashboard/AttendanceCard';
 import { getMyLessons } from '../../../api/lesson';
-import { minusSevenHours } from '../../../utils';
 import { BACKGROUND_COLOR, BORDER_COLOR } from '../../../utils/styles';
 import { useNavigate } from 'react-router-dom';
 import { GoTriangleLeft, GoTriangleRight } from "react-icons/go";
 import { Lesson } from '../../../models';
 import { Tabs, Tab } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { closeTopLoading, showTopLoading } from '../../../redux/toploading.reducer';
 
 export interface CalendarEvent {
     id: string;
@@ -42,8 +43,10 @@ export default function ToastCalendar() {
     const [events, setEvents] = useState<CalendarEvent[]>();
     const [view, setView] = useState<any>("week")
     const token = getCookie("token")
+    const dispatch = useDispatch();
 
     useEffect(() => {
+        dispatch(showTopLoading())
         getMyLessons(token).then((data: any) => {
             setEvents(data?.lessons.map((item: Lesson) => {
                 const random = Number(item.startDateTime?.toString()[9]) % 5;
@@ -59,6 +62,9 @@ export default function ToastCalendar() {
                 })
             }) || [])
         })
+            .finally(() => {
+                dispatch(closeTopLoading())
+            })
     }, [token])
 
     const handleClickNextButton = () => {
