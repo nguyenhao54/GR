@@ -5,6 +5,7 @@ import { login } from '../api/login';
 import { useDispatch } from 'react-redux';
 import { setCurrentUser } from '../redux/user.reducer';
 import { FaChessPawn } from 'react-icons/fa6';
+import { closeTopLoading, showTopLoading } from '../redux/toploading.reducer';
 
 function LoginByField({ setCookie }: { setCookie: (name: string, value: any) => void }) {
     const dispatch = useDispatch()
@@ -14,6 +15,7 @@ function LoginByField({ setCookie }: { setCookie: (name: string, value: any) => 
     const [error, setError] = useState<string>("")
 
     const handleLogin = async () => {
+        dispatch(showTopLoading())
         const data = await login({ email, password })
         if (data?.data.user) {
             dispatch(setCurrentUser(data.data.user))
@@ -23,6 +25,7 @@ function LoginByField({ setCookie }: { setCookie: (name: string, value: any) => 
         else {
             setError("Tài khoản hoặc mật khẩu không chính xác")
         }
+        dispatch(closeTopLoading())
     }
 
     return (
@@ -42,12 +45,12 @@ function LoginByField({ setCookie }: { setCookie: (name: string, value: any) => 
                     }} fullWidth required id="password" label="Password" type='password' variant="standard" />
                 </div>
                 {error && <div className="text-[10px] text-lightRed mt-1 -mb-5 pb-3 italic w-full">{error}</div>}
-                <Link
+                {/* <Link
                     className="inline-block mt-4 align-baseline text-xs font-semibold text-neutral-800 hover:text-venetianRed"
                     to="#"
                 >
                     Quên mật khẩu?
-                </Link>
+                </Link> */}
                 <div className="flex items-center justify-center">
                     <button
                         className="bg-venetianRed hover:bg-barnRed text-white font-semibold py-3 px-8 rounded-full focus:outline-none focus:shadow-outline"

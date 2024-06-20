@@ -9,7 +9,6 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 
 const userRouter = require('./route/userRoutes');
-const reviewRouter = require('./route/reviewRouter');
 const subjectRouter = require('./route/subjectRoutes');
 const classRouter = require('./route/classRoutes');
 const lessonRouter = require('./route/lessonRoutes');
@@ -62,7 +61,6 @@ app.use(
 app.use(express.static(`${__dirname}/public`));
 
 app.use('/api/v1/users', userRouter);
-app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/subjects', subjectRouter);
 app.use('/api/v1/classes', classRouter);
 app.use('/api/v1/lessons', lessonRouter);
