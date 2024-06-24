@@ -33,7 +33,7 @@ export const getClasses = async (token: string) => {
 
 export const deleteClass = async (token: string, classId: string) => {
     try {
-        const res = await axios.delete(
+        await axios.delete(
             `${BASE_URL}/classes/${classId}`,
             { headers: { Authorization: `Bearer ${token}` } }
         )

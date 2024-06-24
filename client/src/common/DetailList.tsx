@@ -1,5 +1,3 @@
-import React from 'react'
-
 function DetailList(props: any) {
     const { list } = props
     return (

@@ -55,7 +55,7 @@ export const getAttendanceRatioForClass = async (token: string, classId: string)
     }
 }
 
-export const createAttendance = async (token: string, lessonId: string, checkInTime: string, student: string, isSuccessful?: boolean, checkOutTime?: string, ) => {
+export const createAttendance = async (token: string, lessonId: string, checkInTime: string, student: string, isSuccessful?: boolean) => {
     try {
         const res = await axios.post(
             `${BASE_URL}/attendances`,
@@ -64,7 +64,7 @@ export const createAttendance = async (token: string, lessonId: string, checkInT
                 lesson: lessonId,
                 checkInTime: checkInTime,
                 student: student,
-
+                isSuccessful: isSuccessful,
             },
             { headers: { Authorization: `Bearer ${token}` } }
         )

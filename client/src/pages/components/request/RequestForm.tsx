@@ -23,7 +23,7 @@ function RequestForm() {
     const [endTime, setEndTime] = React.useState<Dayjs | null>(dayjs(new Date()));
     const [image, setImage] = React.useState<any>(undefined);
     const [reason, setReason] = React.useState<any>();
-    const [url, setURL] = React.useState<string>("");
+    const [_url, setURL] = React.useState<string>("");
     const dispatch = useDispatch();
     const handleSend = async () => {
         const token = getCookie("token")
@@ -137,7 +137,7 @@ function RequestForm() {
                         <div className="absolute top-0 bottom-0 right-0 left-0 height-[100%] opacity-0 rounded-md hover:cursor-pointer transition-all hover:opacity-60 hover:bg-neutral-500 ">
                             <div
                                 className="absolute text-white text-xl right-1 top-1 rounded-full bg-black p-1"
-                                onClick={(e: any) => {
+                                onClick={(_e: any) => {
                                     setImage(undefined)
                                 }}
                             >

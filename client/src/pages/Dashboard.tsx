@@ -1,4 +1,3 @@
-import React from 'react'
 import StackedAtendanceChart from './components/dashboard/AtendanceChart'
 import { AttendanceCard } from './components'
 

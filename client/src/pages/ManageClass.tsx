@@ -111,7 +111,6 @@ function ManageClass() {
                     dispatch(showTopLoading())
                     setTimeout(async () => {
                         const newClass = editClassRef.changedClass
-                        console.log(newClass)
                         const res = await editClass(token, classObj._id, newClass)
                         if (res?.status === "success") {
                             const processedClassList = classList.map(item => {
@@ -160,10 +159,8 @@ function ManageClass() {
                 if (await editClassRef.validateForm()) {
                     dispatch(showTopLoading())
                     setTimeout(async () => {
-                        //TODO: add class 
                         const newClass = editClassRef.changedClass
                         const res = await createClass(token, newClass)
-                        console.log(res)
                         if (res?.status === "success") {
                             dispatch(setDialog({
                                 title: "Thêm lớp học thành công",
@@ -207,7 +204,7 @@ function ManageClass() {
                 type: "warning",
                 onClickOk: async () => {
                     const promise = deleteClass;
-                    const res = await promise(token, classObj._id)
+                    await promise(token, classObj._id)
                     const processedClassList = classList.filter((item) => item._id !== classObj._id)
                     dispatch(setDialog({
                         open: false,

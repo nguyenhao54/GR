@@ -1,6 +1,6 @@
 import { Button, ClickAwayListener, Tooltip } from '@mui/material';
 import TextField from '@mui/material/TextField';
-import React, { useEffect } from 'react'
+import React from 'react'
 import { BiImageAdd } from 'react-icons/bi';
 import { FaInfoCircle } from 'react-icons/fa';
 import { FaXmark } from 'react-icons/fa6';
@@ -94,7 +94,7 @@ const EditRequestForm = React.forwardRef(({ request }: { request: any }, ref) =>
                         <div className="absolute top-0 bottom-0 right-0 left-0 height-[100%] opacity-0 rounded-md hover:cursor-pointer transition-all hover:opacity-60 hover:bg-neutral-500 ">
                             <div
                                 className="absolute text-white text-xl right-1 top-1 rounded-full bg-black p-1"
-                                onClick={(e: any) => {
+                                onClick={(_e: any) => {
                                     setImage(undefined)
                                 }}
                             >

@@ -7,7 +7,6 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import TableSortLabel from "@mui/material/TableSortLabel";
 import Paper from "@mui/material/Paper";
 import { visuallyHidden } from "@mui/utils";
 import { NavigateFunction, useNavigate } from "react-router-dom";
@@ -88,11 +87,11 @@ interface TableHeadProps<T> {
 }
 
 function EnhancedTableHead<T>(props: TableHeadProps<T>) {
-  const { orderBy, order, onRequestSort, hideCheckbox, headCells, onSelectAllClick, isAllSelected } = props;
-  const createSortHandler =
-    (property: keyof T) => (event: React.MouseEvent<unknown>) => {
-      onRequestSort?.(event, property);
-    };
+  const { orderBy, order, hideCheckbox, headCells, onSelectAllClick, isAllSelected } = props;
+  // const createSortHandler =
+  //   (property: keyof T) => (event: React.MouseEvent<unknown>) => {
+  //     onRequestSort?.(event, property);
+  //   };
 
   return (
     <TableHead className='bg-neutral-200 rounded-t-lg'>

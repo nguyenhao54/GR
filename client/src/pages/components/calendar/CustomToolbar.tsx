@@ -1,21 +1,5 @@
-import React from "react"
 import formats from './toolbarOptions';
 
-const renderOptions = (formatData: any) => {
-    const { className, options } = formatData;
-    return (
-        <select className={className}>
-            <option selected={true}></option>
-            {
-                options.map((value: any) => {
-                    return (
-                        <option value={value}></option>
-                    )
-                })
-            }
-        </select>
-    )
-}
 const renderSingle = (formatData: any) => {
     const { className, value } = formatData;
     return (

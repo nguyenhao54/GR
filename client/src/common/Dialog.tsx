@@ -1,4 +1,3 @@
-import React from 'react'
 import { Button, Dialog, DialogTitle, IconButton } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { setDialog } from '../redux/dialog.reducer'

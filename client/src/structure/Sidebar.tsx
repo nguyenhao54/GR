@@ -1,13 +1,13 @@
-import { isActiveStyles, isNotActiveStyles } from "../utils/styles";
 import { NavLink } from "react-router-dom";
 import { MdHomeFilled } from "react-icons/md";
 import { FaCalendarAlt, FaUser } from "react-icons/fa";
-import { FaGear, FaUserGear, FaUserGroup } from "react-icons/fa6";
+import { FaUserGear } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { AppState } from "../redux/store";
 import { FaPaperPlane } from "react-icons/fa";
 import { FaBook } from "react-icons/fa";
 import { FaChalkboardTeacher } from "react-icons/fa";
+import { isActiveStyles, isNotActiveStyles } from '../utils/styles';
 
 export const getListItems = (role?: string) => {
 

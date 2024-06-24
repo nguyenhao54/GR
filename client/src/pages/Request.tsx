@@ -1,4 +1,3 @@
-import React from 'react'
 import RequestForm from './components/request/RequestForm'
 import RequestTable from './components/request/RequestTable'
 import { useSelector } from 'react-redux';

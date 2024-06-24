@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import L from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import "leaflet/dist/leaflet.css"
@@ -27,7 +27,6 @@ function MyLocationMap() {
             alert("Geolocation is not available in your browser.");
         }
     }, []);
-    // console.log(position);
 
     return (
         <div className="h-full w-full p-0 pb-4">

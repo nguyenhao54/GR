@@ -14,7 +14,6 @@ exports.getMyGrades = catchAsync(async (req, res, next) => {
   const semester = req.query.semester;
   let grades;
   if (semester) {
-    console.log(semester);
     const classes = await Class.aggregate([
       {
         $unwind: '$students',
@@ -27,7 +26,6 @@ exports.getMyGrades = catchAsync(async (req, res, next) => {
       },
       { $unset: 'students' },
     ]);
-    console.log(classes, 'classes');
     const ids = classes.map((i) => i._id);
     grades = await Grade.find({ student: req.user.id, class: { $in: ids } });
   } else {

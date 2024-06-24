@@ -1,4 +1,3 @@
-import React from 'react'
 import DotFlashing from './DotFlashing'
 import { useSelector } from 'react-redux';
 import { AppState } from '../redux/store';

@@ -77,7 +77,7 @@ export const editRequest = async (token: string, requestId: string, request: any
 
 export const deleteRequest = async (token: string, requestId: string) => {
     try {
-        const res = await axios.delete(
+        await axios.delete(
             `${BASE_URL}/requests/${requestId}`,
             { headers: { Authorization: `Bearer ${token}` } }
         )

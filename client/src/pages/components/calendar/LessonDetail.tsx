@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppState } from '../../../redux/store'
 import StudentsAttendanceTable from './StudentsAttendanceTable'
 import ReactQuill from 'react-quill'
-import CustomToolbar from './CustomToolbar'
 import { createNote, getNote, updateNote } from '../../../api/note'
 import { setDialog } from '../../../redux/dialog.reducer'
 
@@ -77,7 +76,7 @@ function LessonDetail() {
 
   const [code, setCode] = useState("");
   const [noteId, setNoteId] = useState<string>()
-  const handleProcedureContentChange = (content: string, delta: any, source: any, editor: any) => {
+  const handleProcedureContentChange = (content: string, _delta: any, _source: any, _editor: any) => {
     setCode(content);
     //let has_attribues = delta.ops[1].attributes || "";
     //console.log(has_attribues);
@@ -86,13 +85,13 @@ function LessonDetail() {
     //this.quill.setSelection(cursorPosition + 1);
   };
 
-  const handleChange = (event: React.SyntheticEvent, newValue: LessonDetailTab) => {
+  const handleChange = (_event: React.SyntheticEvent, newValue: LessonDetailTab) => {
     setTab(newValue);
   };
 
 
   useEffect(() => {
-    console.log(lessonId);
+    // console.log(lessonId);
     setLoading(true);
     if (user?._id) {
       let promises = [
@@ -116,7 +115,7 @@ function LessonDetail() {
   }, [])
 
   useEffect(() => {
-    console.log(lessonId);
+    // console.log(lessonId);
     setLoading(true);
     if (user?._id && user?.role === "student") {
       Promise.all([
@@ -159,13 +158,13 @@ function LessonDetail() {
     if (code)
       if (noteId) {
         updateNote(token, noteId, code).then((res: any) => {
-          console.log(res)
+          // console.log(res)
           handleRes(res)
         })
       }
       else
         createNote(token, lessonId, user!._id, code).then((res: any) => {
-          console.log(res)
+          // console.log(res)
           handleRes(res)
         })
   }

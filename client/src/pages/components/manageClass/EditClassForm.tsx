@@ -7,11 +7,9 @@ import { getStyles } from '../../Result';
 import { getUsers } from '../../../api/user';
 import { getCookie } from '../dashboard/AttendanceCard';
 import { getSubject } from '../../../api/subject';
-import { formatDate } from '../../../utils';
-import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import PeoplePicker from '../../../common/PeoplePicker';
+import dayjs, { Dayjs } from 'dayjs';
 
 const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) => {
 
@@ -39,7 +37,6 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
 
     React.useImperativeHandle(ref, () => {
         return {
-            //TODO : change other properties as well 
             changedClass: { ...classObj, classId: classId, semester, teacher: teacher, subject: subject, students: userIds, firstStartTime: startTime?.toDate(), lastStartTime: endTime?.toDate(), duration, location: { coordinates: [lat, lon], description: desc } },
             validateForm: validate
         }
@@ -114,7 +111,6 @@ const EditClassForm = React.forwardRef(({ classObj }: { classObj: any }, ref) =>
         else {
             const validationPromises = userList.split(',').map(user => isExistedStudent(Number(user)));
             const validationRes = await Promise.all(validationPromises);
-            console.log(validationRes)
             setUserIds(validationRes)
             validate = validate && validationRes.every(result => result);
         }

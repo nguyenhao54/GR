@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LiaHandPointer } from "react-icons/lia";
 import { MdLocationPin } from "react-icons/md";
 import MyLocation from "./MyLocationMap";
@@ -13,7 +13,6 @@ import { getMyAttendanceForLesson } from "../../../api/attendance";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { Lesson, User } from '../../../models';
 import { getHourAndMinute } from '../../../utils';
-import React from 'react';
 import { setAttendify } from '../../../redux/attendifly.reducet';
 export interface IAttendance {
     id?: string;
@@ -76,14 +75,12 @@ function AttendanceCard() {
     const [loading, setLoading] = useState<boolean>(true);
     const dispatch = useDispatch();
     const [clock, setClock] = useState<string>(getClock());
-    const [captureVideo, setCaptureVideo] = React.useState(true);
+    const [_captureVideo, setCaptureVideo] = React.useState(true);
 
-    const [position, setPosition] = useState<any>({
+    const [_position, setPosition] = useState<any>({
         latitude: null,
         longitude: null,
     });
-
-    const videoRef = React.useRef<any>();
 
     useEffect(() => {
         if ("geolocation" in navigator) {
@@ -146,10 +143,9 @@ function AttendanceCard() {
 
     const { subject = "", location = " " } = lesson?.class;
     const { endDateTime = " ", startDateTime = "" } = lesson;
-    // console.log(location)
     // sai so 100m cx ok
 
-    const locationDetails = <>    <div className='text-sm font-semibold mt-2'>
+    const locationDetails = <><div className='text-sm font-semibold mt-2'>
         {subject.title} {subject.subjectId}
     </div>
         <div className='text-xs font-semibold mt-1 text-lightRed'>
@@ -203,9 +199,6 @@ function AttendanceCard() {
                                         attendance={attendance}
                                         setAttendance={setAttendance}
                                         lesson={lesson}
-                                    // videoRef={videoRef}
-                                    // captureVideo={captureVideo}
-                                    // setCaptureVideo={setCaptureVideo}
                                     ></Attendify>
                                 </div>
                             ),
@@ -244,9 +237,6 @@ function AttendanceCard() {
                             attendance={attendance}
                             setAttendance={setAttendance}
                             lesson={lesson}
-                        // videoRef={videoRef}
-                        // captureVideo={captureVideo}
-                        // setCaptureVideo={setCaptureVideo}
                         ></Attendify>
                     </div>
                 ),
@@ -270,7 +260,6 @@ function AttendanceCard() {
                 })}`}
             </div>
             {attendance?.checkInTime ?
-
                 attendance?.checkOutTime ?
                     <div className='text-neutral-400 flex mt-4 flex-col justify-center items-center'>
                         <IoMdCheckmarkCircleOutline size={60} color={"#0072D0"} />
@@ -278,7 +267,6 @@ function AttendanceCard() {
                             Bạn đã điểm danh cho lớp học này
                         </div>
                     </div> :
-
                     (
                         <div
                             role={'none'}

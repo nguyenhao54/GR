@@ -1,13 +1,15 @@
 import { Button, TextField } from '@mui/material'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { updatePassword } from '../api/user'
 import { getCookie } from './components/dashboard/AttendanceCard'
 import { setDialog } from '../redux/dialog.reducer'
 import { useNavigate } from 'react-router-dom'
 import { FaArrowLeft } from 'react-icons/fa6'
+import { useDispatch } from 'react-redux'
 
 function ChangePassword() {
     const navigate = useNavigate()
+    const dispatch= useDispatch()
     const [oldPassword, setOldPassword] = useState("")
     const [oldPasswordError, setOldPasswordError] = useState("")
     const [password, setPassword] = useState("")
@@ -137,7 +139,3 @@ function ChangePassword() {
 }
 
 export default ChangePassword
-
-function dispatch(arg0: any) {
-    throw new Error('Function not implemented.')
-}

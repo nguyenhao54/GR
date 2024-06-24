@@ -5,7 +5,6 @@ import Header from "./Header";
 import { Dialog } from "../common";
 import { AppState } from "../redux/store";
 import { useSelector } from "react-redux";
-import TopLoading from '../common/TopLoading';
 
 const Layout = () => {
   const navigate = useNavigate();

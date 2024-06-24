@@ -1,7 +1,6 @@
 import React from 'react'
 import { FormControl, InputLabel, MenuItem, OutlinedInput, Theme, useTheme } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select'
-import { getCookie } from './components/dashboard/AttendanceCard';
 import SemesterGradeTable from './components/grade/SemesterGradeTable';
 
 const ITEM_HEIGHT = 48;
@@ -28,7 +27,6 @@ function Result() {
     const theme = useTheme();
     const semesterList = [20191, 20192, 20211, 20212, 20221, 20222, 20231, 20232, 20241, 20242, 20251, 20252]
     const [selectedSemester, setSelectedSemester] = React.useState<number>(20232);
-    const token = getCookie("token")
 
     const handleChange = (event: SelectChangeEvent<typeof selectedSemester>) => {
         const { target: { value } } = event;

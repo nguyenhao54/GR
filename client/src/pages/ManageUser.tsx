@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import TablePager, { HeadCell } from '../common/TablePager';
 import { getCookie } from './components/dashboard/AttendanceCard';
 import { useDispatch } from 'react-redux';
-import { getClasses } from '../api/class';
 import { closeTopLoading, showTopLoading } from '../redux/toploading.reducer';
 import ToolTip from '../common/ToolTip';
 import { FaPlus, FaTrash } from 'react-icons/fa6';
@@ -150,7 +149,7 @@ function ManageUser() {
         type: "warning",
         onClickOk: async () => {
           const promise = deleteUser;
-          const res = await promise(token, user._id)
+          await promise(token, user._id)
           const processedUserList = userList.filter((item) => item._id !== user._id)
           dispatch(setDialog({
             open: false,

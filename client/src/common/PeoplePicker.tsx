@@ -1,5 +1,5 @@
 import { Box, Chip, FormControl, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, Theme, useTheme } from '@mui/material';
-import React, { useState } from 'react'
+import React from 'react'
 
 
 const ITEM_HEIGHT = 44;
@@ -35,8 +35,7 @@ function getStyles(name: string, personName: readonly string[], theme: Theme) {
   };
 }
 
-const PeoplePicker = React.forwardRef((props: any, ref) => {
-    const [peopleList, setPeopleList] = useState<any[]>([])
+const PeoplePicker = React.forwardRef((_props: any, ref) => {
     const [personName, setPersonName] = React.useState<string[]>([]);
     const theme = useTheme();
     

@@ -69,9 +69,9 @@ export default function MenuTable(props: IMenuTableProps) {
   const { lessonId } = props;
   const [attendances, setAttendances] = React.useState<IAttendance[]>([
   ]);
-  const [lesson, setLesson] = React.useState<Lesson>()
+  const [_lesson, setLesson] = React.useState<Lesson>()
   const [display, setDisplay] = React.useState<IAttendance[]>(attendances);
-  const [orderBy, setOrderBy] = React.useState<keyof StudentTableData>("id");
+  const [orderBy, _setOrderBy] = React.useState<keyof StudentTableData>("id");
   const [selected, setSelected] = React.useState<IAttendance[]>([]);
   const [searchText, setSearchText] = React.useState<string>("");
 
@@ -181,7 +181,7 @@ export default function MenuTable(props: IMenuTableProps) {
         dispatch(closeTopLoading())
       } else {
         //create //item.id is student id actually
-        await createAttendance(token, lessonId, "", item.id!, item.isSuccessful, "")
+        await createAttendance(token, lessonId, "", item.id!, item.isSuccessful)
         dispatch(closeTopLoading())
       }
     })

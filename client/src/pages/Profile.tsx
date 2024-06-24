@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppState } from '../redux/store'
 import { Button, TextField } from '@mui/material'
@@ -115,7 +115,7 @@ function Profile() {
                                     <div
                                         role={"none"}
                                         className="absolute text-white text-xl flex items-center justify-center w-16 h-16 sm:w-36 sm:h-36"
-                                        onClick={(e: any) => {
+                                        onClick={(_e: any) => {
                                             // setImage(undefined)
                                         }}
                                     >

@@ -1,10 +1,10 @@
-export const isActiveStyles =
+export const isActiveStyles: string =
   "mx-2 text-venetianRed font-medium rounded bg-neutral-100 hover:bg-neutral-200 hover:text-venetianRed duration-100 transition-all ease-in-out";
 
-export const isNotActiveStyles =
+export const isNotActiveStyles: string =
   "mx-2 text-neutral-400 font-light rounded-md hover:text-venetianRed hover:bg-neutral-200 duration-100 transition-all ease-in-out";
 
-export const isActiveStyles2 =
+export const isActiveStyles2: string =
   "text-2xl mx-3 text-venetianRed font-medium bg-[#2a2a2a] duration-100 transition-all ease-in-out";
 
 export const isNotActiveStyles2 =

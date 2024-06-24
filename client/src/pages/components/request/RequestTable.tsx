@@ -8,7 +8,7 @@ import ToolTip from '../../../common/ToolTip';
 import { FaCheckCircle, FaEye } from "react-icons/fa";
 import { SearchBar } from '../../../common';
 import { setDialog } from '../../../redux/dialog.reducer';
-import { FaCircleXmark, FaPen, FaXmark } from 'react-icons/fa6';
+import { FaCircleXmark, FaPen } from 'react-icons/fa6';
 import { FaTrash } from "react-icons/fa6";
 import { closeTopLoading, showTopLoading } from '../../../redux/toploading.reducer';
 import EditRequestForm from './EditRequestForm';
@@ -90,7 +90,6 @@ function RequestTable() {
   const dispatch = useDispatch()
   const token = getCookie("token");
   const user = useSelector((appState: AppState) => appState.user.user);
-  const [loading, setLoading] = React.useState<boolean>(true);
   const [requestList, setRequestList] = React.useState<any[]>([])
   const [searchText, setSearchText] = React.useState<string>("");
   const [display, setDisplay] = React.useState<any[]>(requestList);
@@ -98,7 +97,6 @@ function RequestTable() {
   useEffect(() => {
     if (!user)
       return;
-    // setLoading(true);
     dispatch(showTopLoading())
     getRequests(token)
       .then((res) => {
@@ -191,7 +189,7 @@ function RequestTable() {
         type: "warning",
         onClickOk: async () => {
           const promise = deleteRequest;
-          const res = await promise(token, request._id)
+          await promise(token, request._id)
           const processedRequestList = requestList.filter((item) => item.id !== request._id)
           dispatch(setDialog({
             open: false,
@@ -344,21 +342,19 @@ function RequestTable() {
       </div>
     </div>
   return (
-    <>
-      <div className="pt-4 w-full">
-        <TablePager
-          tableTitle={"Danh sách yêu cầu"}
-          total={display?.length || 0}
-          data={display || []}
-          mapDataToRowData={mapRequestToRowElement}
-          headCells={headCells}
-          hideCheckbox
-          orderBy='startTime'
-          showSearchBar
-          toolbarItems={user?.role !== "student" ? toolbarItems : <></>}
-        ></TablePager>
-      </div>
-    </>
+    <div className="pt-4 w-full">
+      <TablePager
+        tableTitle={"Danh sách yêu cầu"}
+        total={display?.length || 0}
+        data={display || []}
+        mapDataToRowData={mapRequestToRowElement}
+        headCells={headCells}
+        hideCheckbox
+        orderBy='startTime'
+        showSearchBar
+        toolbarItems={user?.role !== "student" ? toolbarItems : <></>}
+      ></TablePager>
+    </div>
   )
 }
 

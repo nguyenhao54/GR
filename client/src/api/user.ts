@@ -30,7 +30,7 @@ export const getUsers = async (token: string, query?: string) => {
 
 export const deleteUser = async (token: string, userId: string) => {
     try {
-        const res = await axios.delete(
+        await axios.delete(
             `${BASE_URL}/users/${userId}`,
             { headers: { Authorization: `Bearer ${token}` } }
         )

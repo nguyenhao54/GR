@@ -4,13 +4,13 @@ import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { getCookie } from '../dashboard/AttendanceCard';
 import { getMyLessons } from '../../../api/lesson';
-import { BACKGROUND_COLOR, BORDER_COLOR } from '../../../utils/styles';
 import { useNavigate } from 'react-router-dom';
 import { GoTriangleLeft, GoTriangleRight } from "react-icons/go";
 import { Lesson } from '../../../models';
 import { Tabs, Tab } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { closeTopLoading, showTopLoading } from '../../../redux/toploading.reducer';
+import { BACKGROUND_COLOR, BORDER_COLOR } from '../../../utils/styles';
 
 export interface CalendarEvent {
     id: string;
@@ -117,7 +117,6 @@ export default function ToastCalendar() {
         calendarInstance.setOptions({
             template: {
                 time(event: any) {
-                    console.log(event)
                     return (
                         `<div class="flex flex-col justify-start ${view !== "month" ? "pt-1" : ""} rounded-md">
                   ${view !== "month" ? `<div class="whitespace-normal flex flex-row gap-2">
@@ -207,7 +206,7 @@ export default function ToastCalendar() {
             </nav>
             <Calendar
                 ref={calendarRef}
-                onClickEvent={(event) => handleClickEvent(event)}
+                onClickEvent={(event: any) => handleClickEvent(event)}
                 onAfterRenderEvent={onAfterRenderEvent}
                 usageStatistics={false}
                 height="calc(100vh - 188px)"

@@ -16,7 +16,7 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
-const renderColorfulLegendText = (value: string, entry: any) => {
+const renderColorfulLegendText = (value: string, _entry: any) => {
     return (
         <span style={{ color: "#596579", fontWeight: 500, padding: "10px" }}>
             {value}

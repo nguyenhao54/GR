@@ -15,7 +15,7 @@ function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const carretRef = React.createRef<HTMLDivElement>()
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleClick = (_event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(carretRef.current);
   };
   const handleClose = () => {

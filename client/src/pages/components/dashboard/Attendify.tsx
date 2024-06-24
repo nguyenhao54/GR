@@ -75,16 +75,16 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
         let video = videoRef.current;
         if (video) {
           video.srcObject = stream
-          console.log("playyyy")
+          // console.log("playyyy")
 
           // Show loading animation.
           var playPromise = video.play();
           if (playPromise !== undefined) {
-            playPromise.then((res: any) => {
+            playPromise.then((_res: any) => {
               // Automatic playback started!
               // Show playing UI.
             })
-              .catch((e: any) => {
+              .catch((_e: any) => {
                 // Auto-play was prevented
                 // Show paused UI.
               });
@@ -97,7 +97,7 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
 
     return () => {
       // dispatch(setAttendify({ captureVideo: false }))  
-      asyncIntervals.forEach((item: any, index: number) => { clearAsyncInterval(index); })
+      asyncIntervals.forEach((_item: any, index: number) => { clearAsyncInterval(index); })
       videoRef.current?.srcObject?.getTracks().forEach((track: any) => track.stop())
     }
   }, [captureVideo])
@@ -115,7 +115,7 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
           )
           .withFaceLandmarks()
           .withFaceDescriptors()
-        console.log("done detection")
+        // console.log("done detection")
 
         if (!detections || !videoRef.current) { return }
         const resizedDetections = faceapi.resizeResults(
@@ -128,14 +128,14 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
           const { detection, descriptor } = face;
           let label = faceMatcher.findBestMatch(descriptor).toString();
           if (label.includes("unknown")) {
-            console.log("false")
+            // console.log("false")
             return true
           } else {
-            console.log("true")
-            console.log(asyncIntervals)
+            // console.log("true")
+            // console.log(asyncIntervals)
             // clearAsyncInterval(myInterval)
-            asyncIntervals.forEach((item: any, index: number) => { clearAsyncInterval(index); })
-            console.log(asyncIntervals)
+            asyncIntervals.forEach((_item: any, index: number) => { clearAsyncInterval(index); })
+            // console.log(asyncIntervals)
 
             let options = { label: user.name };
             const drawBox = new faceapi.draw.DrawBox(detection.box, options)
@@ -144,12 +144,12 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
               .clearRect(0, 0, videoWidth, videoHeight);
             let pausePromise = videoRef.current?.pause();
             if (pausePromise !== undefined) {
-              pausePromise.then((res: any) => {
+              pausePromise.then((_res: any) => {
 
                 // Automatic playback started!
                 // Show playing UI.
               })
-                .catch((e: any) => {
+                .catch((_e: any) => {
                   // Auto-play was prevented
                   // Show paused UI.
                 });
@@ -169,7 +169,6 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
               if (!attendance?.checkInTime)
                 createAttendance(token, lesson._id, dateTimeNow, user._id).then(res => {
                   if (res?.status === "success") {
-                    console.log(res, "data")
                     setAttendance({ checkInTime: dateTimeNow, ...res.data.data })
                     dispatch(setDialog({
                       title: "Check-in thành công",
@@ -231,7 +230,6 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
   }
 
   const handleVideoOnPlay = async () => {
-    console.log("play")
     if (asyncIntervals.length === 0)
       setTimeout(() => {
         if (videoRef.current && captureVideo) {
@@ -266,12 +264,12 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
     // navigator.mediaDevices.getUserMedia().
     let pausePromise = videoRef.current?.pause();
     if (pausePromise !== undefined) {
-      pausePromise.then((res: any) => {
+      pausePromise.then((_res: any) => {
 
         // Automatic playback started!
         // Show playing UI.
       })
-        .catch((e: any) => {
+        .catch((_e: any) => {
           // Auto-play was prevented
           // Show paused UI.
         });
@@ -279,8 +277,6 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
     videoRef.current?.srcObject?.getTracks().forEach((track: any) => track.stop())
     dispatch(setAttendify({ captureVideo: false }))
   };
-
-  console.log("attendify")
 
   return (
     <div className="flex items-center justify-center">

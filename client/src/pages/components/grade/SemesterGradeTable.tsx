@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux';
 import { getMyGrade } from '../../../api/grade';
-import { AppState } from '../../../redux/store';
 import { getCookie } from '../dashboard/AttendanceCard';
 import TablePager, { HeadCell } from '../../../common/TablePager';
 import { closeTopLoading, showTopLoading } from '../../../redux/toploading.reducer';
@@ -79,7 +78,6 @@ const headCells: readonly HeadCell<ClassGradeTableData>[] = [
 function SemesterGradeTable({ semester }: { semester: number }) {
     const dispatch = useDispatch()
     const token = getCookie("token");
-    const user = useSelector((appState: AppState) => appState.user.user);
 
     const [classList, setClassList] = useState<any[]>([])
     useEffect(() => {
