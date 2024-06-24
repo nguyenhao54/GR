@@ -51,7 +51,7 @@ function MyLocationMap() {
                 </MapContainer>
                 </div>
             ) : (
-                <p>Loading...</p>
+                <p>Không thể xác định vị trí hiện tại, vui lòng cho phép truy cập vị trí hoặc thử lại sau.</p>
             )}
         </div>
     );
