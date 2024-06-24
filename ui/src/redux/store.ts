@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./user.reducer";
 import dialogReducer from "./dialog.reducer";
 import topLoadingReducer from './toploading.reducer';
+import attendifyReducer from './attendifly.reducet';
 
 export const store = configureStore({
   reducer: {
@@ -9,6 +10,7 @@ export const store = configureStore({
     user: userReducer,
     dialog: dialogReducer,
     topLoading: topLoadingReducer,
+    attendify: attendifyReducer
     // taskFilter: taskReducer
   },
 });

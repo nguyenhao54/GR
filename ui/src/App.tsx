@@ -14,6 +14,7 @@ import Grade from './pages/Grade';
 import ManageUser from './pages/ManageUser';
 import ManageClass from './pages/ManageClass';
 import ChangePassword from './pages/ChangePassword';
+import TopLoading from './common/TopLoading';
 
 function App(props: { cookies: Cookies }) {
 
@@ -44,25 +45,29 @@ function App(props: { cookies: Cookies }) {
   }, [cookies, navigate])
 
   return (
-    <Routes>
-      <Route path="/login" element={<SignIn setCookie={setCookie}></SignIn>}></Route>
-      <Route path="/" element={<Layout />}>
-        <Route path="/profile" element={<Profile />}>
+    <>
+      <Routes>
+        <Route path="/login" element={<SignIn setCookie={setCookie}></SignIn>}></Route>
+        <Route path="/" element={<Layout />}>
+          <Route path="/profile" element={<Profile />}>
+          </Route>
+          <Route path="/profile/changePassword" element={<ChangePassword />} />
+          <Route path="/dashboard" element={<Dashboard />}></Route>
+          <Route path="/requests" element={<Request />}></Route>
+          <Route path="/grades" element={<Grade />}></Route>
+          <Route path="/calendar" element={<Calendar />}>
+            <Route path="" element={
+              <ToastCalendar></ToastCalendar>
+            }></Route>
+            <Route path="/calendar/:id" element={<LessonDetail></LessonDetail>}></Route>
+          </Route>
+          <Route path="/admin/manage-user" element={<ManageUser />}></Route>
+          <Route path="/admin/manage-class" element={<ManageClass />}></Route>
         </Route>
-        <Route path="/profile/changePassword" element={<ChangePassword />} />
-        <Route path="/dashboard" element={<Dashboard />}></Route>
-        <Route path="/requests" element={<Request />}></Route>
-        <Route path="/grades" element={<Grade />}></Route>
-        <Route path="/calendar" element={<Calendar />}>
-          <Route path="" element={
-            <ToastCalendar></ToastCalendar>
-          }></Route>
-          <Route path="/calendar/:id" element={<LessonDetail></LessonDetail>}></Route>
-        </Route>
-        <Route path="/admin/manage-user" element={<ManageUser />}></Route>
-        <Route path="/admin/manage-class" element={<ManageClass />}></Route>
-      </Route>
-    </Routes>
+      </Routes>
+
+      <TopLoading />
+    </>
   );
 }
 

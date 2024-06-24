@@ -68,7 +68,7 @@ export const createAttendance = async (token: string, lessonId: string, checkInT
             },
             { headers: { Authorization: `Bearer ${token}` } }
         )
-        return res.data.data
+        return res.data
     }
     catch (err) {
         console.log(err)

@@ -7,6 +7,7 @@ import { DotFlashing } from "../../../common";
 import { createAttendance, updateAttendance } from "../../../api/attendance";
 import { getCookie } from "./AttendanceCard";
 import { closeTopLoading, showTopLoading } from '../../../redux/toploading.reducer';
+import { setAttendify } from '../../../redux/attendifly.reducet';
 
 const asyncIntervals: any = [];
 
@@ -20,7 +21,7 @@ const runAsyncInterval = async (cb: any, interval: any, intervalIndex: any) => {
 const setAsyncInterval = (cb: any, interval: any) => {
   if (cb && typeof cb === "function") {
     const intervalIndex = asyncIntervals.length;
-    asyncIntervals.push({ run: true, id: 0 })
+    asyncIntervals.push({ run: true, id: intervalIndex })
     runAsyncInterval(cb, interval, intervalIndex);
     return intervalIndex;
   } else {
@@ -44,9 +45,10 @@ function minutesDiff(dateTimeValue2: any, dateTimeValue1: any) {
 
 function Attendify({ attendance, setAttendance, lesson }: any) {
   const user = useSelector((appState: AppState) => appState.user.user)
+  const { captureVideo } = useSelector((appState: AppState) => appState.attendify.attendify || { captureVideo: false })
+
   const dispatch = useDispatch();
   const [modelsLoaded, setModelsLoaded] = React.useState<boolean>(false);
-  const [captureVideo, setCaptureVideo] = React.useState<boolean>(true);
   const videoRef = React.useRef<any>();
   const videoHeight = 420;
   const videoWidth = 540;
@@ -67,13 +69,13 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
   }, []);
 
   useEffect(() => {
-    setCaptureVideo(true)
     navigator.mediaDevices
       .getUserMedia({ video: { width: 300 } })
       .then((stream) => {
         let video = videoRef.current;
         if (video) {
           video.srcObject = stream
+          console.log("playyyy")
 
           // Show loading animation.
           var playPromise = video.play();
@@ -94,24 +96,18 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
       });
 
     return () => {
-      setCaptureVideo(false)
-
+      // dispatch(setAttendify({ captureVideo: false }))  
       asyncIntervals.forEach((item: any, index: number) => { clearAsyncInterval(index); })
-
       videoRef.current?.srcObject?.getTracks().forEach((track: any) => track.stop())
     }
-  })
+  }, [captureVideo])
 
 
   const checkIsValid = async () => {
-
     if (user?.photo) {
-      console.log("about fetching face")
-
-      const refFace = await faceapi.fetchImage(user.photo);
-      console.log("done fetching face")
-      let refFaceData = await faceapi.detectAllFaces(refFace, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
       try {
+        const refFace = await faceapi.fetchImage(user.photo);
+        let refFaceData = await faceapi.detectAllFaces(refFace, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
         const detections = await faceapi
           .detectAllFaces(
             videoRef.current,
@@ -139,6 +135,8 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
             console.log(asyncIntervals)
             // clearAsyncInterval(myInterval)
             asyncIntervals.forEach((item: any, index: number) => { clearAsyncInterval(index); })
+            console.log(asyncIntervals)
+
             let options = { label: user.name };
             const drawBox = new faceapi.draw.DrawBox(detection.box, options)
             canvasRef.current
@@ -167,19 +165,30 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
                 open: false
               }))
               const token = getCookie("token")
-              const dateTimeNow =(new Date()).toISOString()
+              const dateTimeNow = (new Date()).toISOString()
               if (!attendance?.checkInTime)
-                createAttendance(token, lesson._id, dateTimeNow, user._id).then(res =>
-                  setAttendance({ checkInTime: dateTimeNow })
+                createAttendance(token, lesson._id, dateTimeNow, user._id).then(res => {
+                  if (res?.status === "success") {
+                    console.log(res, "data")
+                    setAttendance({ checkInTime: dateTimeNow, ...res.data.data })
+                    dispatch(setDialog({
+                      title: "Check-in thành công",
+                      open: true,
+                      type: "info",
+                      isMessagebar: true
+                    }))
+
+                  }
+                }
                 ).catch(err => console.log(err))
               else {
                 const duration = minutesDiff(attendance.checkInTime, dateTimeNow)
                 updateAttendance(token, attendance._id, dateTimeNow, duration >= lesson.duration).then((res) => {
                   console.log(res)
-                  if (res.status === "success") {
+                  if (res?.status === "success") {
                     setAttendance({ ...attendance, checkOutTime: dateTimeNow });
                     dispatch(setDialog({
-                      title: "Điểm danh thành công",
+                      title: "Check-out thành công",
                       open: true,
                       type: "info",
                       isMessagebar: true
@@ -187,7 +196,7 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
                   }
                   else {
                     dispatch(setDialog({
-                      title: "Điểm danh thất bại, vui lòng thử lại sau",
+                      title: "Check-out thất bại, vui lòng thử lại sau",
                       open: true,
                       type: "warning",
                       isMessagebar: true
@@ -205,6 +214,16 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
         )
       }
       catch (e) {
+        closeWebcam();
+        dispatch(setDialog({
+          open: false
+        }))
+        dispatch(setDialog({
+          title: "Có lỗi sảy ra, vui lòng thử lại sau",
+          open: true,
+          type: "warning",
+          isMessagebar: true
+        }))
         throw new Error("Something went wrong")
         // console.log(e)
       }
@@ -212,37 +231,35 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
   }
 
   const handleVideoOnPlay = async () => {
-    setTimeout(() => {
-      if (videoRef.current && captureVideo) {
-        let myInterval = setAsyncInterval(async () => {
-          console.log("inside interval")
-          if (canvasRef?.current) {
-            try {
-              console.log("create canvas")
-              canvasRef.current.innerHTML = faceapi.createCanvasFromMedia(
-                videoRef.current
-              );
-              console.log("done creating")
-              const displaySize = {
-                width: videoWidth - 40,
-                height: videoHeight - 40,
-              };
+    console.log("play")
+    if (asyncIntervals.length === 0)
+      setTimeout(() => {
+        if (videoRef.current && captureVideo) {
+          let myInterval = setAsyncInterval(async () => {
+            if (canvasRef?.current) {
+              try {
+                canvasRef.current.innerHTML = faceapi.createCanvasFromMedia(
+                  videoRef.current
+                );
+                const displaySize = {
+                  width: videoWidth - 40,
+                  height: videoHeight - 40,
+                };
 
-              faceapi.matchDimensions(canvasRef.current, displaySize);
-            } catch (e) {
-              throw new Error("cannot create canvas")
-            } finally {
-              await checkIsValid()
+                faceapi.matchDimensions(canvasRef.current, displaySize);
+              } catch (e) {
+                // throw new Error("cannot create canvas")
+              } finally {
+                await checkIsValid()
+              }
             }
-          }
-          else {
-            console.log("nothing")
-            await Promise.resolve();
-            clearAsyncInterval(myInterval)
-          }
-        }, 100);
-      }
-    }, 100) //waiting for the media to be loaded
+            else {
+              await Promise.resolve();
+              clearAsyncInterval(myInterval)
+            }
+          }, 100);
+        }
+      }, 100) //waiting for the media to be loaded
   }
 
   const closeWebcam = () => {
@@ -259,10 +276,11 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
           // Show paused UI.
         });
     }
-    // videoRef.current?.pause();
     videoRef.current?.srcObject?.getTracks().forEach((track: any) => track.stop())
-    setCaptureVideo(false);
+    dispatch(setAttendify({ captureVideo: false }))
   };
+
+  console.log("attendify")
 
   return (
     <div className="flex items-center justify-center">

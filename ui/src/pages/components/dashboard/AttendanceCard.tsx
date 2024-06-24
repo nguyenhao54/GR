@@ -12,9 +12,9 @@ import { ThemePic } from "./../../../assets/img";
 import { getMyAttendanceForLesson } from "../../../api/attendance";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { Lesson, User } from '../../../models';
-import { FaInfo } from "react-icons/fa6";
 import { getHourAndMinute } from '../../../utils';
 import React from 'react';
+import { setAttendify } from '../../../redux/attendifly.reducet';
 export interface IAttendance {
     id?: string;
     _id?: string;
@@ -176,26 +176,88 @@ function AttendanceCard() {
     // }
 
 
-    const closeWebcam = () => {
-
-        // navigator.mediaDevices.getUserMedia().
-        let pausePromise = videoRef.current?.pause();
-        if (pausePromise !== undefined) {
-            pausePromise.then((res: any) => {
-
-                // Automatic playback started!
-                // Show playing UI.
+    const handleClickCheckout = () => {
+        setCaptureVideo(true);
+        dispatch(
+            setDialog({
+                customWidth: 360,
+                customHeight: 180,
+                title: "Xác nhận Check-out",
+                open: true,
+                type: "warning",
+                onClickOk: () => {
+                    dispatch(setAttendify({
+                        captureVideo: true
+                    }))
+                    dispatch(
+                        setDialog({
+                            customWidth: 700,
+                            customHeight: 500,
+                            title: "Xác nhận điểm danh",
+                            open: true,
+                            content: (
+                                <div className='w-full h-full flex items-center justify-center'>
+                                    <Attendify
+                                        id="check-out"
+                                        key={new Date()}
+                                        attendance={attendance}
+                                        setAttendance={setAttendance}
+                                        lesson={lesson}
+                                    // videoRef={videoRef}
+                                    // captureVideo={captureVideo}
+                                    // setCaptureVideo={setCaptureVideo}
+                                    ></Attendify>
+                                </div>
+                            ),
+                            onClickClose: () => {
+                                dispatch(setAttendify({
+                                    captureVideo: false
+                                }))
+                            }
+                        })
+                    );
+                },
+                content: (
+                    <div className='pl-6 font-nunitoSans text-xs font-medium'>
+                        Bạn có chắc chắn muốn check-out?
+                    </div>
+                ),
             })
-                .catch((e: any) => {
-                    // Auto-play was prevented
-                    // Show paused UI.
-                });
-        }
-        // videoRef.current?.pause();
-        videoRef.current?.srcObject?.getTracks().forEach((track: any) => track.stop())
-        setCaptureVideo(false);
+        );
+    }
 
-    };
+    const handleClickCheckin = () => {
+        dispatch(setAttendify({
+            captureVideo: true
+        }))
+        dispatch(
+            setDialog({
+                customWidth: 700,
+                customHeight: 500,
+                title: "Xác nhận điểm danh",
+                open: true,
+                content: (
+                    <div className='w-full h-full flex items-center justify-center'>
+                        <Attendify
+                            id="check-in"
+                            key={new Date()}
+                            attendance={attendance}
+                            setAttendance={setAttendance}
+                            lesson={lesson}
+                        // videoRef={videoRef}
+                        // captureVideo={captureVideo}
+                        // setCaptureVideo={setCaptureVideo}
+                        ></Attendify>
+                    </div>
+                ),
+                onClickClose: () => {
+                    dispatch(setAttendify({
+                        captureVideo: false
+                    }))
+                }
+            })
+        );
+    }
 
     return (
         <div className='bg-white rounded-md flex-1 p-4 sm:w-[37%] w-[99%] flex flex-col items-center min-h-[calc(100vh-280px)] sm:min-h-[calc(100vh-80px)] h-max'>
@@ -207,98 +269,41 @@ function AttendanceCard() {
                     month: "2-digit",
                 })}`}
             </div>
-            {attendance?.checkInTime ? (
-                <div
-                    role={'none'}
-                    className='border-lightRed hover:cursor-pointer border-8 rounded-full min-w-40 min-h-40 m-4 gap-2 flex shadow-2xl justify-center flex-col text-neutal-800 items-center'
-                    onClick={() => {
-                        setCaptureVideo(true);
-                        dispatch(
-                            setDialog({
-                                customWidth: 360,
-                                customHeight: 180,
-                                title: "Xác nhận Check-out",
-                                open: true,
-                                type: "warning",
-                                onClickOk: () => {
-                                    dispatch(
-                                        setDialog({
-                                            customWidth: 700,
-                                            customHeight: 500,
-                                            title: "Xác nhận điểm danh",
-                                            open: true,
-                                            content: (
-                                                <div className='w-full h-full flex items-center justify-center'>
-                                                    <Attendify
-                                                        attendance={attendance}
-                                                        setAttendance={setAttendance}
-                                                        lesson={lesson}
-                                                        // videoRef={videoRef}
-                                                        // captureVideo={captureVideo}
-                                                        // setCaptureVideo={setCaptureVideo}
-                                                    ></Attendify>
-                                                </div>
-                                            ),
-                                            // onClickClose: () => {
-                                            //     closeWebcam();
-                                            //     // setCaptureVideo(true);
-                                            // }
-                                        })
-                                    );
-                                },
-                                content: (
-                                    <div className='pl-6 font-nunitoSans text-xs font-medium'>
-                                        Bạn có chắc chắn muốn check-out?
-                                    </div>
-                                ),
-                            })
-                        );
-                    }}
-                >
-                    <LiaHandPointer className='text-6xl text-lightRed -ml-2'></LiaHandPointer>
-                    <div className='text-md font-semibold justify-center text-lightRed flex items-center'>
-                        CHECK-OUT
+            {attendance?.checkInTime ?
+
+                attendance?.checkOutTime ?
+                    <div className='text-neutral-400 flex mt-4 flex-col justify-center items-center'>
+                        <IoMdCheckmarkCircleOutline size={60} color={"#0072D0"} />
+                        <div className='font-semibold text-md py-8 px-4'>
+                            Bạn đã điểm danh cho lớp học này
+                        </div>
+                    </div> :
+
+                    (
+                        <div
+                            role={'none'}
+                            className='border-lightRed hover:cursor-pointer border-8 rounded-full min-w-40 min-h-40 m-4 gap-2 flex shadow-2xl justify-center flex-col text-neutal-800 items-center'
+                            onClick={handleClickCheckout}
+                        >
+                            <LiaHandPointer className='text-6xl text-lightRed -ml-2'></LiaHandPointer>
+                            <div className='text-md font-semibold justify-center text-lightRed flex items-center'>
+                                CHECK-OUT
+                            </div>
+                            <div />
+                        </div>
+                    ) : (
+                    <div
+                        role={"none"}
+                        className='bg-[#D9D9D9] hover:cursor-pointer rounded-full min-w-40 min-h-40 m-4 gap-2 flex shadow-2xl justify-center flex-col text-neutal-800 items-center'
+                        onClick={handleClickCheckin}
+                    >
+                        <LiaHandPointer className='text-6xl text-neutral-800 -ml-2'></LiaHandPointer>
+                        <div className='text-md font-semibold justify-center flex items-center'>
+                            CHECK-IN
+                        </div>
+                        <div />
                     </div>
-                    <div />
-                </div>
-            ) : (
-                <div
-                    role={"none"}
-                    className='bg-[#D9D9D9] hover:cursor-pointer rounded-full min-w-40 min-h-40 m-4 gap-2 flex shadow-2xl justify-center flex-col text-neutal-800 items-center'
-                    onClick={() => {
-                        dispatch(
-                            setDialog({
-                                customWidth: 700,
-                                customHeight: 500,
-                                title: "Xác nhận điểm danh",
-                                open: true,
-                                content: (
-                                    <div className='w-full h-full flex items-center justify-center'>
-                                        <Attendify
-                                            attendance={attendance}
-                                            setAttendance={setAttendance}
-                                            lesson={lesson}
-                                            // videoRef={videoRef}
-                                            // captureVideo={captureVideo}
-                                            // setCaptureVideo={setCaptureVideo}
-                                        ></Attendify>
-                                    </div>
-                                ),
-                                // onClickClose: () => {
-                                //     closeWebcam();
-                                //     // setCaptureVideo(true);
-                                // }
-                            })
-                        );
-                    }}
-                >
-                    <LiaHandPointer className='text-6xl text-neutral-800 -ml-2'></LiaHandPointer>
-                    <div className='text-md font-semibold justify-center flex items-center'>
-                        CHECK-IN
-                    </div>
-                    <div />
-                </div>
-            )}
+                )}
             {locationDetails}
         </div>
     );

@@ -24,7 +24,7 @@ function MyLocationMap() {
                 });
             }, null, {  enableHighAccuracy: true});
         } else {
-            console.log("Geolocation is not available in your browser.");
+            alert("Geolocation is not available in your browser.");
         }
     }, []);
     // console.log(position);

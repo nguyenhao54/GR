@@ -42,7 +42,6 @@ const Layout = () => {
         </div>
       </div>
       <Dialog></Dialog>
-      <TopLoading />
     </div>
   );
 };
