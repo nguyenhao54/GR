@@ -22,7 +22,10 @@ function MyLocationMap() {
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude,
                 });
-            }, null, {  enableHighAccuracy: true});
+            }, function (error) {
+                alert(error.message);
+            },
+                { enableHighAccuracy: true });
         } else {
             alert("Geolocation is not available in your browser.");
         }
@@ -33,21 +36,21 @@ function MyLocationMap() {
             <h2 className="text-neutral-400 text-xs mb-2">Vị trí hiện tại</h2>
             {position.latitude && position.longitude ? (
                 <div className='min-h-[300px] h-[300px] w-full map-wrapper'>
-               <MapContainer 
-                center={[position.latitude,position.longitude ]} 
-                zoom={100} 
-                scrollWheelZoom={true}
-                >
-                    <TileLayer
-                        // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-                    />
-                    <Marker position={[position.latitude, position.longitude]}>
-                        <Popup className='font-nunitoSans'>
-                            Vị trí của bạn
-                        </Popup>
-                    </Marker>
-                </MapContainer>
+                    <MapContainer
+                        center={[position.latitude, position.longitude]}
+                        zoom={100}
+                        scrollWheelZoom={true}
+                    >
+                        <TileLayer
+                            // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+                        />
+                        <Marker position={[position.latitude, position.longitude]}>
+                            <Popup className='font-nunitoSans'>
+                                Vị trí của bạn
+                            </Popup>
+                        </Marker>
+                    </MapContainer>
                 </div>
             ) : (
                 <p>Không thể xác định vị trí hiện tại, vui lòng cho phép truy cập vị trí hoặc thử lại sau.</p>

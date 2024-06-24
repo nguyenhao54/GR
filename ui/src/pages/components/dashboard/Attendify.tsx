@@ -56,7 +56,7 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
 
   useEffect(() => {
     const loadModels = async () => {
-      const MODEL_URL = process.env.PUBLIC_URL + "/models";
+      const MODEL_URL = (import.meta as any).env.PUBLIC_URL + "/models";
 
       Promise.all([
         faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
