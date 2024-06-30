@@ -14,6 +14,7 @@ import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { Lesson, User } from '../../../models';
 import { getHourAndMinute } from '../../../utils';
 import { setAttendify } from '../../../redux/attendifly.reducet';
+import { FaInfo } from 'react-icons/fa6';
 export interface IAttendance {
     id?: string;
     _id?: string;
@@ -77,7 +78,7 @@ function AttendanceCard() {
     const [clock, setClock] = useState<string>(getClock());
     const [_captureVideo, setCaptureVideo] = React.useState(true);
 
-    const [_position, setPosition] = useState<any>({
+    const [position, setPosition] = useState<any>({
         latitude: null,
         longitude: null,
     });
@@ -156,21 +157,19 @@ function AttendanceCard() {
             Vị trí: {location.description || "Không có dữ liệu"}
         </div>
         <div className='w-3/4 h-3/5 mt-2'>
-            <MyLocation></MyLocation>
+            <MyLocation classLocation={location}></MyLocation>
         </div></>
 
-    // if (Math.abs(position.latitude - location.coordinates[0]) > 0.001 || Math.abs(position.longitude - location.coordinates[1]) > 0.001) {
-    //     // console.log(position, location.coordinates)
-    //     return <div className='bg-white rounded-md flex-1 p-4 sm:w-[37%] w-[99%] flex flex-col items-center min-h-[calc(100vh-280px)] sm:min-h-[calc(100vh-80px)] h-stretch'>
-    //         <div className="text-neutral-400 rounded-full border-4 border-neutral-400 p-2 mt-2"><FaInfo size={30}></FaInfo>
-    //         </div>
-    //         <div className='text-sm font-semibold text-neutral-400 mt-2 p-0 sm:p-2'>
-    //             <div>Vị trí hiện tại không trùng vị trí lớp học.</div>
-    //         </div>
-    //         {locationDetails}
-    //     </div>
-    // }
-
+    if (Math.abs(position.latitude - location.coordinates[0]) > 0.001 || Math.abs(position.longitude - location.coordinates[1]) > 0.001) {
+        return <div className='bg-white rounded-md flex-1 p-4 sm:w-[37%] w-[99%] flex flex-col items-center min-h-[calc(100vh-280px)] sm:min-h-[calc(100vh-80px)] h-stretch'>
+            <div className="text-neutral-400 rounded-full border-4 border-neutral-400 p-2 mt-2"><FaInfo size={30}></FaInfo>
+            </div>
+            <div className='text-sm font-semibold text-neutral-400 mt-2 p-0 sm:p-2'>
+                <div>Vị trí hiện tại không trùng vị trí lớp học.</div>
+            </div>
+            {locationDetails}
+        </div>
+    }
 
     const handleClickCheckout = () => {
         setCaptureVideo(true);

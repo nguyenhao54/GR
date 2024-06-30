@@ -12,7 +12,7 @@ let DefaultIcon = L.icon({
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
-function MyLocationMap() {
+function MyLocationMap({classLocation}: any) {
     const [position, setPosition] = useState<any>({ latitude: null, longitude: null });
 
     useEffect(() => {
@@ -48,6 +48,11 @@ function MyLocationMap() {
                         <Marker position={[position.latitude, position.longitude]}>
                             <Popup className='font-nunitoSans'>
                                 Vị trí của bạn
+                            </Popup>
+                        </Marker>
+                        <Marker position={classLocation.coordinates}>
+                            <Popup className='font-nunitoSans'>
+                                Vị trí lớp học
                             </Popup>
                         </Marker>
                     </MapContainer>

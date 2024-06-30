@@ -56,7 +56,7 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
 
   useEffect(() => {
     const loadModels = async () => {
-      const MODEL_URL = (import.meta).env.BASE_URL + "/models";
+      const MODEL_URL = "/models";
       console.log(MODEL_URL, import.meta);
       Promise.all([
         faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
@@ -100,7 +100,7 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
       asyncIntervals.forEach((_item: any, index: number) => { clearAsyncInterval(index); })
       videoRef.current?.srcObject?.getTracks().forEach((track: any) => track.stop())
     }
-  }, [captureVideo])
+  },)
 
 
   const checkIsValid = async () => {
