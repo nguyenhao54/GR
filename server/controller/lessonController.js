@@ -96,7 +96,7 @@ exports.getMyCurrentLesson = catchAsync(async (req, res, next) => {
   const ids = classes.map((i) => i._id);
   const currentDateTime = new Date(
     new Date().getTime() 
-    - 48 * 60 * 60 * 1000
+    // - 48 * 60 * 60 * 1000
   ); //get lesson
   const lessons = await Lesson.find({
     class: { $in: ids },
