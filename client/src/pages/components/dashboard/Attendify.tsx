@@ -100,7 +100,7 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
       asyncIntervals.forEach((_item: any, index: number) => { clearAsyncInterval(index); })
       videoRef.current?.srcObject?.getTracks().forEach((track: any) => track.stop())
     }
-  },)
+  })
 
 
   const checkIsValid = async () => {
@@ -227,37 +227,54 @@ function Attendify({ attendance, setAttendance, lesson }: any) {
         // console.log(e)
       }
     }
+
+    else {
+      closeWebcam();
+
+      dispatch(setDialog({
+        title: "Có lỗi sảy ra, vui lòng thử lại sau",
+        open: true,
+        type: "warning",
+        isMessagebar: true
+      }))
+    }
+    dispatch(setDialog({
+      open: false
+    }))
   }
 
   const handleVideoOnPlay = async () => {
     if (asyncIntervals.length === 0)
-      setTimeout(() => {
-        if (videoRef.current && captureVideo) {
-          let myInterval = setAsyncInterval(async () => {
-            if (canvasRef?.current) {
-              try {
-                canvasRef.current.innerHTML = faceapi.createCanvasFromMedia(
-                  videoRef.current
-                );
-                const displaySize = {
-                  width: videoWidth - 40,
-                  height: videoHeight - 40,
-                };
+      console.log("play")
+    setTimeout(() => {
+      if (videoRef.current && captureVideo) {
+        let myInterval = setAsyncInterval(async () => {
+          console.log("áyysysys")
+          if (canvasRef?.current) {
+            try {
+              canvasRef.current.innerHTML = faceapi.createCanvasFromMedia(
+                videoRef.current
+              );
+              const displaySize = {
+                width: videoWidth - 40,
+                height: videoHeight - 40,
+              };
 
-                faceapi.matchDimensions(canvasRef.current, displaySize);
-              } catch (e) {
-                // throw new Error("cannot create canvas")
-              } finally {
-                await checkIsValid()
-              }
+              faceapi.matchDimensions(canvasRef.current, displaySize);
+            } catch (e) {
+              // throw new Error("cannot create canvas")
+            } finally {
+              console.log("check is valid")
+              await checkIsValid()
             }
-            else {
-              await Promise.resolve();
-              clearAsyncInterval(myInterval)
-            }
-          }, 100);
-        }
-      }, 100) //waiting for the media to be loaded
+          }
+          else {
+            await Promise.resolve();
+            clearAsyncInterval(myInterval)
+          }
+        }, 100);
+      }
+    }, 100) //waiting for the media to be loaded
   }
 
   const closeWebcam = () => {
