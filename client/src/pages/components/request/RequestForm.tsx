@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { closeTopLoading, showTopLoading } from '../../../redux/toploading.reducer';
 import { setDialog } from '../../../redux/dialog.reducer';
 
-function RequestForm() {
+function RequestForm({ provideAddedRequest }: { provideAddedRequest: (added: any) => void }) {
     const storage = firebase.storage();
     const user = useSelector((appState: AppState) => appState.user.user);
     const [startTime, setStartTime] = React.useState<Dayjs | null>(dayjs(new Date()));
@@ -42,12 +42,19 @@ function RequestForm() {
             dispatch(closeTopLoading())
             if (res?.status === "success") {
                 //display success dialog
+
                 dispatch(setDialog({
                     title: "Tạo yêu cầu thành công",
                     open: true,
                     type: "info",
                     isMessagebar: true
                 }))
+
+                // add to list
+                provideAddedRequest(res.data.requests.map((item: any)=>({
+                    ...item,
+                    lesson: lessons.find((i: any) => i.id === item.lesson)
+                }))) 
 
             } else {
                 dispatch(setDialog({

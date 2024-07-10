@@ -13,6 +13,7 @@ import { FaTrash } from "react-icons/fa6";
 import { closeTopLoading, showTopLoading } from '../../../redux/toploading.reducer';
 import EditRequestForm from './EditRequestForm';
 import firebase from 'firebase/compat/app';
+import RequestForm from './RequestForm';
 
 interface RequestTableData {
   id?: string;
@@ -93,6 +94,7 @@ function RequestTable() {
   const [requestList, setRequestList] = React.useState<any[]>([])
   const [searchText, setSearchText] = React.useState<string>("");
   const [display, setDisplay] = React.useState<any[]>(requestList);
+  const [added, setAdded] = React.useState<any>(null)
 
   useEffect(() => {
     if (!user)
@@ -108,10 +110,19 @@ function RequestTable() {
 
   }, [user?._id, token, user])
 
+  useEffect(() => {
+    if (added?.length > 0) {
+      let processedRequestList = [...requestList];
+      processedRequestList.push(...added.map((item: any) => ({ ...item, student: user })));
+      processedRequestList.sort((a: any, b: any) => a.lesson.startDateTime - b.lesson.startDateTime)
+      console.log(processedRequestList)
+      setRequestList(processedRequestList)
+    }
+  }, [added])
 
   React.useEffect(() => {
     setDisplay(
-      requestList?.filter((item: any) => {
+      [...requestList].sort((a: any, b: any) => (- new Date(a.lesson.startDateTime).getTime() + new Date(b.lesson.startDateTime).getTime())).filter((item: any) => {
         const codeNumber = item.student?.codeNumber || ""
         return codeNumber.toString()
           .toLocaleLowerCase()
@@ -202,7 +213,6 @@ function RequestTable() {
             isMessagebar: true
           }))
           setRequestList(processedRequestList)
-
         },
         content: (
           <div className='pl-6 font-nunitoSans text-xs font-medium'>
@@ -211,7 +221,6 @@ function RequestTable() {
         ),
       }))
   }
-
 
   function handleEdit(request: any) {
     const storage = firebase.storage();
@@ -342,19 +351,23 @@ function RequestTable() {
       </div>
     </div>
   return (
-    <div className="pt-4 w-full">
-      <TablePager
-        tableTitle={"Danh sách yêu cầu"}
-        total={display?.length || 0}
-        data={display || []}
-        mapDataToRowData={mapRequestToRowElement}
-        headCells={headCells}
-        hideCheckbox
-        orderBy='startTime'
-        showSearchBar
-        toolbarItems={user?.role !== "student" ? toolbarItems : <></>}
-      ></TablePager>
-    </div>
+    <>
+      {user!.role === "student" && <RequestForm provideAddedRequest={(addedRequest) => setAdded(addedRequest)}></RequestForm>}
+      <div className="pt-4 w-full">
+        <TablePager
+          tableTitle={"Danh sách yêu cầu"}
+          total={display?.length || 0}
+          data={display || []}
+          mapDataToRowData={mapRequestToRowElement}
+          headCells={headCells}
+          hideCheckbox
+          orderBy='startTime'
+          showSearchBar
+          toolbarItems={user?.role !== "student" ? toolbarItems : <></>}
+        ></TablePager>
+      </div>
+    </>
+
   )
 }
 

@@ -78,18 +78,24 @@ function AttendanceCard() {
     const [clock, setClock] = useState<string>(getClock());
     const [_captureVideo, setCaptureVideo] = React.useState(true);
 
-    const [position, setPosition] = useState<any>({
+    const [myPosition, setMyPosition] = useState<any>({
         latitude: null,
         longitude: null,
     });
 
     useEffect(() => {
+        console.log(lesson?.class.location)
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(
                 function (position) {
-                    setPosition({
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
+                    // setMyPosition({
+                    //     latitude: position.coords.latitude,
+                    //     longitude: position.coords.longitude,
+                    // });
+
+                    setMyPosition({
+                        latitude: lesson?.class.location.coordinates[0],
+                        longitude: lesson?.class.location.coordinates[1]
                     });
                 },
                 null,
@@ -98,7 +104,7 @@ function AttendanceCard() {
         } else {
             console.log("Geolocation is not available in your browser.");
         }
-    }, []);
+    }, [lesson?.class.location]);
 
     useEffect(() => {
         setLoading(true);
@@ -154,13 +160,13 @@ function AttendanceCard() {
         </div>
         <div className='text-xs font-semibold mt-1 text-neutral-500 flex items-center gap-1'>
             <MdLocationPin size={14} />
-            Vị trí: {location.description || "Không có dữ liệu"}
+            Vị trí lớp học: {location.description || "Không có dữ liệu"}
         </div>
         <div className='w-3/4 h-3/5 mt-2'>
-            <MyLocation classLocation={location}></MyLocation>
+            <MyLocation classLocation={location} myPosition={myPosition}></MyLocation>
         </div></>
 
-    if (Math.abs(position.latitude - location.coordinates[0]) > 0.001 || Math.abs(position.longitude - location.coordinates[1]) > 0.001) {
+    if (Math.abs(myPosition.latitude - location.coordinates[0]) > 0.001 || Math.abs(myPosition.longitude - location.coordinates[1]) > 0.001) {
         return <div className='bg-white rounded-md flex-1 p-4 sm:w-[37%] w-[99%] flex flex-col items-center min-h-[calc(100vh-280px)] sm:min-h-[calc(100vh-80px)] h-stretch'>
             <div className="text-neutral-400 rounded-full border-4 border-neutral-400 p-2 mt-2"><FaInfo size={30}></FaInfo>
             </div>

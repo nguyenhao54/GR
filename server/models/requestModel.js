@@ -35,6 +35,8 @@ const requestSchema = new mongoose.Schema(
   },
 );
 
+requestSchema.index({ lesson: 1, student: 1 }, { unique: true });
+
 requestSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'lesson',
